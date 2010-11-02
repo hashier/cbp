@@ -4,7 +4,7 @@
 using namespace std;
 
 
-// Hauptprogramm für das Compilerbaupraktikum
+// Hauptprogramm fÃ¼r das Compilerbaupraktikum
 // ##########################################
 //
 // Parameter: 1. Quellcode-Datei zum Compilieren
@@ -21,6 +21,5 @@ int main(int argc, char *argv[])
 	// Quelldatei parsen
 	//...
 
-	system("pause");
 	return 0;
 }
