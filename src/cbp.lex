@@ -2,9 +2,11 @@
 /* cbp.lex */
 
 %{
-#include "heading.h"
+#include "main.h"
 #include "tok.h"
+
 int yyerror(char *s);
+
 %}
 
 letter		[a-zA-Z]

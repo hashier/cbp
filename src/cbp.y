@@ -2,7 +2,7 @@
 /* cbp.y */
 
 %{
-#include "heading.h"
+#include "main.h"
 int yyerror(char *s);
 int yylex(void);
 %}

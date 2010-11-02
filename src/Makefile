@@ -26,7 +26,7 @@ bison.c:	cbp.y
 main.o:	main.cpp
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
 
-lex.o yac.o main.o	: heading.h
+lex.o yac.o main.o	: main.h
 lex.o main.o		: tok.h
 
 clean:
