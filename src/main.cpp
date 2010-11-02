@@ -1,5 +1,5 @@
-#include <iostream>
-#include <stdlib.h>
+#include "main.h"
+
 
 using namespace std;
 
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Quelldatei parsen
-	//...
+	yyparse();
 
 	return 0;
 }
