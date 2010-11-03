@@ -16,6 +16,10 @@ int main(int argc, char *argv[])
 	if (argc >= 2)
 	{
 		cout << "Parameter1: " << argv[1] << endl;
+	} else
+	{
+		cout << "Missing input file." << endl;
+		return 1;
 	}
 
 	// Quelldatei parsen
