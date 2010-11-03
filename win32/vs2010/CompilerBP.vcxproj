@@ -18,6 +18,22 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\Node.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\Definition.h" />
+    <ClInclude Include="..\..\include\Scope.h" />
+    <ClInclude Include="..\..\include\SymbolTable.h" />
+    <ClInclude Include="..\..\include\Type.h" />
+    <ClInclude Include="..\..\src\main.h" />
+    <ClInclude Include="..\..\src\Node.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\cbp.lex" />
+    <None Include="..\..\src\cbp.y" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6848AED9-D895-424C-9F9D-C0D67DB8C0B5}</ProjectGuid>
     <RootNamespace>CompilerBP</RootNamespace>
@@ -26,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -106,9 +122,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
