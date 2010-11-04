@@ -1,4 +1,4 @@
-﻿#ifndef ARRAYTYPE_H_INCLUDED
+#ifndef ARRAYTYPE_H_INCLUDED
 #define ARRAYTYPE_H_INCLUDED
 
 #include "Type.h"

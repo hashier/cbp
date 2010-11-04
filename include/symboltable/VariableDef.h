@@ -1,4 +1,4 @@
-﻿#ifndef VARIABLEDEF_H_INCLUDED
+#ifndef VARIABLEDEF_H_INCLUDED
 #define VARIABLEDEF_H_INCLUDED
 
 #include "Defintion.h"

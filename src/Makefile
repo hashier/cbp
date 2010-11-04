@@ -1,9 +1,9 @@
 # Makefile
 
-OBJS	= bison.o lex.o main.o
+OBJS	= bison.o lex.o symboltable.o scope.o main.o
 
 CC	= g++
-CFLAGS	= -g -Wall -ansi -pedantic -I../include/parser -I../include/scope
+CFLAGS	= -g -Wall -pedantic -I../include/parser -I../include/symboltable
 
 cbp:	$(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o cbp -lfl
@@ -22,6 +22,12 @@ cbp.tab.c:	cbp.y
 
 main.o:	main.cpp
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
+	
+symboltable.o: SymbolTable.cpp
+	$(CC) $(CFLAGS) -c SymbolTable.cpp -o symboltable.o
+
+scope.o: Scope.cpp
+	$(CC) $(CFLAGS) -c Scope.cpp -o scope.o
 
 bison.o lex.o main.o	: main.h cbp.tab.h
 

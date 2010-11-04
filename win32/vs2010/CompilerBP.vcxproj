@@ -25,22 +25,23 @@
     <ClCompile Include="..\..\src\SymbolTable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\ArrayType.h" />
-    <ClInclude Include="..\..\include\ConstantDef.h" />
-    <ClInclude Include="..\..\include\Definition.h" />
-    <ClInclude Include="..\..\include\FunctionDef.h" />
-    <ClInclude Include="..\..\include\SimpleType.h" />
-    <ClInclude Include="..\..\include\Scope.h" />
-    <ClInclude Include="..\..\include\StructType.h" />
-    <ClInclude Include="..\..\include\SymbolTable.h" />
-    <ClInclude Include="..\..\include\Type.h" />
-    <ClInclude Include="..\..\include\VariableDef.h" />
-    <ClInclude Include="..\..\src\main.h" />
-    <ClInclude Include="..\..\src\Node.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\src\cbp.lex" />
     <None Include="..\..\src\cbp.y" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\parser\AbstractNodes.h" />
+    <ClInclude Include="..\..\include\parser\ExprNodes.h" />
+    <ClInclude Include="..\..\include\parser\ProgramNodes.h" />
+    <ClInclude Include="..\..\include\symboltable\ArrayType.h" />
+    <ClInclude Include="..\..\include\symboltable\ConstantDef.h" />
+    <ClInclude Include="..\..\include\symboltable\Definition.h" />
+    <ClInclude Include="..\..\include\symboltable\FunctionDef.h" />
+    <ClInclude Include="..\..\include\symboltable\Scope.h" />
+    <ClInclude Include="..\..\include\symboltable\SimpleType.h" />
+    <ClInclude Include="..\..\include\symboltable\StructType.h" />
+    <ClInclude Include="..\..\include\symboltable\SymbolTable.h" />
+    <ClInclude Include="..\..\include\symboltable\Type.h" />
+    <ClInclude Include="..\..\include\symboltable\VariableDef.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6848AED9-D895-424C-9F9D-C0D67DB8C0B5}</ProjectGuid>
@@ -90,7 +91,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include\symboltable;$(SolutionDir)\..\..\include\parser</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

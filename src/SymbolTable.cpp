@@ -1,4 +1,4 @@
-﻿#include "SymbolTable.h"
+#include "SymbolTable.h"
 
 
 SymbolTable::SymbolTable()
@@ -6,19 +6,18 @@ SymbolTable::SymbolTable()
 	scopeStack.push(Scope());
 }
 
-void SymbolTable::InsertNewScope()
+void SymbolTable::EnterNewScope()
 {
 	scopeStack.push(Scope());
 }
 
-void SymbolTable::DestroyCurrentScope()
+void SymbolTable::LeaveCurrentScope()
 {
 	scopeStack.pop();
 }
 
 Definition &SymbolTable::GetDefinition(const std::string &identifier)
 {
-	// TODO Stack abarbeiten, nicht nur oberes angucken
 	return scopeStack.top().GetDefinition(identifier);
 }
 
