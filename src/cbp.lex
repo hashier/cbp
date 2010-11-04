@@ -3,7 +3,8 @@
 
 %{
 #include "main.h"
-#include "tok.h"
+//#include "tok.h"
+#include "cbp.tab.h"
 
 int yyerror(char *s);
 
@@ -23,7 +24,7 @@ float_const	-?{digit}+\.{digit}+
 {float_const}	{ yylval.float_val = atof(yytext); return FLOAT_CONSTANT; }
 
 [ \t]*			{ return WHITESPACE; }
-[\r]?[\n]		{ yylineno++; }
+[\r]?[\n]		{ yylineno++; /* return EOL; */ }
 [#]+.*			{ return LINE_COMMENT; }
 
 [+]		{ yylval.string_val = new std::string(yytext); return PLUS; }

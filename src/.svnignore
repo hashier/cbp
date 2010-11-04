@@ -5,3 +5,4 @@ cbp.output
 cbp
 lex.yy.c
 lex.c
+cbp.tab.c

@@ -3,15 +3,18 @@
 
 %{
 #include "main.h"
+#include "ExprNodes.h"
 int yyerror(char *s);
 int yylex(void);
 %}
 
-%token	LETTER DIGIT WHITESPACE LINE_COMMENT
+%token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
 
 %union{
-	int			int_val;
+	class Atom*		atom_val;
+	class Expression*	expr_val;
 	float		float_val;
+	int			int_val;
 	string*		string_val;
 }
 
@@ -21,19 +24,19 @@ int yylex(void);
 %token	<float_val>	FLOAT_CONSTANT
 %token	<string>	IDENTIFIER
 
-%type	<int_val>	exp
+%type	<expr_val>	exp
+
 %left	PLUS
 %left	MULT
 
 %%
 
 input:	/* empty */
-		| exp	{ cout << "Result: " << $1 << endl; }
+		| exp	{ $1->dump(); }
 		;
 
-exp:	INTEGER_CONSTANT	{ $$ = $1; }
-		| exp PLUS exp	{ $$ = $1 + $3; }
-		| exp MULT exp	{ $$ = $1 * $3; }
+exp:	INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
+		| exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
 		;
 
 %%
