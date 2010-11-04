@@ -14,7 +14,7 @@ class Type : public Node {
   }
 
   void dump() {
-    cout << "Type: " << identifier << endl;;
+	cout << "Type: " << identifier << endl;;
   }
 };
 class Variable : public Node {
@@ -26,8 +26,22 @@ class Variable : public Node {
 };
 class Function : public Node {
   string identifier;
-  list<Variable*> arguments;
+  list<Variable*>* arguments;
   Statement* statement;
+
+  public:
+      Function(string* identifier, list<Variable*>* arguments, Statement* statement) : arguments(arguments), statement(statement) {
+          this->identifier = *identifier;
+      }
+
+      void dump(int num) {
+          indent(num); cout << "Function: " << identifier << endl;;
+          indent(num); cout << "Statement: ";
+          if(statement)
+              statement->dump(num+1);
+          else
+              cout << "NULL" << endl;
+      }
 };
 
 /** A file holds exactly one Program.

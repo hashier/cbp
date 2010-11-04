@@ -14,7 +14,7 @@ class Node {
 
     static void indent(int num) {
       for(int i = 0; i < num; i++)
-        std::cout << "-";
+        std::cout << "\t";
     }
 };
 

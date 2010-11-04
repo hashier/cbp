@@ -1,3 +1,5 @@
+#pragma once
+
 /* Compilerbau Praktikum 2010
  * main.h
  * */

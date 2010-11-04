@@ -23,8 +23,7 @@ cbp.tab.c:	cbp.y
 main.o:	main.cpp
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
 
-lex.o yac.o main.o	: main.h
-lex.o main.o		: cbp.tab.h
+bison.o lex.o main.o	: main.h cbp.tab.h
 
 clean:
 	rm -f *.o *~ lex.yy.c cbp.tab.c cbp.tab.h cbp.output cbp
