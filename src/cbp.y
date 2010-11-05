@@ -14,7 +14,7 @@ int yylex(void);
 	Statement*	statement;
 	Expression*	expr_val;
 	Variable*	var_val;
-	list<Variable*>	var_list;
+	list<Variable*>*	var_list;
 	TypeDecl*		typeDecl_val;
 	Type		type_val;
 	Func_abi	abi_val;
@@ -62,8 +62,8 @@ var: IDENTIFIER COLON TYPE { $$ = new Variable($1, $3); }
    ;
 
 var_list: /* empty */
-		| var { $$.push_back($1); }
-		| var_list COMMA var { $$.push_back($1); }
+		| var { $$->push_back($1); }
+		| var_list COMMA var { $$->push_back($3); }
         ;
 	
 type_decl: KEY_TYPE IDENTIFIER COLON TYPE { $$ = new TypeDecl($2, $4); }

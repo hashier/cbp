@@ -29,7 +29,7 @@ class Variable : public Node {
   Type type;
 
   public:
-    Variable(string identifier, Type type) : identifier(identifier), type(type) {
+    Variable(string* identifier, Type type) : identifier(*identifier), type(type) {
     }
 
     void dump(int num) {
@@ -38,12 +38,12 @@ class Variable : public Node {
 };
 class Function : public Node {
   string identifier;
-  list<Variable*> arguments;
+  list<Variable*>* arguments;
   Statement* statement;
   Func_abi abi;
 
   public:
-      Function(string* identifier, Func_abi abi, list<Variable*> arguments, Statement* statement) : arguments(arguments), abi(abi), statement(statement) {
+      Function(string* identifier, Func_abi abi, list<Variable*>* arguments, Statement* statement) : arguments(arguments), abi(abi), statement(statement) {
           this->identifier = *identifier;
       }
 
