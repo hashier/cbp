@@ -44,6 +44,21 @@ class Function : public Node {
       }
 };
 
+class TypeDecl : public Node {
+	public:
+		TypeDecl(string* identifier, string* typeName)
+			: identifier(identifier), typeName(typeName) { }
+	
+	void dump(int num)
+	{
+		indent(num); cout << "Type declaration: " << *identifier << " of type " << *typeName << endl;;
+	}
+	
+	private:
+		string *identifier;
+		string *typeName;
+};
+
 /** A file holds exactly one Program.
  * It consists of global definitions for types, variables
  * and functions.

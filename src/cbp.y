@@ -11,13 +11,14 @@ int yylex(void);
 
 %token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
 %token KEY_FUNC KEY_ABI_C KEY_ABI_DEFAULT KEY_TYPE
-%token PAR_LEFT PAR_RIGHT COLON
+%token PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token UINT8 INT8 UINT16 INT16 UINT32 INT32 FLOAT32 FLOAT64 VOID
 
 %union{
 	class Function*		func_val;
 	class Statement*	statement;
 	class Expression*	expr_val;
+	class TypeDecl*		typeDecl_val;
 	float		float_val;
 	int			int_val;
 	string*		string_val;
@@ -32,6 +33,8 @@ int yylex(void);
 %type	<func_val>	func_decl
 %type	<expr_val>	exp
 %type	<statement>	statement
+%type	<typeDecl_val> type_decl;
+%type	<string_val> type;
 
 %left	PLUS
 %left	MULT
@@ -39,6 +42,7 @@ int yylex(void);
 %%
 
 input:	/* empty */
+		| type_decl { $1->dump(0); }
 		| func_decl { $1->dump(0); }
 		;
 
@@ -56,18 +60,19 @@ func_args:	PAR_LEFT var_list PAR_RIGHT
 var_list:	/* empty */
 		| IDENTIFIER COLON type;
 
-type: UINT8
-	| INT8
-	| UINT16
-	| INT16
-	| UINT32
-	| INT32
-	| FLOAT32
-	| FLOAT64
-	| VOID
+type: UINT8 { $$ = new string("uint8"); }
+	| INT8 { $$ = new string("int8"); }
+	| UINT16 { $$ = new string("uint16"); }
+	| INT16 { $$ = new string("int16"); }
+	| UINT32 { $$ = new string("uint32"); }
+	| INT32 { $$ = new string("int32"); }
+	| FLOAT32 { $$ = new string("float32"); }
+	| FLOAT64 { $$ = new string("float64"); }
+	| VOID { $$ = new string("void"); }
 	;
 	
-type_decl : KEY_TYPE IDENTIFIER COLON type ; 	
+type_decl : KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
+		; 	
 
 statement:	/* empty */ { $$ = NULL }
 		 | exp;
