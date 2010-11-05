@@ -10,9 +10,9 @@ int yylex(void);
 %}
 
 %token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_ABI_C KEY_ABI_DEFAULT
+%token KEY_FUNC KEY_ABI_C KEY_ABI_DEFAULT KEY_TYPE
 %token PAR_LEFT PAR_RIGHT COLON
-%token UINT8 INT8 UINT16 INT16 UINT32 INT32 FLOAT32 FLOAT64
+%token UINT8 INT8 UINT16 INT16 UINT32 INT32 FLOAT32 FLOAT64 VOID
 
 %union{
 	class Function*		func_val;
@@ -64,7 +64,10 @@ type: UINT8
 	| INT32
 	| FLOAT32
 	| FLOAT64
+	| VOID
 	;
+	
+type_decl : KEY_TYPE IDENTIFIER COLON type ; 	
 
 statement:	/* empty */ { $$ = NULL }
 		 | exp;

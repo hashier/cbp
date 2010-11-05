@@ -25,6 +25,7 @@ float_const	-?{digit}+\.{digit}+
 "func"			{ return KEY_FUNC; }
 "abi_c"			{ return KEY_ABI_C; }
 "abi_default"	{ return KEY_ABI_DEFAULT; }
+"type"			{ return KEY_TYPE; }
 
 "uint8"			{ return UINT8; }
 "int8"			{ return INT8; }
@@ -34,6 +35,7 @@ float_const	-?{digit}+\.{digit}+
 "int32"			{ return INT32; }
 "float32"		{ return FLOAT32; }
 "float64"		{ return FLOAT64; }
+"void"			{ return VOID; }
 
 "("				{ return PAR_LEFT; }
 ")"				{ return PAR_RIGHT; }
