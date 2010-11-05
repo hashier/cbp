@@ -7,30 +7,43 @@
 
 using namespace std;
 
-class Type : public Node {
-  string identifier;
-
-  Type(string identifier) : identifier(identifier) {
-  }
-
-  void dump() {
-	cout << "Type: " << identifier << endl;;
-  }
+enum Type {
+  Type_uint8,
+  Type_int8,
+  Type_uint16,
+  Type_int16,
+  Type_uint32,
+  Type_int32,
+  Type_float32,
+  Type_float64,
+  Type_void
 };
+
+enum Func_abi {
+  Abi_c,
+  Abi_default
+};
+
 class Variable : public Node {
   string identifier;
-  Type* type;
+  Type type;
 
-  Variable(string identifier, Type* type) : identifier(identifier), type(type) {
-  }
+  public:
+    Variable(string identifier, Type type) : identifier(identifier), type(type) {
+    }
+
+    void dump(int num) {
+        indent(num); cout << "Variable: " << endl;
+    }
 };
 class Function : public Node {
   string identifier;
-  list<Variable*>* arguments;
+  list<Variable*> arguments;
   Statement* statement;
+  Func_abi abi;
 
   public:
-      Function(string* identifier, list<Variable*>* arguments, Statement* statement) : arguments(arguments), statement(statement) {
+      Function(string* identifier, Func_abi abi, list<Variable*> arguments, Statement* statement) : arguments(arguments), abi(abi), statement(statement) {
           this->identifier = *identifier;
       }
 
@@ -46,17 +59,17 @@ class Function : public Node {
 
 class TypeDecl : public Node {
 	public:
-		TypeDecl(string* identifier, string* typeName)
-			: identifier(identifier), typeName(typeName) { }
+		TypeDecl(string* identifier, Type type)
+			: identifier(identifier), type(type) { }
 	
 	void dump(int num)
 	{
-		indent(num); cout << "Type declaration: " << *identifier << " of type " << *typeName << endl;;
+		indent(num); cout << "Type declaration: " << *identifier << " of type " << type << endl;;
 	}
 	
 	private:
 		string *identifier;
-		string *typeName;
+		Type type;
 };
 
 /** A file holds exactly one Program.

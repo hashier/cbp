@@ -9,16 +9,15 @@ int yyerror(char *s);
 int yylex(void);
 %}
 
-%token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_ABI_C KEY_ABI_DEFAULT KEY_TYPE
-%token PAR_LEFT PAR_RIGHT COLON SEMICOLON
-%token UINT8 INT8 UINT16 INT16 UINT32 INT32 FLOAT32 FLOAT64 VOID
-
 %union{
-	class Function*		func_val;
-	class Statement*	statement;
-	class Expression*	expr_val;
-	class TypeDecl*		typeDecl_val;
+	Function*		func_val;
+	Statement*	statement;
+	Expression*	expr_val;
+	Variable*	var_val;
+	list<Variable*>	var_list;
+	TypeDecl*		typeDecl_val;
+	Type		type_val;
+	Func_abi	abi_val;
 	float		float_val;
 	int			int_val;
 	string*		string_val;
@@ -26,15 +25,23 @@ int yylex(void);
 
 %start	input
 
+%token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
+%token KEY_FUNC KEY_ABI_C KEY_ABI_DEFAULT KEY_TYPE
+%token PAR_LEFT PAR_RIGHT COLON SEMICOLON COMMA
+%token TYPE ABI
+
 %token	<int_val>	INTEGER_CONSTANT
 %token	<float_val>	FLOAT_CONSTANT
 %token	<string_val>	IDENTIFIER
+%type <type_val> TYPE
 
 %type	<func_val>	func_decl
 %type	<expr_val>	exp
 %type	<statement>	statement
-%type	<typeDecl_val> type_decl;
-%type	<string_val> type;
+%type	<typeDecl_val> type_decl
+%type   <abi_val> abi
+%type   <var_val> var
+%type   <var_list> var_list
 
 %left	PLUS
 %left	MULT
@@ -46,40 +53,27 @@ input:	/* empty */
 		| func_decl { $1->dump(0); }
 		;
 
-
-/*
-		| exp	{ $1->dump(); }
-func_args ::= '(' ( IDENTIFIER ':' type )* ')' ;                                   --Christopher
-*/
-
-func_decl:	KEY_FUNC abi IDENTIFIER func_args COLON type statement { $$ = new Function($3, NULL, $7); }
+func_decl:	KEY_FUNC abi IDENTIFIER func_args COLON TYPE statement { $$ = new Function($3, $2, NULL, $7); }
 		 ;
 
 func_args:	PAR_LEFT var_list PAR_RIGHT
 
-var_list:	/* empty */
-		| IDENTIFIER COLON type;
+var: IDENTIFIER COLON TYPE { $$ = new Variable($1, $3); }
+   ;
 
-type: UINT8 { $$ = new string("uint8"); }
-	| INT8 { $$ = new string("int8"); }
-	| UINT16 { $$ = new string("uint16"); }
-	| INT16 { $$ = new string("int16"); }
-	| UINT32 { $$ = new string("uint32"); }
-	| INT32 { $$ = new string("int32"); }
-	| FLOAT32 { $$ = new string("float32"); }
-	| FLOAT64 { $$ = new string("float64"); }
-	| VOID { $$ = new string("void"); }
-	;
+var_list: /* empty */
+		| var { $$.push_back($1); }
+		| var_list COMMA var { $$.push_back($1); }
+        ;
 	
-type_decl : KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
+type_decl: KEY_TYPE IDENTIFIER COLON TYPE { $$ = new TypeDecl($2, $4); }
 		; 	
 
 statement:	/* empty */ { $$ = NULL }
 		 | exp;
 
-abi:	/* empty */
-		| KEY_ABI_C { ; }
-		| KEY_ABI_DEFAULT { ; }
+abi:	/* empty */ { $$ = Abi_default; }
+		| ABI
 		;
 
 exp:	INTEGER_CONSTANT	{ $$ = new ConstInt($1); }

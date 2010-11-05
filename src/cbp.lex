@@ -4,6 +4,8 @@
 %{
 #include "main.h"
 //#include "tok.h"
+#include "ExprNodes.h"
+#include "ProgramNodes.h"
 #include "cbp.tab.h"
 
 int yyerror(char *s);
@@ -23,23 +25,24 @@ float_const	-?{digit}+\.{digit}+
 {float_const}	{ yylval.float_val = atof(yytext); return FLOAT_CONSTANT; }
 
 "func"			{ return KEY_FUNC; }
-"abi_c"			{ return KEY_ABI_C; }
-"abi_default"	{ return KEY_ABI_DEFAULT; }
 "type"			{ return KEY_TYPE; }
+"abi_c"			{ yylval.abi_val = Abi_c; return ABI; }
+"abi_default"	{ yylval.abi_val = Abi_default; return ABI; }
 
-"uint8"			{ return UINT8; }
-"int8"			{ return INT8; }
-"uint16"		{ return UINT16; }
-"int16"			{ return INT16; }
-"uint32"		{ return UINT32; }
-"int32"			{ return INT32; }
-"float32"		{ return FLOAT32; }
-"float64"		{ return FLOAT64; }
-"void"			{ return VOID; }
+"uint8"			{ yylval.type_val = Type_uint8; return TYPE; }
+"int8"			{ yylval.type_val = Type_int8; return TYPE; }
+"uint16"		{ yylval.type_val = Type_uint16; return TYPE; }
+"int16"			{ yylval.type_val = Type_int16; return TYPE; }
+"uint32"		{ yylval.type_val = Type_uint32; return TYPE; }
+"int32"			{ yylval.type_val = Type_int32; return TYPE; }
+"float32"		{ yylval.type_val = Type_float32; return TYPE; }
+"float64"		{ yylval.type_val = Type_float64; return TYPE; }
+"void"			{ yylval.type_val = Type_void; return TYPE; }
 
 "("				{ return PAR_LEFT; }
 ")"				{ return PAR_RIGHT; }
 ":"				{ return COLON; }
+","				{ return COMMA; }
 "+"		{ yylval.string_val = new std::string(yytext); return PLUS; }
 "*"		{ yylval.string_val = new std::string(yytext); return MULT; }
 

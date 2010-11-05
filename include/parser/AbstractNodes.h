@@ -7,7 +7,7 @@
 
 class Node {
   public:
-    virtual void dump() {
+    void dump() {
       dump(0);
     }
     virtual void dump(int num) = 0;
