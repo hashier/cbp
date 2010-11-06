@@ -49,8 +49,8 @@ int yylex(void);
 %%
 
 input:	/* empty */
-		| type_decl { $1->dump(0); }
-		| func_decl { $1->dump(0); }
+		| type_decl { $1->dump(); }
+		| func_decl { $1->dump(); }
 		;
 
 func_decl:	KEY_FUNC abi IDENTIFIER func_args COLON TYPE statement { $$ = new Function($3, $2, NULL, $7); }

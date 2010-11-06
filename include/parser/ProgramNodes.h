@@ -47,7 +47,7 @@ class Function : public Node {
           this->identifier = *identifier;
       }
 
-      void dump(int num) {
+      void dump(int num = 0) {
           indent(num); cout << "Function: " << identifier << endl;;
           indent(num); cout << "Statement: ";
           if(statement)
@@ -62,7 +62,7 @@ class TypeDecl : public Node {
 		TypeDecl(string* identifier, Type type)
 			: identifier(identifier), type(type) { }
 	
-	void dump(int num)
+	void dump(int num = 0)
 	{
 		indent(num); cout << "Type declaration: " << *identifier << " of type " << type << endl;;
 	}
