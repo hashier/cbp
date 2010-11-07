@@ -5,7 +5,7 @@
 #include<string>
 #include<iostream>
 
-enum Type {
+enum SimpleTypeEnum {
   Type_uint8,
   Type_int8,
   Type_uint16,
@@ -24,14 +24,15 @@ enum Func_abi {
 
 class Variable : public Node {
   std::string identifier;
-  Type type;
+  Type *type;
 
   public:
-    Variable(std::string* identifier, Type type) : identifier(*identifier), type(type) {
+    Variable(std::string* identifier, Type *type) : identifier(*identifier), type(type) {
     }
 
     void dump(int num) {
-        indent(num); std::cout << "Variable: " << std::endl;
+        indent(num); std::cout << "Variable '" << identifier << "': " << std::endl;
+        type->dump(num+1);
     }
 };
 
@@ -58,7 +59,7 @@ class Function : public Node {
 
 class TypeDecl : public Node {
 	public:
-		TypeDecl(std::string* identifier, Type type)
+		TypeDecl(std::string* identifier, Type *type)
 			: identifier(identifier), type(type) { }
 
 	void dump(int num = 0)
@@ -68,7 +69,7 @@ class TypeDecl : public Node {
 
 	private:
 		std::string *identifier;
-		Type type;
+		Type *type;
 };
 
 /** A file holds exactly one Program.
@@ -144,4 +145,57 @@ class WhileLoop : public Statement {
 /** Returns from outermost function. */
 class Return : public Statement {
   Expression* expr;
+};
+
+class Local : public Statement {
+	Variable* var;
+
+	public:
+  	  Local(Variable* var) : var(var) {
+  	  }
+
+  	  void dump(int num = 0) {
+    	indent(num); std::cout << "Local Variable:" << std::endl;
+    	var->dump(num+1);
+  	  }
+};
+
+class TypeStruct : public Type {
+};
+
+/** Wrapper class for the Type Enum */
+class TypeSimple : public Type {
+	SimpleTypeEnum simpleType;
+
+	public:
+	TypeSimple(SimpleTypeEnum simpleType) : simpleType(simpleType) {
+	}
+	void dump(int num = 0) {
+		indent(num); std::cout << printSimpleTypeEnum(simpleType) << std::endl;
+	}
+
+	static std::string printSimpleTypeEnum(SimpleTypeEnum x) {
+		switch(x) {
+			case Type_uint8:
+				return "uint8";
+			case Type_int8:
+				return "int8";
+			case Type_uint16:
+				return "uint16";
+			case Type_int16:
+				return "int16";
+			case Type_uint32:
+				return "uint32";
+			case Type_int32:
+				return "int32";
+			case Type_float32:
+				return "float32";
+			case Type_float64:
+				return "float64";
+			case Type_void:
+				return "void";
+		}
+		return "SHOULDNTHAPPEN";
+	}
+
 };

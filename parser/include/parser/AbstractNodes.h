@@ -21,3 +21,6 @@ class Statement : public Node {
 // Expressions, as in things that can be evaluated to numbers (at runtime)
 class Expression : public Statement {
 };
+
+class Type : public Node {
+};

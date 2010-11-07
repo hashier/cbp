@@ -18,25 +18,28 @@ int yylex(void);
 	std::list<Variable*>*   var_list;
 	std::list<Expression*>* expr_list;
 	TypeDecl*               typeDecl_val;
-	Type                    type_val;
+	Type*                   type_val;
+	SimpleTypeEnum          simpletype_val;
 	Func_abi                abi_val;
 	float                   float_val;
 	int                     int_val;
+	//TypeStruct*             struct_val;
 	std::string*            string_val;
 }
 
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_FOR
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL
 %token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
-%token TYPE ABI
+%token TYPE ABI AT DOLLAR
 
-%token <int_val>     INTEGER_CONSTANT
-%token <float_val>   FLOAT_CONSTANT
-%token <string_val>  IDENTIFIER
+%token <int_val>	INTEGER_CONSTANT
+%token <float_val>	FLOAT_CONSTANT
+%token <string_val>	IDENTIFIER
 
-%type <type_val>     TYPE
+%type <type_val>     type
+%type <simpletype_val> TYPE
 %type <func_val>     func_decl
 %type <expr_val>     exp
 %type <statement>    statement
@@ -45,6 +48,7 @@ int yylex(void);
 %type <typeDecl_val> type_decl
 %type <abi_val>      abi ABI
 %type <var_val>      var
+%type <var_val>      var_decl
 
 %type <var_list>     var_list
 %type <expr_list>    exp_list
@@ -59,34 +63,46 @@ input:   /* empty */
        | func_decl { $1->dump(); }
          ;
 
-func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON TYPE statement { $$ = new Function($3, $2, $5, $9); }
+func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { $$ = new Function($3, $2, $5, $9); }
            ;
 
-var: IDENTIFIER COLON TYPE { $$ = new Variable($1, $3); }
-     ;
+var: IDENTIFIER COLON type { $$ = new Variable($1, $3); }
+   ;
 
 var_list:   /* empty */ { $$ = new std::list<Variable*>(); }
           | var { $$->push_back($1); }
           | var_list var { $$->push_back($2); }
             ;
 
-type_decl: KEY_TYPE IDENTIFIER COLON TYPE { $$ = new TypeDecl($2, $4); }
+type_decl: KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
            ;
+
+type: TYPE
+    | KEY_STRUCT CURLY_LEFT struct_members CURLY_RIGHT { /* TODO */ }
+      ;
+
+struct_members: /* empty */
+              | var_decl { /* TODO */ }
+              | var_decl AT INTEGER_CONSTANT { /* TODO */ }
+                ;
+
+var_decl: KEY_VAR IDENTIFIER COLON type { $$ = new Variable($2, $4); }
 
 statement:   CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
            | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
              /* this is a shift-reduce, danglig else problem. not sure what to do about that.. */
            | KEY_IF exp statement elseish { $$ = new IfElse($2, $3, $4); }
            | exp { $$ = $1 }
+           | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
              ;
 
-elseish:   /* empty */ { $$ = NULL; }
-         | KEY_ELSE statement { $$ = $2 }
-           ;
+elseish: /* empty */ { $$ = NULL; }
+       | KEY_ELSE statement { $$ = $2 }
+         ;
 
-st_block:   /* empty */ { $$ = new Block(); }
-          | st_block statement { $$->add($2); }
-            ;
+st_block: /* empty */ { $$ = new Block(); }
+        | st_block statement { $$->add($2); }
+          ;
 
 abi:   /* empty */ { $$ = Abi_default; }
      | ABI
@@ -96,9 +112,9 @@ exp_list:   exp { $$ = new std::list<Expression*>(); $$->push_back($1); }
           | exp_list exp { $$->push_back($2); }
             ;
 
-exp:   INTEGER_CONSTANT { $$ = new ConstInt($1); }
-     | exp PLUS exp     { $$ = new Expr_Add($1, $3); }
-     | exp MULT exp     { $$ = new Expr_Mul($1, $3); }
+exp:   INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
+     | exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
+     | exp MULT exp	{ $$ = new Expr_Mul($1, $3); }
      | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
        ;
 
