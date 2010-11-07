@@ -13,6 +13,7 @@ int yylex(void);
 	Statement*	statement;
 	Expression*	expr_val;
 	Variable*	var_val;
+	Block*	block_val;
 	list<Variable*>*	var_list;
 	TypeDecl*		typeDecl_val;
 	Type		type_val;
@@ -26,7 +27,7 @@ int yylex(void);
 
 %token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
 %token KEY_FUNC KEY_ABI_C KEY_ABI_DEFAULT KEY_TYPE
-%token PAR_LEFT PAR_RIGHT COLON SEMICOLON COMMA
+%token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON COMMA
 %token TYPE ABI
 
 %token	<int_val>	INTEGER_CONSTANT
@@ -37,6 +38,7 @@ int yylex(void);
 %type	<func_val>	func_decl
 %type	<expr_val>	exp
 %type	<statement>	statement
+%type	<block_val>	st_block
 %type	<typeDecl_val> type_decl
 %type   <abi_val> abi ABI
 %type   <var_val> var
@@ -60,16 +62,22 @@ func_args:	PAR_LEFT var_list PAR_RIGHT
 var: IDENTIFIER COLON TYPE { $$ = new Variable($1, $3); }
    ;
 
-var_list: /* empty */
-		| var { $$->push_back($1); }
+var_list: /* empty */ { $$ = new list<Variable*>() }
 		| var_list COMMA var { $$->push_back($3); }
+        | var { $$->push_back($1); }
         ;
 	
 type_decl: KEY_TYPE IDENTIFIER COLON TYPE { $$ = new TypeDecl($2, $4); }
 		; 	
 
 statement:	/* empty */ { $$ = NULL }
-		 | exp;
+         | CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
+         | exp { $$ = $1 }
+         ;
+
+st_block: /* empty */ { $$ = new Block(); }
+        | st_block statement { $$->add($2); }
+        ;
 
 abi:	/* empty */ { $$ = Abi_default; }
 		| ABI

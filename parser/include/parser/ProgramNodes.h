@@ -85,7 +85,22 @@ class File {
 
 /** Groups a number of statements. */
 class Block : public Statement {
-  list<Statement*> substatements;
+  list<Statement*> subs;
+
+  public:
+    void add(Statement* st) {
+      subs.push_back(st);
+    }
+
+    void dump(int num = 0) {
+      indent(num); cout << "{" << endl;
+
+      list<Statement*>::iterator it;
+      for ( it = subs.begin() ; it != subs.end(); it++ )
+        (*it)->dump(num+1);
+
+      indent(num); cout << "}" << endl;
+    }
 };
 
 /** Classic IfElse block. */

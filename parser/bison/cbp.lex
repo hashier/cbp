@@ -12,6 +12,8 @@ int yyerror(char *s);
 
 %}
 
+/* Avoid one linker error related to yywrap */
+/* http://stackoverflow.com/questions/1811125/undefined-reference-to-yywrap */
 %option noyywrap
 
 letter		[a-zA-Z]
@@ -41,6 +43,8 @@ float_const	-?{digit}+\.{digit}+
 "float64"		{ yylval.type_val = Type_float64; return TYPE; }
 "void"			{ yylval.type_val = Type_void; return TYPE; }
 
+"{"				{ return CURLY_LEFT; }
+"}"				{ return CURLY_RIGHT; }
 "("				{ return PAR_LEFT; }
 ")"				{ return PAR_RIGHT; }
 ":"				{ return COLON; }
@@ -50,7 +54,7 @@ float_const	-?{digit}+\.{digit}+
 
 [ \t]*			{ /* return WHITESPACE; */ }
 [\r]?[\n]		{ yylineno++; /* return EOL; */ }
-[#]+.*			{ return LINE_COMMENT; }
+[#].*[\n]			{ /* return LINE_COMMENT; */ }
 
 
 
