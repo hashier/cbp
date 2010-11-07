@@ -1,0 +1,22 @@
+-- File tree --
+/parser         die parser library
+/parser/bison   die .y und .lex dateien, die von bison zum parser generiert werden
+/main.{cpp|h}   hauptprogramm, wrappt bisher nur die parser lib
+/modules        CMake module, speziell ein bison macro
+/examples       ein Programm, das man in den parser pipen kann (irgendwann mal)
+/Makefile       schnelles build ohne cmake, fuer den eiligen user (legacy?)
+
+-- HOWTO build --
+Reqs: Bison, [CMake]
+
+Build:
+  mkdir build
+  cd build
+  cmake ..
+  make
+
+Dabei wird ein out-of-source build gemacht, so dass alle Dateien im build ordner
+verbleiben, der dementsprechend auch nichts im repo zu suchen hat!
+
+Test:
+  ./cbp 5 < ../examples/whatever.cbp

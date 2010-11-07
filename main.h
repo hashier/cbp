@@ -10,5 +10,3 @@
 
 // prototype of bison-generated parser function
 int yyparse();
-
-using namespace std;

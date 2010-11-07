@@ -2,7 +2,6 @@
 /* cbp.y */
 
 %{
-#include "main.h"
 #include "ExprNodes.h"
 #include "ProgramNodes.h"
 int yyerror(char *s);
@@ -39,7 +38,7 @@ int yylex(void);
 %type	<expr_val>	exp
 %type	<statement>	statement
 %type	<typeDecl_val> type_decl
-%type   <abi_val> abi
+%type   <abi_val> abi ABI
 %type   <var_val> var
 %type   <var_list> var_list
 

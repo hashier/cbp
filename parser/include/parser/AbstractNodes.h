@@ -3,7 +3,7 @@
 #include<list>
 #include<iostream>
 
-// Abstract superclasses
+// Abstract superclasses a
 
 class Node {
   public:

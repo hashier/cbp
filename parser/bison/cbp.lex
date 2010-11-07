@@ -2,15 +2,17 @@
 /* cbp.lex */
 
 %{
-#include "main.h"
 //#include "tok.h"
 #include "ExprNodes.h"
 #include "ProgramNodes.h"
+// bison generates .hh files in cpp mode
 #include "cbp.tab.h"
 
 int yyerror(char *s);
 
 %}
+
+%option noyywrap
 
 letter		[a-zA-Z]
 digit		[0-9]
