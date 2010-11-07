@@ -1,5 +1,8 @@
 func main () : void {
    call SDL_Init(0)
+   if 1 {
+     call SDL_Init(0)
+   }
 #   screen = call SDL_SetVideoMode(800 600 32 0)
 #   call SDL_LockSurface(screen)
 #   local var x : uint32
