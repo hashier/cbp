@@ -1,1 +1,2 @@
 Keine Leerzeichen im Pfad zum .\msvs2010\bison\bin das verkraftet m4.exe nicht
+Im Verzeichnis C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include eine leere Datei mit Namen unistd.h erstellen oder ggf. im prebuild.bat die include zeile mit ssr entfernen 
