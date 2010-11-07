@@ -65,16 +65,14 @@ func_args:	PAR_LEFT var_list PAR_RIGHT
 var: IDENTIFIER COLON TYPE { $$ = new Variable($1, $3); }
    ;
 
-var_list: /* empty */ { $$ = new list<Variable*>() }
+var_list: var { $$ = new list<Variable*>(); $$->push_back($1); }
 		| var_list COMMA var { $$->push_back($3); }
-        | var { $$->push_back($1); }
         ;
 	
 type_decl: KEY_TYPE IDENTIFIER COLON TYPE { $$ = new TypeDecl($2, $4); }
 		; 	
 
-statement:	/* empty */ { $$ = NULL }
-         | CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
+statement: CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
          | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
          | exp { $$ = $1 }
          ;
@@ -87,8 +85,8 @@ abi:	/* empty */ { $$ = Abi_default; }
 		| ABI
 		;
 
-exp_list: exp_list COMMA exp { $$->push_back($3); }
-        | exp { $$ = new list<Expression*>(); $$->push_back($1); }
+exp_list: exp { $$ = new list<Expression*>(); $$->push_back($1); }
+        | exp_list COMMA exp { $$->push_back($3); }
         ;
 
 exp:	INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
