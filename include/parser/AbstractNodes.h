@@ -7,10 +7,7 @@
 
 class Node {
   public:
-    void dump() {
-      dump(0);
-    }
-    virtual void dump(int num) = 0;
+    virtual void dump(int num = 0) = 0;
 
     static void indent(int num) {
       for(int i = 0; i < num; i++)

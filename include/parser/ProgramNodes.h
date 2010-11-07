@@ -36,6 +36,7 @@ class Variable : public Node {
         indent(num); cout << "Variable: " << endl;
     }
 };
+
 class Function : public Node {
   string identifier;
   list<Variable*>* arguments;
@@ -61,12 +62,12 @@ class TypeDecl : public Node {
 	public:
 		TypeDecl(string* identifier, Type type)
 			: identifier(identifier), type(type) { }
-	
+
 	void dump(int num = 0)
 	{
 		indent(num); cout << "Type declaration: " << *identifier << " of type " << type << endl;;
 	}
-	
+
 	private:
 		string *identifier;
 		Type type;

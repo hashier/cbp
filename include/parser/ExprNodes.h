@@ -17,11 +17,12 @@ class Unary : public Expression {
     Unary(Expression* sub) : sub(sub) {
     }
 
-    void dump(int num) {
+    void dump(int num = 0) {
       indent(num); cout << "Unary: " << typeid(*this).name() << endl;
       sub->dump(num);
     }
 };
+
 class Binary : public Expression {
   Expression* left;
   Expression* right;
@@ -30,7 +31,7 @@ class Binary : public Expression {
     Binary(Expression* left, Expression* right) : left(left), right(right) {
     }
 
-    void dump(int num) {
+    void dump(int num = 0) {
       indent(num); cout << "Binary: " << typeid(*this).name() << endl;
 
       indent(num); cout << "Left:" << endl;
@@ -129,8 +130,9 @@ class ConstInt : public Constant {
   public:
     ConstInt(int value) : value(value) { }
 
-    void dump(int num) {
-      indent(num); cout << "Const Int: " << value << endl;
+    void dump(int num = 0) {
+      indent(num);
+      cout << "Const Int: " << value << endl;
     }
 };
 class ConstFloat : public Constant {
@@ -139,14 +141,16 @@ class ConstFloat : public Constant {
   public:
     ConstFloat(float value) : value(value) { }
 
-    void dump() {
+    void dump(int num = 0) {
+      indent(num);
       cout << "Const Float: " << value << endl;
     }
 };
 class Identifier : public Atom {
   Variable* ref;
 
-  void dump(int num) {
+  void dump(int num = 0) {
+    indent(num);
     cout << "Const Identifier:" << endl;
     ref->dump(num+1);
   }
