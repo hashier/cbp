@@ -1,0 +1,21 @@
+func main () : void {
+   call SDL_Init(0)
+#   screen = call SDL_SetVideoMode(800 600 32 0)
+#   call SDL_LockSurface(screen)
+#   local var x : uint32
+#   local var y : uint32
+#   local var i : uint32
+   while 1 {
+#     for y = 0 .. 600
+#       for x = 0 .. 800
+#         screen[0].pixels[x + 800 * y] =
+#           ((x | y + i) + 4 * i) +
+#           256 * ((x + 3 * i & y) + 5 * i) +
+#           65536 * ((x - 4 * i ^ y - 2 * i) + 6 *i)
+#     call SDL_UnlockSurface(screen)
+#     call SDL_UpdateRect(screen 0 0 0 0)
+#     i = i +1
+   }
+#   call SDL_Flip(screen)
+#   while 1 0
+}
