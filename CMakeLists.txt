@@ -10,13 +10,13 @@ message(STATUS "")
 set(CBP_MAIN_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_MODULE_PATH ${CMAKE_MODLUE_PATH} ${CBP_MAIN_DIR}/modules)
 
-if(WIN32)
+if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D_SCL_SECURE_NO_WARNINGS")
   add_definitions(-DWIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-else(WIN32)
+else(MSVC)
   set(CMAKE_CXX_FLAGS "-Wall -g")
-endif(WIN32)
+endif(MSVC)
 
 include(${CMAKE_MODULE_PATH}/FindBison.cmake)
 
