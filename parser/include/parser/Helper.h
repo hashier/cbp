@@ -1,3 +1,0 @@
-class LinkedList {
-  LinkedList* next;
-}
