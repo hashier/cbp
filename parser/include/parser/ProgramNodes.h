@@ -164,7 +164,7 @@ class TypeStruct : public Type {
 	std::list<Variable*>* typeStruct;
 
 	public:
-	TypeStruct(std::list<Variable*>*) : typeStruct(typeStruct) {
+	TypeStruct(std::list<Variable*>* typeStruct) : typeStruct(typeStruct) {
 	}
 	void dump(int num = 0) {
 		indent(num); dumpStructsMembers(num);
