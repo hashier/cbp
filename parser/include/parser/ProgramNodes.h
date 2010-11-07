@@ -30,7 +30,7 @@ class Variable : public Node {
     Variable(std::string* identifier, Type *type) : identifier(*identifier), type(type) {
     }
 
-    void dump(int num) {
+    void dump(int num = 0) {
         indent(num); std::cout << "Variable '" << identifier << "': " << std::endl;
         type->dump(num+1);
     }
