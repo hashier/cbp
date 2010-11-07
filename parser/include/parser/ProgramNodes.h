@@ -161,6 +161,25 @@ class Local : public Statement {
 };
 
 class TypeStruct : public Type {
+	std::list<Variable*>* typeStruct;
+
+	public:
+	TypeStruct(std::list<Variable*>*) : typeStruct(typeStruct) {
+	}
+	void dump(int num = 0) {
+		indent(num); dumpStructsMembers(num);
+	}
+
+	private:
+	void dumpStructsMembers(int num) {
+		std::cout << "Struct" << std::endl;
+		std::list<Variable*>::iterator it;
+		if ( typeStruct ) {
+			for ( it = typeStruct->begin() ; it != typeStruct->end(); it++ ) {
+				(*it)->dump(num+1);
+			}
+		}
+	}
 };
 
 /** Wrapper class for the Type Enum */

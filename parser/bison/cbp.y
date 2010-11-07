@@ -23,6 +23,7 @@ int yylex(void);
 	Func_abi                abi_val;
 	float                   float_val;
 	int                     int_val;
+	std::list<Variable*>*   struct_members_val;
 	//TypeStruct*             struct_val;
 	std::string*            string_val;
 }
@@ -53,6 +54,8 @@ int yylex(void);
 %type <var_list>     var_list
 %type <expr_list>    exp_list
 
+%type <struct_members_val> struct_members
+
 %left PLUS
 %left MULT
 
@@ -78,10 +81,10 @@ type_decl: KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
            ;
 
 type: TYPE
-    | KEY_STRUCT CURLY_LEFT struct_members CURLY_RIGHT { /* TODO */ }
+    | KEY_STRUCT CURLY_LEFT struct_members CURLY_RIGHT { $$ = new TypeStruct($3) }
       ;
 
-struct_members: /* empty */
+struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
               | var_decl { /* TODO */ }
               | var_decl AT INTEGER_CONSTANT { /* TODO */ }
                 ;
