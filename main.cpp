@@ -1,24 +1,20 @@
 #include "main.h"
 
-
-using namespace std;
-
-
 // Hauptprogramm für das Compilerbaupraktikum
 // ##########################################
 //
 // Parameter: 1. Quellcode-Datei zum Compilieren
 int main(int argc, char *argv[])
 {
-	cout << "CompilerBauPraktikum" << endl;
-	cout << "--------------------" << endl << endl;
+	std::cout << "CompilerBauPraktikum" << std::endl;
+	std::cout << "--------------------" << std::endl << std::endl;
 
 	if (argc >= 2)
 	{
-		cout << "Parameter1: " << argv[1] << endl;
+		std::cout << "Parameter1: " << argv[1] << std::endl;
 	} else
 	{
-		cout << "Missing input file." << endl;
+		std::cout << "Missing input file." << std::endl;
 		return 1;
 	}
 

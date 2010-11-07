@@ -5,8 +5,6 @@
 #include<string>
 #include<iostream>
 
-using namespace std;
-
 enum Type {
   Type_uint8,
   Type_int8,
@@ -25,51 +23,51 @@ enum Func_abi {
 };
 
 class Variable : public Node {
-  string identifier;
+  std::string identifier;
   Type type;
 
   public:
-    Variable(string* identifier, Type type) : identifier(*identifier), type(type) {
+    Variable(std::string* identifier, Type type) : identifier(*identifier), type(type) {
     }
 
     void dump(int num) {
-        indent(num); cout << "Variable: " << endl;
+        indent(num); std::cout << "Variable: " << std::endl;
     }
 };
 
 class Function : public Node {
-  string identifier;
+  std::string identifier;
   Func_abi abi;
-  list<Variable*>* arguments;
+  std::list<Variable*>* arguments;
   Statement* statement;
 
   public:
-      Function(string* identifier, Func_abi abi, list<Variable*>* arguments, Statement* statement) : abi(abi), arguments(arguments), statement(statement) {
+      Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement) : abi(abi), arguments(arguments), statement(statement) {
           this->identifier = *identifier;
       }
 
       void dump(int num = 0) {
-          indent(num); cout << "Function: " << identifier << endl;;
-          indent(num); cout << "Statement: ";
+          indent(num); std::cout << "Function: " << identifier << std::endl;;
+          indent(num); std::cout << "Statement: ";
           if(statement)
               statement->dump(num+1);
           else
-              cout << "NULL" << endl;
+              std::cout << "NULL" << std::endl;
       }
 };
 
 class TypeDecl : public Node {
 	public:
-		TypeDecl(string* identifier, Type type)
+		TypeDecl(std::string* identifier, Type type)
 			: identifier(identifier), type(type) { }
 
 	void dump(int num = 0)
 	{
-		indent(num); cout << "Type declaration: " << *identifier << " of type " << type << endl;;
+		indent(num); std::cout << "Type declaration: " << *identifier << " of type " << type << std::endl;;
 	}
 
 	private:
-		string *identifier;
+		std::string *identifier;
 		Type type;
 };
 
@@ -78,14 +76,14 @@ class TypeDecl : public Node {
  * and functions.
  */
 class File {
-  list<Type*> types;
-  list<Variable*> variables;
-  list<Function*> functions;
+  std::list<Type*> types;
+  std::list<Variable*> variables;
+  std::list<Function*> functions;
 };
 
 /** Groups a number of statements. */
 class Block : public Statement {
-  list<Statement*> subs;
+  std::list<Statement*> subs;
 
   public:
     void add(Statement* st) {
@@ -93,14 +91,14 @@ class Block : public Statement {
     }
 
     void dump(int num = 0) {
-      indent(num); cout << "{" << endl;
+      indent(num); std::cout << "{" << std::endl;
 
-      list<Statement*>::iterator it;
+      std::list<Statement*>::iterator it;
       for ( it = subs.begin() ; it != subs.end(); it++ ) {
         (*it)->dump(num+1);
       }
 
-      indent(num); cout << "}" << endl;
+      indent(num); std::cout << "}" << std::endl;
     }
 };
 
@@ -115,13 +113,13 @@ class IfElse : public Statement {
     }
 
     void dump(int num = 0) {
-      indent(num); cout << "IfElse" << endl;
-      indent(num); cout << "Condition:" << endl;
+      indent(num); std::cout << "IfElse" << std::endl;
+      indent(num); std::cout << "Condition:" << std::endl;
       condition->dump(num+1);
-      indent(num); cout << "Then:" << endl;
+      indent(num); std::cout << "Then:" << std::endl;
       then->dump(num+1);
       if(otherwise) {
-        indent(num); cout << "Otherwise:" << endl;
+        indent(num); std::cout << "Otherwise:" << std::endl;
         otherwise->dump(num+1);
       }
     }
@@ -136,10 +134,10 @@ class WhileLoop : public Statement {
     }
 
     void dump(int num = 0) {
-      indent(num); cout << "While Loop" << endl;
-      indent(num); cout << "Condition:" << endl;
+      indent(num); std::cout << "While Loop" << std::endl;
+      indent(num); std::cout << "Condition:" << std::endl;
       condition->dump(num+1);
-      indent(num); cout << "Loop:" << endl;
+      indent(num); std::cout << "Loop:" << std::endl;
       loop->dump(num+1);
     }
 };

@@ -7,8 +7,6 @@
 #include<iostream>
 #include<typeinfo>
 
-using namespace std;
-
 // Basic types of expressions
 class Unary : public Expression {
   Expression* sub;
@@ -18,7 +16,7 @@ class Unary : public Expression {
     }
 
     void dump(int num = 0) {
-      indent(num); cout << "Unary: " << typeid(*this).name() << endl;
+      indent(num); std::cout << "Unary: " << typeid(*this).name() << std::endl;
       sub->dump(num);
     }
 };
@@ -32,12 +30,12 @@ class Binary : public Expression {
     }
 
     void dump(int num = 0) {
-      indent(num); cout << "Binary: " << typeid(*this).name() << endl;
+      indent(num); std::cout << "Binary: " << typeid(*this).name() << std::endl;
 
-      indent(num); cout << "Left:" << endl;
+      indent(num); std::cout << "Left:" << std::endl;
       left->dump(num+1);
 
-      indent(num); cout << "Right:" << endl;
+      indent(num); std::cout << "Right:" << std::endl;
       right->dump(num+1);
     }
 };
@@ -132,7 +130,7 @@ class ConstInt : public Constant {
 
     void dump(int num = 0) {
       indent(num);
-      cout << "Const Int: " << value << endl;
+      std::cout << "Const Int: " << value << std::endl;
     }
 };
 class ConstFloat : public Constant {
@@ -143,31 +141,31 @@ class ConstFloat : public Constant {
 
     void dump(int num = 0) {
       indent(num);
-      cout << "Const Float: " << value << endl;
+      std::cout << "Const Float: " << value << std::endl;
     }
 };
 class Identifier : public Atom {
   Variable* ref;
 
   void dump(int num = 0) {
-    indent(num); cout << "Const Identifier:" << endl;
+    indent(num); std::cout << "Const Identifier:" << std::endl;
     ref->dump(num+1);
   }
 };
 class FuncCall : public Atom {
-  string identifier;
+  std::string identifier;
   Function* func;
-  list<Expression*> exprs;
+  std::list<Expression*> exprs;
 
   public:
 
-    FuncCall(string* identifier, list<Expression*>* exprs) {
+    FuncCall(std::string* identifier, std::list<Expression*>* exprs) {
       // is this safe?
       this->identifier = *identifier;
     }
 
     void dump(int num = 0) {
-      indent(num); cout << "Function Call: " << identifier << endl;
+      indent(num); std::cout << "Function Call: " << identifier << std::endl;
     }
 
 };
