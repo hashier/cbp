@@ -22,7 +22,7 @@ cbp.tab.c:	parser/bison/cbp.y
 
 main.o:	main.cpp
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
-	
+
 symboltable.o: parser/src/SymbolTable.cpp
 	$(CC) $(CFLAGS) -c parser/src/SymbolTable.cpp -o symboltable.o
 

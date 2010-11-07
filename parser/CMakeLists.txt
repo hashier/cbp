@@ -8,7 +8,7 @@ include_directories(
   )
 
 GENERATE_BISON_FLEX_SOURCES(
-  ${CMAKE_CURRENT_SOURCE_DIR}/bison/cbp.y    "-v"
+  ${CMAKE_CURRENT_SOURCE_DIR}/bison/cbp.y    "-dv"
   ${CMAKE_CURRENT_SOURCE_DIR}/bison/cbp.lex  ""
   )
 
