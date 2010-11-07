@@ -85,9 +85,9 @@ type: TYPE
     | KEY_STRUCT CURLY_LEFT struct_members CURLY_RIGHT { $$ = new TypeStruct($3) }
       ;
 
-struct_members: /* empty */ { /*printf("test1\n");*/ $$ = new std::list<Variable*>(); }
-              | struct_members var_decl { /*printf("test2\n");*/ $$->push_back($2); }
-              | var_decl AT INTEGER_CONSTANT { /* TODO */ }
+struct_members: /* empty */ { printf("test1\n"); $$ = new std::list<Variable*>(); }
+              | struct_members var_decl { printf("test2\n"); $$->push_back($2); }
+              | struct_members var_decl AT INTEGER_CONSTANT { printf("test3\n"); $$->push_back($2); }
                 ;
 
 var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variable($2, $4); }

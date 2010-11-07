@@ -12,7 +12,8 @@ func main () : void {
    local var y : uint32
    local var i : uint32
     local var StructVariableName : struct {
-      #var chris : uint32
+      var XXXXXXXX : uint32
+      var XXXXXXXXX : uint32
     }
    while 1 {
 #     for y = 0 .. 600
