@@ -52,7 +52,6 @@ float_const	-?{digit}+\.{digit}+
 "("				{ return PAR_LEFT; }
 ")"				{ return PAR_RIGHT; }
 ":"				{ return COLON; }
-","				{ return COMMA; }
 "+"		{ yylval.string_val = new std::string(yytext); return PLUS; }
 "*"		{ yylval.string_val = new std::string(yytext); return MULT; }
 
