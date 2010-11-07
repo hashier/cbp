@@ -22,6 +22,7 @@ word		[a-zA-Z][a-zA-Z0-9_]*
 identifier	{letter}{word}*
 int_const	-?{digit}+
 float_const	-?{digit}+\.{digit}+
+eol			[\r]?[\n]
 
 %%
 
@@ -56,8 +57,8 @@ float_const	-?{digit}+\.{digit}+
 "*"		{ yylval.string_val = new std::string(yytext); return MULT; }
 
 [ \t]*			{ /* return WHITESPACE; */ }
-[\r]?[\n]		{ yylineno++; /* return EOL; */ }
-[#].*[\n]			{ /* return LINE_COMMENT; */ }
+{eol}		{ yylineno++; /* return EOL; */ }
+[#].*{eol}	{ /* return LINE_COMMENT; */ }
 
 
 
