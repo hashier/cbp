@@ -96,8 +96,9 @@ class Block : public Statement {
       indent(num); cout << "{" << endl;
 
       list<Statement*>::iterator it;
-      for ( it = subs.begin() ; it != subs.end(); it++ )
+      for ( it = subs.begin() ; it != subs.end(); it++ ) {
         (*it)->dump(num+1);
+      }
 
       indent(num); cout << "}" << endl;
     }
@@ -118,4 +119,3 @@ class While : public Statement {
 class Return : public Statement {
   Expression* expr;
 };
-

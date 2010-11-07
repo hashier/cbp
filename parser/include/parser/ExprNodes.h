@@ -150,9 +150,25 @@ class Identifier : public Atom {
   Variable* ref;
 
   void dump(int num = 0) {
-    indent(num);
-    cout << "Const Identifier:" << endl;
+    indent(num); cout << "Const Identifier:" << endl;
     ref->dump(num+1);
   }
+};
+class FuncCall : public Atom {
+  string identifier;
+  Function* func;
+  list<Expression*> exprs;
+
+  public:
+
+    FuncCall(string* identifier, list<Expression*>* exprs) {
+      // is this safe?
+      this->identifier = *identifier;
+    }
+
+    void dump(int num = 0) {
+      indent(num); cout << "Function Call: " << identifier << endl;
+    }
+
 };
 

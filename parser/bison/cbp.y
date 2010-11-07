@@ -15,6 +15,7 @@ int yylex(void);
 	Variable*	var_val;
 	Block*	block_val;
 	list<Variable*>*	var_list;
+	list<Expression*>*	expr_list;
 	TypeDecl*		typeDecl_val;
 	Type		type_val;
 	Func_abi	abi_val;
@@ -26,7 +27,7 @@ int yylex(void);
 %start	input
 
 %token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_ABI_C KEY_ABI_DEFAULT KEY_TYPE
+%token KEY_FUNC KEY_CALL KEY_TYPE
 %token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON COMMA
 %token TYPE ABI
 
@@ -42,7 +43,9 @@ int yylex(void);
 %type	<typeDecl_val> type_decl
 %type   <abi_val> abi ABI
 %type   <var_val> var
+
 %type   <var_list> var_list
+%type	<expr_list>	exp_list
 
 %left	PLUS
 %left	MULT
@@ -83,9 +86,14 @@ abi:	/* empty */ { $$ = Abi_default; }
 		| ABI
 		;
 
+exp_list: exp_list COMMA exp { $$->push_back($3); }
+        | exp { $$ = new list<Expression*>(); $$->push_back($1); }
+        ;
+
 exp:	INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
 		| exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
 		| exp MULT exp	{ $$ = new Expr_Mul($1, $3); }
+        | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
 		;
 
 %%

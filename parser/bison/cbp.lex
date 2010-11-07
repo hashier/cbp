@@ -29,6 +29,7 @@ float_const	-?{digit}+\.{digit}+
 {float_const}	{ yylval.float_val = atof(yytext); return FLOAT_CONSTANT; }
 
 "func"			{ return KEY_FUNC; }
+"call"			{ return KEY_CALL; }
 "type"			{ return KEY_TYPE; }
 "abi_c"			{ yylval.abi_val = Abi_c; return ABI; }
 "abi_default"	{ yylval.abi_val = Abi_default; return ABI; }
