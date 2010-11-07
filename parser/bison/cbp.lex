@@ -56,6 +56,8 @@ eol			[\r]?[\n]
 "}"             { return CURLY_RIGHT; }
 "("             { return PAR_LEFT; }
 ")"             { return PAR_RIGHT; }
+"["             { return BRACKETS_LEFT; }
+"]"				{ return BRACKETS_RIGHT; }
 ":"             { return COLON; }
 "+"             { yylval.string_val = new std::string(yytext); return PLUS; }
 "*"             { yylval.string_val = new std::string(yytext); return MULT; }

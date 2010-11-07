@@ -33,7 +33,7 @@ int yylex(void);
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
 %token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL
 %token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
-%token TYPE ABI AT DOLLAR
+%token TYPE ABI AT DOLLAR BRACKETS_LEFT BRACKETS_RIGHT
 
 %token <int_val>	INTEGER_CONSTANT
 %token <float_val>	FLOAT_CONSTANT
@@ -83,6 +83,8 @@ type_decl: KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
 
 type: TYPE
     | KEY_STRUCT CURLY_LEFT struct_members CURLY_RIGHT { $$ = new TypeStruct($3) }
+    | IDENTIFIER { $$ = new TypeId($1); }
+    | BRACKETS_LEFT BRACKETS_RIGHT type { $$ = new TypeArray($3); }
       ;
 
 struct_members: /* empty */ { $$ = new std::list<Variable*>(); }

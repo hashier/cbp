@@ -64,7 +64,8 @@ class TypeDecl : public Node {
 
 	void dump(int num = 0)
 	{
-		indent(num); std::cout << "Type declaration: " << *identifier << " of type " << type << std::endl;;
+		indent(num); std::cout << "Type declaration: " << *identifier << " of type " << std::endl;
+		type->dump(num+1);
 	}
 
 	private:
@@ -217,4 +218,29 @@ class TypeSimple : public Type {
 		return "SHOULDNTHAPPEN";
 	}
 
+};
+
+class TypeArray : public Type {
+	Type* type;
+
+	public:
+		TypeArray(Type *type): type(type) {}
+
+	    void dump(int num = 0) {
+	        indent(num); std::cout << "TypeArray: " << std::endl;
+	        type->dump(num+1);
+	    }
+};
+
+class TypeId : public Type {
+	std::string identifier;
+
+	public:
+		TypeId(std::string *identifier) {
+			this->identifier = *identifier;
+		}
+
+		void dump(int num = 0) {
+			indent(num); std::cout << "TypeId: " << identifier << std::endl;
+		}
 };
