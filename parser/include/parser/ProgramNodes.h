@@ -111,9 +111,21 @@ class IfElse : public Statement {
   Statement* otherwise;
 };
 /** Classic While block. */
-class While : public Statement {
+class WhileLoop : public Statement {
   Expression* condition;
   Statement* loop;
+
+  public:
+    WhileLoop(Expression* condition, Statement* loop) : condition(condition), loop(loop) {
+    }
+
+    void dump(int num = 0) {
+      indent(num); cout << "While Loop" << endl;
+      indent(num); cout << "Condition:" << endl;
+      condition->dump(num+1);
+      indent(num); cout << "Loop:" << endl;
+      loop->dump(num+1);
+    }
 };
 /** Returns from outermost function. */
 class Return : public Statement {

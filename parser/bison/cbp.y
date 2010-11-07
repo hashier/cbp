@@ -27,7 +27,7 @@ int yylex(void);
 %start	input
 
 %token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE
 %token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON COMMA
 %token TYPE ABI
 
@@ -75,6 +75,7 @@ type_decl: KEY_TYPE IDENTIFIER COLON TYPE { $$ = new TypeDecl($2, $4); }
 
 statement:	/* empty */ { $$ = NULL }
          | CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
+         | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
          | exp { $$ = $1 }
          ;
 
