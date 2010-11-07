@@ -39,12 +39,12 @@ class Variable : public Node {
 
 class Function : public Node {
   string identifier;
+  Func_abi abi;
   list<Variable*>* arguments;
   Statement* statement;
-  Func_abi abi;
 
   public:
-      Function(string* identifier, Func_abi abi, list<Variable*>* arguments, Statement* statement) : arguments(arguments), abi(abi), statement(statement) {
+      Function(string* identifier, Func_abi abi, list<Variable*>* arguments, Statement* statement) : abi(abi), arguments(arguments), statement(statement) {
           this->identifier = *identifier;
       }
 
