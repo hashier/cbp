@@ -2,13 +2,16 @@ cmake_minimum_required(VERSION 2.6)
 project(CBP)
 set(CBP_VERSION v0.1)
 
-message(STATUS "")
-message(STATUS "Generating CBP build files..")
-message(STATUS "")
-
 # where there be modules
 set(CBP_MAIN_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_MODULE_PATH ${CMAKE_MODLUE_PATH} ${CBP_MAIN_DIR}/modules)
+
+INCLUDE(MacroEnsureOutOfSourceBuild)
+macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build. Please create a separate build directory and run 'cmake /path/to/${PROJECT_NAME} [options]' there.")
+
+message(STATUS "")
+message(STATUS "Generating CBP build files..")
+message(STATUS "")
 
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D_SCL_SECURE_NO_WARNINGS")
