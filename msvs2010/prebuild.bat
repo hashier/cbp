@@ -19,10 +19,15 @@ echo [Execute Flex]
 
 cd flex
 cd bin
-flex.exe -l ..\..\..\parser\bison\cbp.lex
+flex.exe -L -l ..\..\..\parser\bison\cbp.lex
 
 cd..
 cd..
+
+
+
+echo [extern *yyin]
+ssr 0 "FILE *yyin = (FILE *) 0" "extern FILE *yyin; FILE *yyin = (FILE *) 0" .\flex\bin\lex.yy.c 
 
 echo [Correct To POSIX]
 ssr 0 "extern int isatty" "extern ''C'' int __cdecl isatty" .\flex\bin\lex.yy.c 

@@ -34,6 +34,7 @@ eol			[\r]?[\n]
 "if"            { return KEY_IF; }
 "else"          { return KEY_ELSE; }
 "while"         { return KEY_WHILE; }
+"for"           { return KEY_FOR; }
 "abi_c"         { yylval.abi_val = Abi_c; return ABI; }
 "abi_default"   { yylval.abi_val = Abi_default; return ABI; }
 
@@ -55,9 +56,9 @@ eol			[\r]?[\n]
 "+"             { yylval.string_val = new std::string(yytext); return PLUS; }
 "*"             { yylval.string_val = new std::string(yytext); return MULT; }
 
-[ \t]*			{ /* return WHITESPACE; */ }
-{eol}		{ yylineno++; /* return EOL; */ }
-[#].*{eol}	{ /* return LINE_COMMENT; */ }
+[ \t]*          { /* return WHITESPACE; */ }
+{eol}           { yylineno++; /* return EOL; */ }
+[#].*{eol}      { /* return LINE_COMMENT; */ }
 
 {identifier}    { yylval.string_val = new std::string(yytext); return IDENTIFIER; }
 

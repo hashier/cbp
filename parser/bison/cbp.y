@@ -28,13 +28,13 @@ int yylex(void);
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_FOR
 %token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI
 
-%token <int_val>	INTEGER_CONSTANT
-%token <float_val>	FLOAT_CONSTANT
-%token <string_val>	IDENTIFIER
+%token <int_val>     INTEGER_CONSTANT
+%token <float_val>   FLOAT_CONSTANT
+%token <string_val>  IDENTIFIER
 
 %type <type_val>     TYPE
 %type <func_val>     func_decl
@@ -63,7 +63,7 @@ func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON TYPE statem
            ;
 
 var: IDENTIFIER COLON TYPE { $$ = new Variable($1, $3); }
-   ;
+     ;
 
 var_list:   /* empty */ { $$ = new std::list<Variable*>(); }
           | var { $$->push_back($1); }
@@ -96,9 +96,9 @@ exp_list:   exp { $$ = new std::list<Expression*>(); $$->push_back($1); }
           | exp_list exp { $$->push_back($2); }
             ;
 
-exp:   INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
-     | exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
-     | exp MULT exp	{ $$ = new Expr_Mul($1, $3); }
+exp:   INTEGER_CONSTANT { $$ = new ConstInt($1); }
+     | exp PLUS exp     { $$ = new Expr_Add($1, $3); }
+     | exp MULT exp     { $$ = new Expr_Mul($1, $3); }
      | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
        ;
 
