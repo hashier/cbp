@@ -62,8 +62,9 @@ int yylex(void);
 %%
 
 input:   /* empty */
-       | type_decl { $1->dump(); }
-       | func_decl { $1->dump(); }
+       | input type_decl { $2->dump(); }
+       | input var_decl  { $2->dump(); }
+       | input func_decl { $2->dump(); }
          ;
 
 func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { $$ = new Function($3, $2, $5, $9); }
@@ -84,12 +85,12 @@ type: TYPE
     | KEY_STRUCT CURLY_LEFT struct_members CURLY_RIGHT { $$ = new TypeStruct($3) }
       ;
 
-struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
-              | var_decl { /* TODO */ }
+struct_members: /* empty */ { /*printf("test1\n");*/ $$ = new std::list<Variable*>(); }
+              | struct_members var_decl { /*printf("test2\n");*/ $$->push_back($2); }
               | var_decl AT INTEGER_CONSTANT { /* TODO */ }
                 ;
 
-var_decl: KEY_VAR IDENTIFIER COLON type { $$ = new Variable($2, $4); }
+var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variable($2, $4); }
 
 statement:   CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
            | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }

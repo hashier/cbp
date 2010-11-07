@@ -1,3 +1,6 @@
+var chris : uint32
+var chris2 : uint32
+var chris3 : uint32
 func main () : void {
    call SDL_Init(0)
    if 1 {
@@ -5,11 +8,11 @@ func main () : void {
    }
 #   screen = call SDL_SetVideoMode(800 600 32 0)
 #   call SDL_LockSurface(screen)
-#   local var x : uint32
+   local var x : uint32
    local var y : uint32
-#   local var i : uint32
+   local var i : uint32
     local var StructVariableName : struct {
-#      var chris : uint32
+      #var chris : uint32
     }
    while 1 {
 #     for y = 0 .. 600
