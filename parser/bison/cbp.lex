@@ -31,6 +31,8 @@ float_const	-?{digit}+\.{digit}+
 "func"			{ return KEY_FUNC; }
 "call"			{ return KEY_CALL; }
 "type"			{ return KEY_TYPE; }
+"if"				{ return KEY_IF; }
+"else"			{ return KEY_ELSE; }
 "while"			{ return KEY_WHILE; }
 "abi_c"			{ yylval.abi_val = Abi_c; return ABI; }
 "abi_default"	{ yylval.abi_val = Abi_default; return ABI; }

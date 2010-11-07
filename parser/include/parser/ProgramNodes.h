@@ -109,6 +109,22 @@ class IfElse : public Statement {
   Expression* condition;
   Statement* then;
   Statement* otherwise;
+
+  public:
+    IfElse(Expression* condition, Statement* then, Statement* otherwise) : condition(condition), then(then), otherwise(otherwise) {
+    }
+
+    void dump(int num = 0) {
+      indent(num); cout << "IfElse" << endl;
+      indent(num); cout << "Condition:" << endl;
+      condition->dump(num+1);
+      indent(num); cout << "Then:" << endl;
+      then->dump(num+1);
+      if(otherwise) {
+        indent(num); cout << "Otherwise:" << endl;
+        otherwise->dump(num+1);
+      }
+    }
 };
 /** Classic While block. */
 class WhileLoop : public Statement {

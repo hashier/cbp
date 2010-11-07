@@ -27,7 +27,7 @@ int yylex(void);
 %start	input
 
 %token	LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE
 %token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON COMMA
 %token TYPE ABI
 
@@ -39,6 +39,7 @@ int yylex(void);
 %type	<func_val>	func_decl
 %type	<expr_val>	exp
 %type	<statement>	statement
+%type	<statement>	elseish
 %type	<block_val>	st_block
 %type	<typeDecl_val> type_decl
 %type   <abi_val> abi ABI
@@ -65,7 +66,8 @@ func_args:	PAR_LEFT var_list PAR_RIGHT
 var: IDENTIFIER COLON TYPE { $$ = new Variable($1, $3); }
    ;
 
-var_list: var { $$ = new list<Variable*>(); $$->push_back($1); }
+var_list: /* empty */ { $$ = new list<Variable*>(); }
+        | var { $$->push_back($1); }
 		| var_list COMMA var { $$->push_back($3); }
         ;
 	
@@ -74,8 +76,14 @@ type_decl: KEY_TYPE IDENTIFIER COLON TYPE { $$ = new TypeDecl($2, $4); }
 
 statement: CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
          | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
+         /* this is a shift-reduce, danglig else problem. not sure what to do about that.. */
+         | KEY_IF exp statement elseish { $$ = new IfElse($2, $3, $4); }
          | exp { $$ = $1 }
          ;
+
+elseish: /* empty */ { $$ = NULL; }
+       | KEY_ELSE statement { $$ = $2 }
+       ;
 
 st_block: /* empty */ { $$ = new Block(); }
         | st_block statement { $$->add($2); }
