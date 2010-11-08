@@ -72,6 +72,7 @@ int yylex(void);
 %left OR AND XOR
 %left BIT_SHIFT_LEFT BIT_SHIFT_RIGHT BIT_OR BIT_AND BIT_XOR
 %left PLUS
+%left SUBT
 %left MULT
 
 %%
