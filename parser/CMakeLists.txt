@@ -12,11 +12,6 @@ GENERATE_BISON_FLEX_SOURCES(
   ${CMAKE_CURRENT_SOURCE_DIR}/bison/cbp.lex  ""
   )
 
-# add the current binary dir - where the generated files are
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  )
-
 # grab all source files to build here
 file(GLOB_RECURSE SRCS
   RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}

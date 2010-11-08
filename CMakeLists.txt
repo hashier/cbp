@@ -23,6 +23,12 @@ endif(MSVC)
 
 include(${CMAKE_MODULE_PATH}/FindBison.cmake)
 
+# add the current binary dir - where the generated files are
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/parser
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/symboltable
+  )
+
 if(PARSERS_FOUND)
   message(STATUS "Found Bison and Flex executables!")
 
