@@ -20,7 +20,7 @@ file(GLOB_RECURSE SRCS
 
 # some visual studio dance steps to make headers show up in the file view
 if(WIN32)
-  file(GLOB_RECURSE INCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+  file(GLOB_RECURSE INCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${CBP_MAIN_DIR}/include/*/*.h")
   set_source_files_properties(${INCS} PROPERTIES HEADER_FILE_ONLY true)
   # source_group(Headers FILES ${INCS})
 
