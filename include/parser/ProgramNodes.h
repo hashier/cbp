@@ -1,9 +1,11 @@
 #pragma once
 
 #include"AbstractNodes.h"
+#include "ExprNodes.h"
 
 #include<string>
 #include<iostream>
+#include <memory>
 
 enum SimpleTypeEnum {
   Type_uint8,
@@ -126,6 +128,53 @@ class IfElse : public Statement {
       }
     }
 };
+
+/** Switch-Case-Block. */
+class SwitchCase : public Statement {
+public:
+    struct Case {
+        Case(ConstInt* condition_, Statement* action_)
+            : condition(condition_),
+            action(action_) {}
+            
+        std::auto_ptr<ConstInt> condition;
+        std::auto_ptr<Statement> action;
+    };
+    
+private:
+
+    std::auto_ptr<Expression> condition;
+    std::auto_ptr<std::list<Case*> > cases;
+
+public:
+    SwitchCase(Expression* condition_, std::list<Case*>* cases_)
+        : condition(condition_),
+        cases(cases_) { }
+        
+    ~SwitchCase(){
+        std::list<Case*>::iterator caseIter = cases->begin();
+        for(; caseIter != cases->end(); ++caseIter ){
+            delete (*caseIter);
+        }
+    }
+
+    void dump(int num = 0) {
+        indent(num); std::cout << "SwitchCase {" << std::endl;
+        num += 1;
+        indent(num); std::cout << "Condition:" << std::endl;
+        condition->dump(num + 1);
+        std::list<Case*>::const_iterator caseIter = cases->begin();
+        for(; caseIter != cases->end(); ++caseIter ){
+            indent(num); std::cout << "Case" << std::endl;
+            (*caseIter)->condition->dump(num + 1);
+            indent(num); std::cout << "Action:" << std::endl;
+            (*caseIter)->action->dump(num + 1);
+        }
+        num -= 1;
+        indent(num); std::cout << "}" << std::endl;
+    }
+};
+
 /** Classic While block. */
 class WhileLoop : public Statement {
   Expression* condition;

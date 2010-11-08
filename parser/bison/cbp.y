@@ -4,6 +4,7 @@
 %{
 #include "ExprNodes.h"
 #include "ProgramNodes.h"
+//#include <cstdio>
 
 int yyerror(char *s);
 int yylex(void);
@@ -15,8 +16,10 @@ int yylex(void);
 	Expression*             expr_val;
 	Variable*               var_val;
 	Block*                  block_val;
+	SwitchCase::Case*       case_val;
 	std::list<Variable*>*   var_list;
 	std::list<Expression*>* expr_list;
+	std::list<SwitchCase::Case*>* case_list;
 	TypeDecl*               typeDecl_val;
 	Type*                   type_val;
 	SimpleTypeEnum          simpletype_val;
@@ -31,7 +34,7 @@ int yylex(void);
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN KEY_FOR
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_SWITCH KEY_CASE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN KEY_FOR
 %token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
 %token ASSIGN
@@ -58,6 +61,9 @@ int yylex(void);
 
 %type <var_list>     var_list
 %type <expr_list>    exp_list
+
+%type <case_val>    case
+%type <case_list>   case_list
 
 %type <struct_members_val> struct_members
 
@@ -101,6 +107,13 @@ struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
 
 var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variable($2, $4); }
 
+case: KEY_CASE INTEGER_CONSTANT statement {  $$ = new SwitchCase::Case(new ConstInt($2), $3); }
+
+case_list:
+    case { $$ = new std::list<SwitchCase::Case*>(); $$->push_back($1); }
+    | case_list case { $$->push_back($2); }
+;
+
 statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
            | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
            | KEY_IF exp statement { $$ = new IfElse($2, $3, NULL); }
@@ -109,6 +122,7 @@ statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
            | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
            | KEY_RETURN exp { $$ = new Return($2) }
            | KEY_FOR IDENTIFIER ASSIGN exp DOTDOT exp statement { $$ = new ForLoop($2,$4,$6,$7) }
+           | KEY_SWITCH exp case_list { $$ = new SwitchCase($2, $3) }
            | /* empty */ { $$ = NULL; }
              ;
 

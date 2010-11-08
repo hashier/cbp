@@ -1,7 +1,6 @@
 #pragma once
 
 #include"AbstractNodes.h"
-#include"ProgramNodes.h"
 
 #include<string>
 #include<iostream>
@@ -172,6 +171,7 @@ class ConstFloat : public Constant {
       std::cout << "Const Float: " << value << std::endl;
     }
 };
+#if 0
 class Identifier : public Atom {
   Variable* ref;
 
@@ -180,6 +180,8 @@ class Identifier : public Atom {
     ref->dump(num+1);
   }
 };
+#endif
+class Function;
 class FuncCall : public Atom {
   std::string identifier;
   Function* func;

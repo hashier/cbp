@@ -1,5 +1,7 @@
 #pragma once
 
+#define YYDEBUG 1
+
 #include<list>
 #include<iostream>
 

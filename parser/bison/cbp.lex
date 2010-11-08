@@ -36,6 +36,8 @@ eol			[\r]?[\n]
 "type"          { return KEY_TYPE; }
 "if"            { return KEY_IF; }
 "else"          { return KEY_ELSE; }
+"switch"        { return KEY_SWITCH; }
+"case"          { return KEY_CASE; }
 "while"         { return KEY_WHILE; }
 "return"        { return KEY_RETURN; }
 "abi_c"         { yylval.abi_val = Abi_c; return ABI; }
