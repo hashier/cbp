@@ -32,8 +32,8 @@ int yylex(void);
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
 %token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS
-%token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
-%token TYPE ABI AT DOLLAR BRACKETS_LEFT BRACKETS_RIGHT
+%token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
+%token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
 %token ASSIGN
 
 %token <int_val>	INTEGER_CONSTANT
@@ -85,9 +85,9 @@ type_decl: KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
            ;
 
 type: TYPE
-    | KEY_STRUCT CURLY_LEFT struct_members CURLY_RIGHT { $$ = new TypeStruct($3) }
+    | KEY_STRUCT CURLY_BRACKET_LEFT struct_members CURLY_BRACKET_RIGHT { $$ = new TypeStruct($3) }
     | IDENTIFIER { $$ = new TypeId($1); }
-    | BRACKETS_LEFT BRACKETS_RIGHT type { $$ = new TypeArray($3); }
+    | SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT type { $$ = new TypeArray($3); }
       ;
 
 struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
@@ -97,7 +97,7 @@ struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
 
 var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variable($2, $4); }
 
-statement:   CURLY_LEFT st_block CURLY_RIGHT { $$ = $2 }
+statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
            | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
              /* this is a shift-reduce, danglig else problem. not sure what to do about that.. */
            | KEY_IF exp statement elseish { $$ = new IfElse($2, $3, $4); }

@@ -54,12 +54,12 @@ eol			[\r]?[\n]
 
 "as"            { return KEY_AS; }
 
-"{"             { return CURLY_LEFT; }
-"}"             { return CURLY_RIGHT; }
+"{"             { return CURLY_BRACKET_LEFT; }
+"}"             { return CURLY_BRACKET_RIGHT; }
 "("             { return PAR_LEFT; }
 ")"             { return PAR_RIGHT; }
-"["             { return BRACKETS_LEFT; }
-"]"				{ return BRACKETS_RIGHT; }
+"["             { return SQUARE_BRACKET_LEFT; }
+"]"             { return SQUARE_BRACKET_RIGHT; }
 ":"             { return COLON; }
 "+"             { yylval.string_val = new std::string(yytext); return PLUS; }
 "*"             { yylval.string_val = new std::string(yytext); return MULT; }
