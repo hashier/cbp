@@ -20,3 +20,20 @@ verbleiben, der dementsprechend auch nichts im repo zu suchen hat!
 
 Test:
   ./cbp 5 < ../examples/whatever.cbp
+
+  
+-- HOWTO Visual Studio Solution erzeugen --
+
+CMake für Windows installieren: http://www.cmake.org
+Bison für Windows installieren: http://sourceforge.net/projects/gnuwin32/files/bison/
+Flex für Windows installieren: http://sourceforge.net/projects/gnuwin32/files/flex/
+
+Flex und Bison idealerweise in einen Pfad ohne Leerzeichen, z.B. C:\gnuwin32\, sonst
+gibt es später Probleme
+
+- CMake-GUI starten
+- Per "Browse Source" das Repository auswählen (dort wo die CMakeLists.txt liegt)
+- Per "Browse Build" Pfad auswählen, in den die Projektdateien geschrieben werden sollen
+- "Configure" anklicken, VS Version wählen
+- Wenn Bison und/oder Flex nicht gefunden wurde, den Pfad manuell eintragen (Haken bei "Advanced")
+- Evtl. nochmal "Configure" anklicken, dann "Generate"
