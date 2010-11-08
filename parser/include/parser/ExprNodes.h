@@ -40,6 +40,34 @@ class Binary : public Expression {
     }
 };
 
+class Expr_Assign : public Expression {
+  public:
+    Expr_Assign(Expression *expr) : assigned(expr) {}
+
+    virtual void dump(int num = 0) {
+      indent(num); std::cout << "Assigned:" << std::endl;
+      if(assigned != NULL) {
+        assigned->dump(num + 1);
+      }
+    }
+  private:
+    Expression *assigned;
+};
+
+class Expr_Cast : public Expression {
+  public:
+    Expr_Cast(Type *_castType) : castType(_castType) {}
+
+    virtual void dump(int num = 0) {
+      indent(num); std::cout << "Cast as:" << std::endl;
+      if(castType != NULL) {
+        castType->dump(num + 1);
+      }
+    }
+  private:
+    Type *castType;
+};
+
 // Precedence 9
 class Expr_EQ : public Binary {
   public: Expr_EQ(Expression* left, Expression* right) : Binary(left, right) { }

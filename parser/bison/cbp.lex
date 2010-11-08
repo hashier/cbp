@@ -52,6 +52,8 @@ eol			[\r]?[\n]
 
 "var"           { return KEY_VAR; }
 
+"as"            { return KEY_AS; }
+
 "{"             { return CURLY_LEFT; }
 "}"             { return CURLY_RIGHT; }
 "("             { return PAR_LEFT; }
@@ -63,6 +65,7 @@ eol			[\r]?[\n]
 "*"             { yylval.string_val = new std::string(yytext); return MULT; }
 "@"             { return AT; }
 "$"             { return DOLLAR; }
+"="             { return ASSIGN; }
 
 [ \t]*			{ /* return WHITESPACE; */ }
 {eol}		{ yylineno++; /* return EOL; */ }

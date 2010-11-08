@@ -31,9 +31,10 @@ int yylex(void);
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS
 %token CURLY_LEFT CURLY_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR BRACKETS_LEFT BRACKETS_RIGHT
+%token ASSIGN
 
 %token <int_val>	INTEGER_CONSTANT
 %token <float_val>	FLOAT_CONSTANT
@@ -43,6 +44,8 @@ int yylex(void);
 %type <simpletype_val> TYPE
 %type <func_val>     func_decl
 %type <expr_val>     exp
+%type <expr_val>     exp_assign
+%type <expr_val>     exp_as_type
 %type <statement>    statement
 %type <statement>    elseish
 %type <block_val>    st_block
@@ -122,7 +125,22 @@ exp:   INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
      | exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
      | exp MULT exp	{ $$ = new Expr_Mul($1, $3); }
      | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
+     | exp_cast exp_assign
        ;
+
+exp_assign:   /* empty */ { $$ = NULL; }
+            | ASSIGN exp { $$ = new Expr_Assign($2); }
+              ;
+
+exp_cast:   exp_as_type exp_comp
+            ;
+
+exp_as_type:   /* empty */ { $$ = NULL; }
+             | KEY_AS type { $$ = new Expr_Cast($2); }
+             ;
+
+exp_comp:   /* FIXME: empty */
+            ;
 
 %%
 
