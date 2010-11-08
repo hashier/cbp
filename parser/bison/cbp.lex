@@ -67,6 +67,7 @@ eol			[\r]?[\n]
 "]"             { return SQUARE_BRACKET_RIGHT; }
 ":"             { return COLON; }
 "+"             { yylval.string_val = new std::string(yytext); return PLUS; }
+"-"             { yylval.string_val = new std::string(yytext); return SUBT; }
 "*"             { yylval.string_val = new std::string(yytext); return MULT; }
 "@"             { return AT; }
 "$"             { return DOLLAR; }
@@ -80,6 +81,11 @@ eol			[\r]?[\n]
 "||"            { return OR; }
 "&&"            { return AND; }
 "^^"            { return XOR; }
+"<<"            { return BIT_SHIFT_LEFT; }
+">>"            { return BIT_SHIFT_RIGHT; }
+"|"             { return BIT_OR; }
+"&"             { return BIT_AND; }
+"^"             { return BIT_XOR; }
 ".."            { return DOTDOT; }
 
 [ \t]*          { /* return WHITESPACE; */ }
