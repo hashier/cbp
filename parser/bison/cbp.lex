@@ -37,39 +37,36 @@ eol			[\r]?[\n]
 "abi_c"         { yylval.abi_val = Abi_c; return ABI; }
 "abi_default"   { yylval.abi_val = Abi_default; return ABI; }
 
-"uint8"         { yylval.type_val = new TypeSimple(Type_uint8);   return TYPE; }
-"int8"          { yylval.type_val = new TypeSimple(Type_int8);    return TYPE; }
-"uint16"        { yylval.type_val = new TypeSimple(Type_uint16);  return TYPE; }
-"int16"         { yylval.type_val = new TypeSimple(Type_int16);   return TYPE; }
-"uint32"        { yylval.type_val = new TypeSimple(Type_uint32);  return TYPE; }
-"int32"         { yylval.type_val = new TypeSimple(Type_int32);   return TYPE; }
-"float32"       { yylval.type_val = new TypeSimple(Type_float32); return TYPE; }
-"float64"       { yylval.type_val = new TypeSimple(Type_float64); return TYPE; }
-"void"          { yylval.type_val = new TypeSimple(Type_void);    return TYPE; }
-"local"         { return KEY_LOCAL; }
+"uint8"         { yylval.type_val = Type_uint8;   return TYPE; }
+"int8"          { yylval.type_val = Type_int8;    return TYPE; }
+"uint16"        { yylval.type_val = Type_uint16;  return TYPE; }
+"int16"         { yylval.type_val = Type_int16;   return TYPE; }
+"uint32"        { yylval.type_val = Type_uint32;  return TYPE; }
+"int32"         { yylval.type_val = Type_int32;   return TYPE; }
+"float32"       { yylval.type_val = Type_float32; return TYPE; }
+"float64"       { yylval.type_val = Type_float64; return TYPE; }
+"void"          { yylval.type_val = Type_void;    return TYPE; }
 
-"struct"        { return KEY_STRUCT; }
-
-"var"           { return KEY_VAR; }
-
-"as"            { return KEY_AS; }
-
-"{"             { return CURLY_BRACKET_LEFT; }
-"}"             { return CURLY_BRACKET_RIGHT; }
+"{"             { return CURLY_LEFT; }
+"}"             { return CURLY_RIGHT; }
 "("             { return PAR_LEFT; }
 ")"             { return PAR_RIGHT; }
-"["             { return SQUARE_BRACKET_LEFT; }
-"]"             { return SQUARE_BRACKET_RIGHT; }
 ":"             { return COLON; }
-"+"             { yylval.string_val = new std::string(yytext); return PLUS; }
-"*"             { yylval.string_val = new std::string(yytext); return MULT; }
-"@"             { return AT; }
-"$"             { return DOLLAR; }
-"="             { return ASSIGN; }
+"+"             { return PLUS; }
+"*"             { return MULT; }
+"=="            { return EQ; }
+"!="            { return NEQ; }
+"<="            { return LE; }
+">="            { return GE; }
+"<"             { return LT; }
+">"             { return GT; }
+"||"            { return OR; }
+"&&"            { return AND; }
+"^^"            { return XOR; }
 
 [ \t]*			{ /* return WHITESPACE; */ }
 {eol}		{ yylineno++; /* return EOL; */ }
-[#].*{eol}	{ yylineno++; /* return LINE_COMMENT; */ }
+[#].*{eol}	{ /* return LINE_COMMENT; */ }
 
 {identifier}    { yylval.string_val = new std::string(yytext); return IDENTIFIER; }
 
