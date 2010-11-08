@@ -17,6 +17,15 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D_SCL_SECURE_NO_WARNINGS")
   add_definitions(-DWIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+  find_path(UNISTD_DIR unistd.h
+    PATHS "C:\gnuwin32\include"
+  )
+  message(STATUS "MSVC: Adding ${UNISTD_DIR} to include path")
+  include_directories(
+    ${UNISTD_DIR}
+  )
+
 else(MSVC)
   set(CMAKE_CXX_FLAGS "-Wall -g")
 endif(MSVC)
