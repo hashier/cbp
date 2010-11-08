@@ -146,6 +146,16 @@ class WhileLoop : public Statement {
 /** Returns from outermost function. */
 class Return : public Statement {
   Expression* expr;
+
+  public:
+    Return(Expression* expr) : expr(expr) {
+    }
+
+    void dump(int num = 0) {
+      indent(num); std::cout << "Return" << std::endl;
+	  indent(num); std::cout << "expr:" << std::endl;
+      expr->dump(num+1);      
+    }
 };
 
 class Local : public Statement {

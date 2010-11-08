@@ -34,6 +34,7 @@ eol			[\r]?[\n]
 "if"            { return KEY_IF; }
 "else"          { return KEY_ELSE; }
 "while"         { return KEY_WHILE; }
+"return"        { return KEY_RETURN; }
 "abi_c"         { yylval.abi_val = Abi_c; return ABI; }
 "abi_default"   { yylval.abi_val = Abi_default; return ABI; }
 

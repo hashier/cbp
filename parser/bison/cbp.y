@@ -31,7 +31,7 @@ int yylex(void);
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN
 %token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
 %token ASSIGN
@@ -107,6 +107,7 @@ statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
            | KEY_IF exp statement elseish { $$ = new IfElse($2, $3, $4); }
            | exp { $$ = $1 }
            | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
+		   | KEY_RETURN exp { $$ = new Return($2) }
              ;
 
 elseish: /* empty */ { $$ = NULL; }
