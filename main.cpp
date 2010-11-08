@@ -1,5 +1,7 @@
 #include "main.h"
 
+
+
 // Hauptprogramm für das Compilerbaupraktikum
 // ##########################################
 //
@@ -32,6 +34,7 @@ int main(int argc, char *argv[])
 	extern FILE *yyin;
 	yyin = file;
 
+    //yydebug = 1;
 	//parse file
 	std::cout << "[Parse File]" << std::endl;
 	yyparse();

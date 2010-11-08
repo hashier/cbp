@@ -10,4 +10,5 @@
 
 // prototype of bison-generated parser function
 int yyparse();
+//extern int yydebug;
 
