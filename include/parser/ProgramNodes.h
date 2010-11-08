@@ -115,13 +115,13 @@ class IfElse : public Statement {
     }
 
     void dump(int num = 0) {
-      indent(num); std::cout << "IfElse" << std::endl;
+      indent(num); std::cout << "If" << std::endl;
       indent(num); std::cout << "Condition:" << std::endl;
       condition->dump(num+1);
       indent(num); std::cout << "Then:" << std::endl;
       then->dump(num+1);
       if(otherwise) {
-        indent(num); std::cout << "Otherwise:" << std::endl;
+        indent(num); std::cout << "ELSE" << std::endl;
         otherwise->dump(num+1);
       }
     }
@@ -129,19 +129,19 @@ class IfElse : public Statement {
 /** Classic While block. */
 class WhileLoop : public Statement {
   Expression* condition;
-  Statement* loop;
+  Statement* body;
 
   public:
-    WhileLoop(Expression* condition, Statement* loop) : condition(condition), loop(loop) {
+    WhileLoop(Expression* condition, Statement* body) : condition(condition), body(body) {
     }
 
     void dump(int num = 0) {
       indent(num); std::cout << "While Loop" << std::endl;
       indent(num); std::cout << "Condition:" << std::endl;
-      condition->dump(num+1);
-      indent(num); std::cout << "Loop:" << std::endl;
-      loop->dump(num+1);
-    }
+      if(body==NULL) return;
+	  indent(num); std::cout << "Body:" << std::endl;
+	  body->dump(num+1);
+	}
 };
 /** Returns from outermost function. */
 class Return : public Statement {
@@ -267,7 +267,7 @@ public:
 	}
 
 	void dump(int num = 0) {
-		indent(num); std::cout << "While Loop" << std::endl;
+		indent(num); std::cout << "For Loop" << std::endl;
 		indent(num); std::cout << "Iterator: " << *iterator << std::endl;
 
 		indent(num); std::cout << "InitValue:" << std::endl;

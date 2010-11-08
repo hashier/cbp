@@ -50,7 +50,6 @@ int yylex(void);
 %type <expr_val>     exp_assign
 %type <expr_val>     exp_as_type
 %type <statement>    statement
-%type <statement>    elseish
 %type <block_val>    st_block
 %type <typeDecl_val> type_decl
 %type <abi_val>      abi ABI
@@ -104,18 +103,14 @@ var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variab
 
 statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
            | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
-             /* this is a shift-reduce, danglig else problem. not sure what to do about that.. */
-           | KEY_IF exp statement elseish { $$ = new IfElse($2, $3, $4); }
+           | KEY_IF exp statement { $$ = new IfElse($2, $3, NULL); }
+		   | KEY_IF exp statement KEY_ELSE statement { $$ = new IfElse($2, $3, $5); }
            | exp { $$ = $1 }
            | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
            | KEY_RETURN exp { $$ = new Return($2) }
            | KEY_FOR IDENTIFIER ASSIGN exp DOTDOT exp statement { $$ = new ForLoop($2,$4,$6,$7) }
            | /* empty */ { $$ = NULL; }
              ;
-
-elseish: /* empty */ { $$ = NULL; }
-       | KEY_ELSE statement { $$ = $2 }
-         ;
 
 st_block: /* empty */ { $$ = new Block(); }
         | st_block statement { $$->add($2); }
