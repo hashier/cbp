@@ -35,6 +35,8 @@ int yylex(void);
 %token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
 %token ASSIGN
+%token EQ NEQ LE GE LT GT
+%token OR AND XOR
 
 %token <int_val>	INTEGER_CONSTANT
 %token <float_val>	FLOAT_CONSTANT
@@ -59,6 +61,8 @@ int yylex(void);
 
 %type <struct_members_val> struct_members
 
+%left EQ NEQ GE LE GT LT
+%left OR AND XOR
 %left PLUS
 %left MULT
 
@@ -124,6 +128,15 @@ exp_list:   exp { $$ = new std::list<Expression*>(); $$->push_back($1); }
 exp:   INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
      | exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
      | exp MULT exp	{ $$ = new Expr_Mul($1, $3); }
+     | exp EQ exp       { $$ = new Expr_EQ($1, $3); }
+     | exp NEQ exp      { $$ = new Expr_NEQ($1, $3); }
+     | exp LE exp       { $$ = new Expr_LE($1, $3); }
+     | exp GE exp       { $$ = new Expr_GE($1, $3); }
+     | exp LT exp       { $$ = new Expr_LT($1, $3); }
+     | exp GT exp       { $$ = new Expr_GT($1, $3); }
+     | exp OR exp       { $$ = new Expr_BoolOR($1, $3); }
+     | exp AND exp      { $$ = new Expr_BoolAND($1, $3); }
+     | exp XOR exp      { $$ = new Expr_BoolXOR($1, $3); }
      | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
      | exp_cast exp_assign
        ;

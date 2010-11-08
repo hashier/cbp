@@ -66,6 +66,15 @@ eol			[\r]?[\n]
 "@"             { return AT; }
 "$"             { return DOLLAR; }
 "="             { return ASSIGN; }
+"=="            { return EQ; }
+"!="            { return NEQ; }
+"<="            { return LE; }
+">="            { return GE; }
+"<"             { return LT; }
+">"             { return GT; }
+"||"            { return OR; }
+"&&"            { return AND; }
+"^^"            { return XOR; }
 
 [ \t]*			{ /* return WHITESPACE; */ }
 {eol}		{ yylineno++; /* return EOL; */ }
