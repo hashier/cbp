@@ -31,12 +31,13 @@ int yylex(void);
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN KEY_FOR
 %token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
 %token ASSIGN
 %token EQ NEQ LE GE LT GT
 %token OR AND XOR
+%token DOTDOT
 
 %token <int_val>	INTEGER_CONSTANT
 %token <float_val>	FLOAT_CONSTANT
@@ -107,7 +108,9 @@ statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
            | KEY_IF exp statement elseish { $$ = new IfElse($2, $3, $4); }
            | exp { $$ = $1 }
            | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
-		   | KEY_RETURN exp { $$ = new Return($2) }
+           | KEY_RETURN exp { $$ = new Return($2) }
+           | KEY_FOR IDENTIFIER ASSIGN exp DOTDOT exp statement { $$ = new ForLoop($2,$4,$6,$7) }
+           | /* empty */ { $$ = NULL; }
              ;
 
 elseish: /* empty */ { $$ = NULL; }
@@ -165,7 +168,8 @@ int yyerror(std::string s)
 
 	std::cerr << "ERROR: " << s << " at symbol \"" << yytext;
 	std::cerr << "\" on line " << yylineno << std::endl;
-	exit(1);
+
+    return 0;
 }
 
 int yyerror(char *s)

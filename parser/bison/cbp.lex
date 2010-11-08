@@ -51,6 +51,7 @@ eol			[\r]?[\n]
 "float64"       { yylval.type_val = new TypeSimple(Type_float64); return TYPE; }
 "void"          { yylval.type_val = new TypeSimple(Type_void);    return TYPE; }
 "local"         { return KEY_LOCAL; }
+"for"           { return KEY_FOR; }
 
 "struct"        { return KEY_STRUCT; }
 
@@ -79,10 +80,11 @@ eol			[\r]?[\n]
 "||"            { return OR; }
 "&&"            { return AND; }
 "^^"            { return XOR; }
+".."            { return DOTDOT; }
 
-[ \t]*			{ /* return WHITESPACE; */ }
-{eol}		{ yylineno++; /* return EOL; */ }
-[#].*{eol}	{ yylineno++; /* return LINE_COMMENT; */ }
+[ \t]*          { /* return WHITESPACE; */ }
+{eol}           { yylineno++; /* return EOL; */ }
+[#].*{eol}      { yylineno++; /* return LINE_COMMENT; */ }
 
 {identifier}    { yylval.string_val = new std::string(yytext); return IDENTIFIER; }
 

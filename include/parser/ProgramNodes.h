@@ -254,3 +254,30 @@ class TypeId : public Type {
 			indent(num); std::cout << "TypeId: " << identifier << std::endl;
 		}
 };
+
+/** Classic For Loop */
+class ForLoop : public Statement {
+	std::string* iterator;
+	Expression* init_value;
+	Expression* final_value;
+	Statement* body;
+
+public:
+	ForLoop(std::string* iterator, Expression* init_value, Expression* final_value, Statement* body) : iterator(iterator),init_value(init_value),final_value(final_value),body(body) {
+	}
+
+	void dump(int num = 0) {
+		indent(num); std::cout << "While Loop" << std::endl;
+		indent(num); std::cout << "Iterator: " << *iterator << std::endl;
+
+		indent(num); std::cout << "InitValue:" << std::endl;
+		init_value->dump(num+1);
+
+		indent(num); std::cout << "FinalValue:" << std::endl;
+		final_value->dump(num+1);
+
+		if(body==NULL) return;
+		indent(num); std::cout << "Body:" << std::endl;
+		body->dump(num+1);
+	}
+};

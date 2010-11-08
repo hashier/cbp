@@ -19,21 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\main.h" />
+    <ClInclude Include="..\include\parser\AbstractNodes.h" />
+    <ClInclude Include="..\include\parser\ExprNodes.h" />
+    <ClInclude Include="..\include\parser\ProgramNodes.h" />
+    <ClInclude Include="..\include\symboltable\ArrayType.h" />
+    <ClInclude Include="..\include\symboltable\ConstantDef.h" />
+    <ClInclude Include="..\include\symboltable\Definition.h" />
+    <ClInclude Include="..\include\symboltable\FunctionDef.h" />
+    <ClInclude Include="..\include\symboltable\Scope.h" />
+    <ClInclude Include="..\include\symboltable\SimpleType.h" />
+    <ClInclude Include="..\include\symboltable\StructType.h" />
+    <ClInclude Include="..\include\symboltable\SymbolTable.h" />
+    <ClInclude Include="..\include\symboltable\Type.h" />
+    <ClInclude Include="..\include\symboltable\VariableDef.h" />
     <ClInclude Include="..\parser\bison\cbp.tab.h" />
-    <ClInclude Include="..\parser\include\parser\AbstractNodes.h" />
-    <ClInclude Include="..\parser\include\parser\ExprNodes.h" />
-    <ClInclude Include="..\parser\include\parser\ProgramNodes.h" />
-    <ClInclude Include="..\parser\include\symboltable\ArrayType.h" />
-    <ClInclude Include="..\parser\include\symboltable\ConstantDef.h" />
-    <ClInclude Include="..\parser\include\symboltable\Definition.h" />
-    <ClInclude Include="..\parser\include\symboltable\FunctionDef.h" />
-    <ClInclude Include="..\parser\include\symboltable\Scope.h" />
-    <ClInclude Include="..\parser\include\symboltable\SimpleType.h" />
-    <ClInclude Include="..\parser\include\symboltable\StructType.h" />
-    <ClInclude Include="..\parser\include\symboltable\SymbolTable.h" />
-    <ClInclude Include="..\parser\include\symboltable\Type.h" />
-    <ClInclude Include="..\parser\include\symboltable\VariableDef.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp" />
@@ -44,6 +43,8 @@
     <ClCompile Include="..\parser\src\SymbolTable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\examples\sdl_surface.cbp" />
+    <None Include="..\examples\working.cbp" />
     <None Include="..\parser\bison\cbp.lex" />
     <None Include="..\parser\bison\cbp.y" />
   </ItemGroup>
@@ -103,7 +104,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\parser\include\parser;..\parser\include\symboltable;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
