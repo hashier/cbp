@@ -39,6 +39,7 @@ class Binary : public Expression {
     }
 };
 
+// Precedence 11
 class Expr_Assign : public Expression {
   public:
     Expr_Assign(Expression *expr) : assigned(expr) {}
@@ -53,6 +54,7 @@ class Expr_Assign : public Expression {
     Expression *assigned;
 };
 
+// Precedence 10
 class Expr_Cast : public Expression {
   public:
     Expr_Cast(Type *_castType) : castType(_castType) {}
