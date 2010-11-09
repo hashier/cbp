@@ -3,15 +3,16 @@
 
 #include "Defintion.h"
 #include "Type.h"
+#include "Types.h"
 
 class VariableDef : public Definition
 {
 public:
-	VariableDef(const std::string &identifier, bool initialized, Type &type)
-		: Definition(identifier, initialized), type(type) { }
+    VariableDef(const std::string &identifier, bool initialized, TypeST &type)
+        : Definition(identifier, initialized), type(type) { }
 
 private:
-	Type type;
+    TypeST type;
 
 };
 

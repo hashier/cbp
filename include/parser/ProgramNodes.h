@@ -1,23 +1,12 @@
 #pragma once
 
 #include"AbstractNodes.h"
+#include"Types.h"
 #include "ExprNodes.h"
 
 #include<string>
 #include<iostream>
 #include <memory>
-
-enum SimpleTypeEnum {
-  Type_uint8,
-  Type_int8,
-  Type_uint16,
-  Type_int16,
-  Type_uint32,
-  Type_int32,
-  Type_float32,
-  Type_float64,
-  Type_void
-};
 
 enum Func_abi {
   Abi_c,

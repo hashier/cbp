@@ -2,13 +2,11 @@
 #define TYPE_H_INCLUDED
 
 
-class Type
+class TypeST
 {
 public:
 
-
 private:
-
 
 };
 

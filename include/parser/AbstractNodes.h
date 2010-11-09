@@ -5,16 +5,25 @@
 #include<list>
 #include<iostream>
 
+#include"SymbolTable.h"
+
 // Abstract superclasses a
 
 class Node {
-  public:
+public:
     virtual void dump(int num = 0) = 0;
 
     static void indent(int num) {
       for(int i = 0; i < num; i++)
         std::cout << "\t";
     }
+
+    static void initSymbolTable() {
+        symbolTable = new SymbolTable();
+    }
+
+protected:
+    static SymbolTable *symbolTable;
 };
 
 class Statement : public Node {

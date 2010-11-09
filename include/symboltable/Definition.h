@@ -8,16 +8,16 @@
 class Definition
 {
 public:
-	bool IsInitialized() const { return initialized; }
-	void Initialize();
-	
+    bool isInitialized() const { return initialized; }
+    void initialize();
+    
 protected:
-	Definition(std::string &identifier, bool initialized) 
-		: identifier(identifier), initialized(initialized) { }
+    Definition(std::string &identifier, bool initialized) 
+        : identifier(identifier), initialized(initialized) { }
 
 private:
-	std::string identifier;
-	bool initialized;
+    std::string identifier;
+    bool initialized;
 };
 
 class DefinitionNotFoundException : public std::exception
@@ -30,10 +30,10 @@ class DefinitionNotFoundException : public std::exception
 
 class DefinitionAlreadyExistsException : public std::exception
 {
-  virtual const char* what() const throw()
-  {
-    return "Definition already exists TODO";
-  }
+    virtual const char* what() const throw()
+    {
+        return "Definition already exists TODO";
+    }
 };
 
 #endif // DEFINITION_H_INCLUDED
