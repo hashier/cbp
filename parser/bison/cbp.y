@@ -40,7 +40,8 @@ int yylex(void);
 %token ASSIGN
 %token EQ NEQ LE GE LT GT
 %token OR AND XOR
-%token BIT_SHIFT_LEFT BIT_SHIFT_RIGHT BIT_OR BIT_AND BIT_XOR
+%token BIT_OR BIT_AND BIT_XOR
+%token BIT_LEFT BIT_RIGHT
 %token DOTDOT
 
 %token <int_val>	INTEGER_CONSTANT
@@ -70,9 +71,8 @@ int yylex(void);
 
 %left EQ NEQ GE LE GT LT
 %left OR AND XOR
-%left BIT_SHIFT_LEFT BIT_SHIFT_RIGHT BIT_OR BIT_AND BIT_XOR
-%left PLUS
-%left SUBT
+%left BIT_LEFT BIT_RIGHT BIT_OR BIT_AND BIT_XOR
+%left PLUS SUBT
 %left MULT
 
 %%
@@ -143,7 +143,7 @@ exp_list:   exp { $$ = new std::list<Expression*>(); $$->push_back($1); }
 
 exp:   INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
      | exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
-     | exp SUBT exp	{ $$ = new Expr_Subt($1, $3); }
+     | exp SUBT exp { $$ = new Expr_Sub($1, $3); }
      | exp MULT exp	{ $$ = new Expr_Mul($1, $3); }
      | exp EQ exp       { $$ = new Expr_EQ($1, $3); }
      | exp NEQ exp      { $$ = new Expr_NEQ($1, $3); }
@@ -154,11 +154,11 @@ exp:   INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
      | exp OR exp       { $$ = new Expr_BoolOR($1, $3); }
      | exp AND exp      { $$ = new Expr_BoolAND($1, $3); }
      | exp XOR exp      { $$ = new Expr_BoolXOR($1, $3); }
-     | exp BIT_SHIFT_LEFT  exp { $$ = new Expr_BitShiftLeft($1, $3); }
-     | exp BIT_SHIFT_RIGHT exp { $$ = new Expr_BitShiftRight($1, $3); }
-     | exp BIT_OR exp          { $$ = new Expr_BitOR($1, $3); }
-     | exp BIT_AND exp         { $$ = new Expr_BitAND($1, $3); }
-     | exp BIT_XOR exp         { $$ = new Expr_BitXOR($1, $3); }
+     | exp BIT_LEFT  exp { $$ = new Expr_BitLeft($1, $3); }
+     | exp BIT_RIGHT exp { $$ = new Expr_BitRight($1, $3); }
+     | exp BIT_OR exp    { $$ = new Expr_BitOR($1, $3); }
+     | exp BIT_AND exp   { $$ = new Expr_BitAND($1, $3); }
+     | exp BIT_XOR exp   { $$ = new Expr_BitXOR($1, $3); }
      | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
      | exp_cast exp_assign
        ;

@@ -83,8 +83,8 @@ eol			[\r]?[\n]
 "||"            { return OR; }
 "&&"            { return AND; }
 "^^"            { return XOR; }
-"<<"            { return BIT_SHIFT_LEFT; }
-">>"            { return BIT_SHIFT_RIGHT; }
+"<<"            { return BIT_LEFT; }
+">>"            { return BIT_RIGHT; }
 "|"             { return BIT_OR; }
 "&"             { return BIT_AND; }
 "^"             { return BIT_XOR; }
