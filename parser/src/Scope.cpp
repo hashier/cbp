@@ -17,22 +17,17 @@ void Scope::InsertNewDefinition(const std::string &identifier, Definition *defin
 
 Definition *Scope::GetDefinition(const std::string &identifier) 
 {
-	std::map<std::string, Definition *>::iterator it;
-	it = definitions.find(identifier);
-	
-	if (it == definitions.end())
-	{
-		if (parentScope == NULL)
-		{
-			throw new DefinitionNotFoundException();
-		}
-		else
-		{
-			return parentScope->GetDefinition(identifier);
-		}
-	}
-
-	return it->second;
+    std::map<std::string, Definition *>::iterator it;
+    it = definitions.find(identifier);
+    
+    if (it == definitions.end())
+    {
+        return NULL;
+    }
+    else
+    {
+        return it->second;
+    }
 }
 
 }

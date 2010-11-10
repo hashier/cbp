@@ -1,7 +1,7 @@
 #ifndef SYMBOLTABLE_H_INCLUDED
 #define SYMBOLTABLE_H_INCLUDED
 
-#include<stack>
+#include<list>
 #include "Scope.h"
 
 namespace SymbolTable
@@ -30,7 +30,7 @@ public:
 	Definition *GetDefinition(const std::string &identifier);
 
 private:
-	std::stack<Scope> scopeStack;
+	std::list<Scope> scopes;
 };
 
 }

@@ -12,17 +12,14 @@ namespace SymbolTable
 class Definition
 {
 public:
-    //bool isInitialized() const { return initialized; }
-    //void initialize();
-
     const std::string &getIdentifier() const { return identifier; }
     
     Definition(const std::string &identifier) 
         : identifier(identifier) { }
 
+    virtual ~Definition() { }
+
 protected:
-
-
     std::string identifier;
 };
 
