@@ -105,7 +105,7 @@ type: TYPE
 
 struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
               | struct_members var_decl { $1->push_back($2); }
-              | struct_members var_decl AT INTEGER_CONSTANT { $1->push_back($2); }
+              | struct_members var_decl AT INTEGER_CONSTANT { $1->push_back(new VariableInStruct($2,$4)); }
                 ;
 
 var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variable($2, $4); }

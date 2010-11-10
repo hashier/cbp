@@ -18,11 +18,40 @@ class Variable : public Node {
   Type *type;
 
   public:
+    
+    Variable(){
+    }
+
     Variable(std::string* identifier, Type *type) : identifier(*identifier), type(type) {
     }
 
-    void dump(int num = 0) {
+    virtual void dump(int num = 0) {
         indent(num); std::cout << "Variable '" << identifier << "': " << std::endl;
+        type->dump(num+1);
+    }
+
+    std::string getIdentifier(){
+        return identifier;
+    }
+    
+    Type* getType(){
+        return type;
+    }
+
+};
+
+class VariableInStruct : public Variable {
+  std::string identifier;
+  Type *type;
+  int offset;
+
+  public:
+    VariableInStruct(Variable* variable, int offset = -1) : identifier(variable->getIdentifier()), type(variable->getType()) {
+        this->offset = offset;
+    }
+
+    void dump(int num = 0) {
+        indent(num); std::cout << "StructVariable '" << identifier  << "' @ " << offset << " : " << std::endl;
         type->dump(num+1);
     }
 };
