@@ -40,7 +40,8 @@ int main(int argc, char *argv[])
 	yyparse();
 	std::cout << " -done" << std::endl << std::endl;
 
-	getchar();
+	// Raimar: Have more fun without pressing return...
+//	getchar();
 
 	return 0;
 }
