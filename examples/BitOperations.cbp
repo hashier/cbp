@@ -1,0 +1,26 @@
+func main () : void {
+    local var x : uint32 1
+    local var y : uint32 2
+    local var z : uint32 3
+    1 & 2
+    10 | 1
+    3 ^ 1
+    1 << 3
+    256 >> 8
+#    x = 2
+#    x = 1
+#    y = 2
+#    z = x | y
+#    x = 1
+#    y = 2
+#    z = x & y
+#    x = 1
+#    y = 2
+#    z = x ^ y
+#    x = 1
+#    y = 2
+#    z = x << y
+#    x = 1
+#    y = 2
+#    z = x >> y
+}
