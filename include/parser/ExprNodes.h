@@ -1,11 +1,12 @@
 #pragma once
 
 #include"AbstractNodes.h"
-#include "TypeNode.h"
 
 #include<string>
 #include<iostream>
 #include<typeinfo>
+
+class NodeType;
 
 // Basic types of expressions
 class Unary : public Expression {
