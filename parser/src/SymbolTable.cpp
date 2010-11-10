@@ -31,7 +31,7 @@ Definition *SymbolTable::GetDefinition(const std::string &identifier)
         }
     }
 
-    throw new DefinitionNotFoundException();
+    throw DefinitionNotFoundException();
     return NULL;
 }
 

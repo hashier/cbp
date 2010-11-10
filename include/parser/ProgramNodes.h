@@ -24,26 +24,28 @@ public:
     {
         this->type = new TypeSimple(baseType);
     }
+
     NodeType(std::string *identifier)
     {
-        this->type = new TypeSimple(Type_float64); // TODO type aus symboltabelle holen
-        SymbolTable::Definition *def = symbolTable->GetDefinition(*identifier);
         SymbolTable::TypeDef *tdef = NULL;
-        if (tdef = static_cast<SymbolTable::TypeDef *>(def))
+        try
         {
-            this->type = tdef->getType();
+            if (tdef = dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier)))
+            {
+                this->type = tdef->getType();
+            }
+        }
+        catch (SymbolTable::DefinitionNotFoundException &e)
+        {
+            std::cerr << "Error: Undefined Type: " << *identifier << std::endl;
         }
     }
-    /*
-    NodeType(Type *type_)
-    {
-        this->type = new TypeArray(type_);
-    }
-    */
+
     NodeType(NodeType *type_)
     {
         this->type = new TypeArray(type_->getType());
     }
+
     NodeType(std::list<Variable *>* members);
 
     void dump(int num = 0) {
@@ -126,7 +128,18 @@ class TypeDecl : public Node {
     TypeDecl(std::string* identifier, NodeType *type)
             : identifier(identifier), type(type) 
         {
-            symbolTable->InsertDefinition(new SymbolTable::TypeDef(*identifier, type->getType())); 
+            try
+            {
+                symbolTable->InsertDefinition(new SymbolTable::TypeDef(*identifier, type->getType())); 
+            }
+            catch (SymbolTable::DefinitionAlreadyExistsException &e)
+            {
+                // TODO: the existing definition can also be a VariableDef or a FunctionDef
+                std::cerr << "Error: Definition already exisits: " << std::endl;
+                std::cerr << "'" << *identifier << "' is redefined from '" << 
+                    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier))->getType()->getString()
+                    << "' to '" << type->getType()->getString() << "'." << std::endl;
+            }
         }
 
 	void dump(int num = 0)

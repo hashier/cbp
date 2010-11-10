@@ -11,7 +11,7 @@ void Scope::InsertNewDefinition(const std::string &identifier, Definition *defin
 
 	if (insertTest.second == false)
 	{
-		throw new DefinitionAlreadyExistsException();
+		throw DefinitionAlreadyExistsException();
 	}
 }
 

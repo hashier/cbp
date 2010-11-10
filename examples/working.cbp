@@ -8,6 +8,12 @@ type jan : struct {
 	var x : float32 
 	var y : float32
 	}
+	
+type jan2 : struct {
+	var j : jan
+	var j : jan
+	}
+	
 func main () : void {
    call SDL_Init(0)
    if 1 {
