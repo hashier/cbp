@@ -8,7 +8,7 @@
 // bison generates .hh files in cpp mode
 #include "cbp.tab.h"
 
-#ifdef MSVC 
+#if defined (MSVC) || defined (WIN32)
 int yylineno;
 #endif
 int yyerror(char *s);
