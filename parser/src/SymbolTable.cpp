@@ -1,5 +1,8 @@
 #include "SymbolTable.h"
+#include "Definition.h"
 
+namespace SymbolTable
+{
 
 SymbolTable::SymbolTable()
 {
@@ -16,12 +19,14 @@ void SymbolTable::LeaveCurrentScope()
 	scopeStack.pop();
 }
 
-Definition &SymbolTable::GetDefinition(const std::string &identifier)
+Definition *SymbolTable::GetDefinition(const std::string &identifier)
 {
 	return scopeStack.top().GetDefinition(identifier);
 }
 
-void SymbolTable::InsertDefinition(const std::string &identifier, const Definition &definition)
+void SymbolTable::InsertDefinition(Definition *definition)
 {
-	scopeStack.top().InsertNewDefinition(identifier, definition);
+	scopeStack.top().InsertNewDefinition(definition->getIdentifier(), definition);
+}
+
 }

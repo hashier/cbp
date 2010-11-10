@@ -1,6 +1,7 @@
 #pragma once
 
 #include"AbstractNodes.h"
+#include "TypeNode.h"
 
 #include<string>
 #include<iostream>
@@ -57,16 +58,12 @@ class Expr_Assign : public Expression {
 // Precedence 10
 class Expr_Cast : public Expression {
   public:
-    Expr_Cast(Type *_castType) : castType(_castType) {}
+    Expr_Cast(NodeType *_castType) : castType(_castType) {}
 
-    virtual void dump(int num = 0) {
-      indent(num); std::cout << "Cast as:" << std::endl;
-      if(castType != NULL) {
-        castType->dump(num + 1);
-      }
-    }
+    virtual void dump(int num = 0);
+
   private:
-    Type *castType;
+    NodeType *castType;
 };
 
 // Precedence 9

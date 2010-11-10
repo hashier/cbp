@@ -1,24 +1,42 @@
 #ifndef DEFINITION_H_INCLUDED
 #define DEFINITION_H_INCLUDED
 
-#include "Type.h"
 #include<string>
 #include<exception>
+
+class Type;
+
+namespace SymbolTable
+{
 
 class Definition
 {
 public:
-    bool isInitialized() const { return initialized; }
-    void initialize();
-    
-protected:
-    Definition(std::string &identifier, bool initialized) 
-        : identifier(identifier), initialized(initialized) { }
+    //bool isInitialized() const { return initialized; }
+    //void initialize();
 
-private:
+    const std::string &getIdentifier() const { return identifier; }
+    
+    Definition(const std::string &identifier) 
+        : identifier(identifier) { }
+
+protected:
+
+
     std::string identifier;
-    bool initialized;
 };
+
+class TypeDef : public Definition
+{
+public:
+     TypeDef(const std::string &identifier, Type *type)
+         : Definition(identifier), type(type) { }
+
+protected:
+    Type *type;
+};
+
+
 
 class DefinitionNotFoundException : public std::exception
 {
@@ -35,5 +53,7 @@ class DefinitionAlreadyExistsException : public std::exception
         return "Definition already exists TODO";
     }
 };
+
+}
 
 #endif // DEFINITION_H_INCLUDED

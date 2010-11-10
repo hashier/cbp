@@ -18,12 +18,12 @@ public:
         std::cout << "\t";
     }
 
-    static void initSymbolTable() {
-        symbolTable = new SymbolTable();
-    }
+    //static void initSymbolTable() {
+    //    symbolTable = new SymbolTable::SymbolTable();
+    //}
 
 protected:
-    static SymbolTable *symbolTable;
+    //static SymbolTable::SymbolTable *symbolTable;
 };
 
 class Statement : public Node {
@@ -33,5 +33,3 @@ class Statement : public Node {
 class Expression : public Statement {
 };
 
-class Type : public Node {
-};

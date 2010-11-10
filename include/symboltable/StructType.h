@@ -7,10 +7,11 @@
 class StructType : public Type
 {
 public:
-
+    StructType(std::vector<Type> &elements) 
+        : elements(elements) { }
 
 private:
-	std::vector<Type> elements;
+    std::vector<Type> elements;
 
 };
 

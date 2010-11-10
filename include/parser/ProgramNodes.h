@@ -3,6 +3,9 @@
 #include"AbstractNodes.h"
 #include"Types.h"
 #include "ExprNodes.h"
+#include "TypeNode.h"
+
+#include "VariableDef.h"
 
 #include<string>
 #include<iostream>
@@ -13,16 +16,59 @@ enum Func_abi {
   Abi_default
 };
 
+class Variable;
+
+class NodeType : public Node
+{
+public:
+    NodeType(BaseType baseType)
+    {
+        this->type = new TypeSimple(baseType);
+    }
+    NodeType(std::string *identifier)
+    {
+        this->type = new TypeSimple(Type_float64); // TODO type aus symboltabelle holen
+    }
+    /*
+    NodeType(Type *type_)
+    {
+        this->type = new TypeArray(type_);
+    }
+    */
+    NodeType(NodeType *type_)
+    {
+        this->type = new TypeArray(type_->getType());
+    }
+    NodeType(std::list<Variable *>* members);
+
+    void dump(int num = 0) {
+        indent(num); std::cout << "Type: " << std::endl;
+        if (type != NULL)
+        {
+            indent(num); std::cout << type->getString() << std::endl;
+        }
+        else
+        {
+            indent(num); std::cout << "TODO" << std::endl;
+        }
+    }
+
+    Type *getType() { return type; }
+
+protected:
+    Type *type;
+};
+
 class Variable : public Node {
   std::string identifier;
-  Type *type;
+  NodeType *type;
 
   public:
     
     Variable(){
     }
 
-    Variable(std::string* identifier, Type *type) : identifier(*identifier), type(type) {
+    Variable(std::string* identifier, NodeType *type) : identifier(*identifier), type(type) {
     }
 
     virtual void dump(int num = 0) {
@@ -30,19 +76,13 @@ class Variable : public Node {
         type->dump(num+1);
     }
 
-    std::string getIdentifier(){
-        return identifier;
-    }
-    
-    Type* getType(){
-        return type;
-    }
-
+    std::string &getIdentifier() { return identifier; }
+    NodeType *getType() { return type; }
 };
 
 class VariableInStruct : public Variable {
   std::string identifier;
-  Type *type;
+  NodeType *type;
   int offset;
 
   public:
@@ -79,8 +119,11 @@ class Function : public Node {
 
 class TypeDecl : public Node {
 	public:
-		TypeDecl(std::string* identifier, Type *type)
-			: identifier(identifier), type(type) { }
+    TypeDecl(std::string* identifier, NodeType *type)
+            : identifier(identifier), type(type) 
+        {
+            //symbolTable->InsertDefinition(new SymbolTable::VariableDef(*identifier, false, type->getType())); 
+        }
 
 	void dump(int num = 0)
 	{
@@ -90,7 +133,7 @@ class TypeDecl : public Node {
 
 	private:
 		std::string *identifier;
-		Type *type;
+		NodeType *type;
 };
 
 /** A file holds exactly one Program.
@@ -238,78 +281,10 @@ class Local : public Statement {
   	  }
 };
 
-class TypeStruct : public Type {
-	std::list<Variable*>* typeStruct;
 
-	public:
-	TypeStruct(std::list<Variable*>* typeStruct) : typeStruct(typeStruct) {
-	}
-	void dump(int num = 0) {
-		indent(num); dumpStructsMembers(num);
-	}
 
-	private:
-	void dumpStructsMembers(int num) {
-		std::cout << "Struct" << std::endl;
-		std::list<Variable*>::iterator it;
-		if ( typeStruct ) {
-			for ( it = typeStruct->begin() ; it != typeStruct->end(); it++ ) {
-				(*it)->dump(num+1);
-			}
-		}
-	}
-};
-
-/** Wrapper class for the Type Enum */
-class TypeSimple : public Type {
-	SimpleTypeEnum simpleType;
-
-	public:
-	TypeSimple(SimpleTypeEnum simpleType) : simpleType(simpleType) {
-	}
-	void dump(int num = 0) {
-		indent(num); std::cout << printSimpleTypeEnum(simpleType) << std::endl;
-	}
-
-	static std::string printSimpleTypeEnum(SimpleTypeEnum x) {
-		switch(x) {
-			case Type_uint8:
-				return "uint8";
-			case Type_int8:
-				return "int8";
-			case Type_uint16:
-				return "uint16";
-			case Type_int16:
-				return "int16";
-			case Type_uint32:
-				return "uint32";
-			case Type_int32:
-				return "int32";
-			case Type_float32:
-				return "float32";
-			case Type_float64:
-				return "float64";
-			case Type_void:
-				return "void";
-		}
-		return "SHOULDNTHAPPEN";
-	}
-
-};
-
-class TypeArray : public Type {
-	Type* type;
-
-	public:
-		TypeArray(Type *type): type(type) {}
-
-	    void dump(int num = 0) {
-	        indent(num); std::cout << "TypeArray: " << std::endl;
-	        type->dump(num+1);
-	    }
-};
-
-class TypeId : public Type {
+/*
+class TypeId : public NodeType {
 	std::string identifier;
 
 	public:
@@ -321,6 +296,7 @@ class TypeId : public Type {
 			indent(num); std::cout << "TypeId: " << identifier << std::endl;
 		}
 };
+*/
 
 /** Classic For Loop */
 class ForLoop : public Statement {

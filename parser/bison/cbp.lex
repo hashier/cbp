@@ -43,15 +43,15 @@ eol			[\r]?[\n]
 "abi_c"         { yylval.abi_val = Abi_c; return ABI; }
 "abi_default"   { yylval.abi_val = Abi_default; return ABI; }
 
-"uint8"         { yylval.type_val = new TypeSimple(Type_uint8);   return TYPE; }
-"int8"          { yylval.type_val = new TypeSimple(Type_int8);    return TYPE; }
-"uint16"        { yylval.type_val = new TypeSimple(Type_uint16);  return TYPE; }
-"int16"         { yylval.type_val = new TypeSimple(Type_int16);   return TYPE; }
-"uint32"        { yylval.type_val = new TypeSimple(Type_uint32);  return TYPE; }
-"int32"         { yylval.type_val = new TypeSimple(Type_int32);   return TYPE; }
-"float32"       { yylval.type_val = new TypeSimple(Type_float32); return TYPE; }
-"float64"       { yylval.type_val = new TypeSimple(Type_float64); return TYPE; }
-"void"          { yylval.type_val = new TypeSimple(Type_void);    return TYPE; }
+"uint8"         { yylval.type_val = new NodeType(Type_uint8);   return TYPE; }
+"int8"          { yylval.type_val = new NodeType(Type_int8);    return TYPE; }
+"uint16"        { yylval.type_val = new NodeType(Type_uint16);  return TYPE; }
+"int16"         { yylval.type_val = new NodeType(Type_int16);   return TYPE; }
+"uint32"        { yylval.type_val = new NodeType(Type_uint32);  return TYPE; }
+"int32"         { yylval.type_val = new NodeType(Type_int32);   return TYPE; }
+"float32"       { yylval.type_val = new NodeType(Type_float32); return TYPE; }
+"float64"       { yylval.type_val = new NodeType(Type_float64); return TYPE; }
+"void"          { yylval.type_val = new NodeType(Type_void);    return TYPE; }
 "local"         { return KEY_LOCAL; }
 "for"           { return KEY_FOR; }
 
