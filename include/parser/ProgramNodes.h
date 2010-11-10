@@ -59,6 +59,7 @@ protected:
 };
 
 class Variable : public Node {
+protected:
   std::string identifier;
   NodeType *type;
 
@@ -80,12 +81,10 @@ class Variable : public Node {
 };
 
 class VariableInStruct : public Variable {
-  std::string identifier;
-  NodeType *type;
   int offset;
 
   public:
-    VariableInStruct(Variable* variable, int offset = -1) : identifier(variable->getIdentifier()), type(variable->getType()) {
+    VariableInStruct(Variable* variable, int offset = -1) : Variable(&variable->getIdentifier(), variable->getType()) {
         this->offset = offset;
     }
 

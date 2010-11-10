@@ -3,10 +3,8 @@
 
 NodeType::NodeType(std::list<Variable *>* members)
 {
-    std::cout << "I'm sad, so I will segfault soon." << std::endl;
-    // todo sth.
     std::list<SymbolTable::VariableDef *> *defMembers = new std::list<SymbolTable::VariableDef *>();
-    for (std::list<Variable *>::iterator it; it != members->end(); it++)
+    for (std::list<Variable *>::iterator it = members->begin(); it != members->end(); it++)
     {
         SymbolTable::VariableDef *v = new SymbolTable::VariableDef(
             (*it)->getIdentifier(), 
