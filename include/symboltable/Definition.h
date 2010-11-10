@@ -32,6 +32,8 @@ public:
      TypeDef(const std::string &identifier, Type *type)
          : Definition(identifier), type(type) { }
 
+     Type *getType() { return type; }
+
 protected:
     Type *type;
 };

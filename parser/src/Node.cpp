@@ -1,5 +1,8 @@
 #include "ProgramNodes.h"
 #include "ExprNodes.h"
+#include "AbstractNodes.h"
+
+SymbolTable::SymbolTable *Node::symbolTable = new SymbolTable::SymbolTable(); // wtf
 
 NodeType::NodeType(std::list<Variable *>* members)
 {

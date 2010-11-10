@@ -27,6 +27,12 @@ public:
     NodeType(std::string *identifier)
     {
         this->type = new TypeSimple(Type_float64); // TODO type aus symboltabelle holen
+        SymbolTable::Definition *def = symbolTable->GetDefinition(*identifier);
+        SymbolTable::TypeDef *tdef = NULL;
+        if (tdef = static_cast<SymbolTable::TypeDef *>(def))
+        {
+            this->type = tdef->getType();
+        }
     }
     /*
     NodeType(Type *type_)
@@ -120,7 +126,7 @@ class TypeDecl : public Node {
     TypeDecl(std::string* identifier, NodeType *type)
             : identifier(identifier), type(type) 
         {
-            //symbolTable->InsertDefinition(new SymbolTable::VariableDef(*identifier, false, type->getType())); 
+            symbolTable->InsertDefinition(new SymbolTable::TypeDef(*identifier, type->getType())); 
         }
 
 	void dump(int num = 0)

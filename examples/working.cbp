@@ -4,6 +4,10 @@ var chris3 : uint32
 type hendrik : uint32
 type hendrik1 : [] uint32
 type hendrik2 : hendrik
+type jan : struct { 
+	var x : float32 
+	var y : float32
+	}
 func main () : void {
    call SDL_Init(0)
    if 1 {

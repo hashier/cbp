@@ -69,8 +69,12 @@ public:
         std::string result = "Struct of (";
         for (std::list<SymbolTable::VariableDef *>::const_iterator it = members.begin(); it != members.end(); it++)
         {
+            if (it != members.begin())
+            {
+                result.append(", ");
+            }
             result.append((*it)->getType()->getString());
-            result.append(", ");
+            
         }
         result.append(")");
         return result;
