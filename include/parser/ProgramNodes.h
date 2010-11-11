@@ -280,6 +280,7 @@ class Return : public Statement {
 
     void dump(int num = 0) {
       indent(num); std::cout << "Return" << std::endl;
+      if(expr==NULL) return;
 	  indent(num); std::cout << "expr:" << std::endl;
       expr->dump(num+1);      
     }

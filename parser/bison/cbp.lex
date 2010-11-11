@@ -51,7 +51,7 @@ eol			[\r]?[\n]
 "int32"         { yylval.type_val = new NodeType(Type_int32);   return TYPE; }
 "float32"       { yylval.type_val = new NodeType(Type_float32); return TYPE; }
 "float64"       { yylval.type_val = new NodeType(Type_float64); return TYPE; }
-"void"          { yylval.type_val = new NodeType(Type_void);    return TYPE; }
+"void"          { yylval.type_val = new NodeType(Type_void);    return KEY_VOID; }
 "local"         { return KEY_LOCAL; }
 "for"           { return KEY_FOR; }
 

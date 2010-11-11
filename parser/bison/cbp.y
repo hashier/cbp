@@ -34,7 +34,7 @@ int yylex(void);
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_WHILE KEY_IF KEY_ELSE KEY_SWITCH KEY_CASE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN KEY_FOR
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_VOID KEY_WHILE KEY_IF KEY_ELSE KEY_SWITCH KEY_CASE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN KEY_FOR
 %token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
 %token ASSIGN
@@ -98,6 +98,7 @@ type_decl: KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
            ;
 
 type: TYPE
+    | KEY_VOID
     | KEY_STRUCT CURLY_BRACKET_LEFT struct_members CURLY_BRACKET_RIGHT { $$ = new NodeType($3) }
     | IDENTIFIER { $$ = new NodeType($1); }
     | SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT type { $$ = new NodeType($3); }
@@ -124,6 +125,7 @@ statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
            | exp { $$ = $1 }
            | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
            | KEY_RETURN exp { $$ = new Return($2) }
+           | KEY_RETURN KEY_VOID { $$ = new Return(NULL) }
            | KEY_FOR IDENTIFIER ASSIGN exp DOTDOT exp statement { $$ = new ForLoop($2,$4,$6,$7) }
            | KEY_SWITCH exp case_list { $$ = new SwitchCase($2, $3) }
            | /* empty */ { $$ = NULL; }
@@ -182,7 +184,7 @@ exp_comp:   /* FIXME: empty */
 int yyerror(std::string s)
 {
 	extern int yylineno;   // defined and maintained in lex.c
-	extern char yytext[];  // defined and maintained in lex.c
+	extern char* yytext;  // defined and maintained in lex.c
 
 	std::cerr << "ERROR: " << s << " at symbol \"" << yytext;
 	std::cerr << "\" on line " << yylineno << std::endl;
