@@ -4,21 +4,21 @@
 #include<map>
 #include<string>
 
+class Declaration;
+
 namespace SymbolTable
 {
-
-class Definition;
 
 class Scope
 {
 public:
     Scope() { }
 
-    Definition *GetDefinition(const std::string &identifier);
-    void InsertNewDefinition(const std::string &identifier, Definition *definition);
+    Declaration *GetDefinition(const std::string &identifier);
+    void InsertNewDefinition(const std::string &identifier, Declaration *definition);
 
 private:
-    std::map<std::string, Definition *> definitions;
+    std::map<std::string, Declaration *> definitions;
 };
 
 }

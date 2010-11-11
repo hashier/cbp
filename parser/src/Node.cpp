@@ -4,19 +4,26 @@
 
 SymbolTable::SymbolTable *Node::symbolTable = new SymbolTable::SymbolTable(); // wtf
 
+
+NodeType::NodeType(std::string *identifier)
+{
+    TypeDecl *tdef = NULL;
+    try
+    {
+        if ((tdef = dynamic_cast<TypeDecl *>(symbolTable->GetDefinition(*identifier))))
+        {
+            this->type = tdef->getType()->getType();
+        }
+    }
+    catch (SymbolTable::DefinitionNotFoundException &e)
+    {
+        std::cerr << "Error: Undefined Type: " << *identifier << std::endl;
+    }
+}
+
 NodeType::NodeType(std::list<Variable *>* members)
 {
-    std::list<SymbolTable::VariableDef *> *defMembers = new std::list<SymbolTable::VariableDef *>();
-    for (std::list<Variable *>::iterator it = members->begin(); it != members->end(); it++)
-    {
-        SymbolTable::VariableDef *v = new SymbolTable::VariableDef(
-            (*it)->getIdentifier(), 
-            false, 
-            (*it)->getType()->getType()
-        );
-        defMembers->push_back(v);
-    }
-    type = new TypeStruct(*defMembers);
+    type = new TypeStruct(*members);
 }
 
 void Expr_Cast::dump(int num)

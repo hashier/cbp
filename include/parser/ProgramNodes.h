@@ -4,8 +4,6 @@
 #include"Types.h"
 #include "ExprNodes.h"
 
-#include "VariableDef.h"
-
 #include<string>
 #include<iostream>
 #include <memory>
@@ -17,6 +15,7 @@ enum Func_abi {
 
 class Variable;
 
+
 class NodeType : public Node
 {
     public:
@@ -25,21 +24,7 @@ class NodeType : public Node
             this->type = new TypeSimple(baseType);
         }
 
-        NodeType(std::string *identifier)
-        {
-            SymbolTable::TypeDef *tdef = NULL;
-            try
-            {
-                if ((tdef = dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier))))
-                {
-                    this->type = tdef->getType();
-                }
-            }
-            catch (SymbolTable::DefinitionNotFoundException &e)
-            {
-                std::cerr << "Error: Undefined Type: " << *identifier << std::endl;
-            }
-        }
+        NodeType(std::string *identifier);
 
         NodeType(NodeType *type_)
         {
@@ -66,13 +51,10 @@ class NodeType : public Node
         Type *type;
 };
 
-class Variable : public Node {
+class Variable : public Declaration {
 
     public:
-        Variable(){
-        }
-
-        Variable(std::string* identifier, NodeType *type) : identifier(*identifier), type(type) {
+        Variable(std::string* identifier, NodeType *type) : Declaration(*identifier), type(type) {
         }
 
         virtual void dump(int num = 0) {
@@ -80,11 +62,9 @@ class Variable : public Node {
             type->dump(num+1);
         }
 
-        std::string &getIdentifier() { return identifier; }
         NodeType *getType() { return type; }
 
     protected:
-        std::string identifier;
         NodeType *type;
 
 };
@@ -103,12 +83,11 @@ class VariableInStruct : public Variable {
     }
 };
 
-class Function : public Node {
+class Function : public Declaration {
 
     public:
-        Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement) : abi(abi), arguments(arguments), statement(statement) {
-            this->identifier = *identifier;
-        }
+        Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement) 
+            : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement) { }
 
         void dump(int num = 0) {
             indent(num); std::cout << "Function: " << identifier << std::endl;;
@@ -120,41 +99,40 @@ class Function : public Node {
         }
 
     private:
-        std::string identifier;
         Func_abi abi;
         std::list<Variable*>* arguments;
         Statement* statement;
 
 };
 
-class TypeDecl : public Node {
+class TypeDecl : public Declaration {
 
     public:
         TypeDecl(std::string* identifier, NodeType *type)
-            : identifier(identifier), type(type) 
+            : Declaration(*identifier), type(type) 
         {
             try
             {
-                symbolTable->InsertDefinition(new SymbolTable::TypeDef(*identifier, type->getType())); 
+                symbolTable->InsertDefinition(this); 
             }
             catch (SymbolTable::DefinitionAlreadyExistsException &e)
             {
-                // TODO: the existing definition can also be a VariableDef or a FunctionDef
+                // TODO: the existing definition can also be something else
                 std::cerr << "Error: Definition already exisits: " << std::endl;
-                std::cerr << "'" << *identifier << "' is redefined from '" << 
-                    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier))->getType()->getString()
-                    << "' to '" << type->getType()->getString() << "'." << std::endl;
+                //std::cerr << "'" << *identifier << "' is redefined from '" << 
+                //    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier))->getType()->getString()
+                //    << "' to '" << type->getType()->getString() << "'." << std::endl;
             }
         }
 
         void dump(int num = 0)
         {
-            indent(num); std::cout << "Type declaration: " << *identifier << " of type " << std::endl;
+            indent(num); std::cout << "Type declaration: " << identifier << " of type " << std::endl;
             type->dump(num+1);
         }
 
+        NodeType *getType() { return type; }
     private:
-        std::string *identifier;
         NodeType *type;
 };
 

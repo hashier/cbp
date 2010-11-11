@@ -1,13 +1,14 @@
 #include "Scope.h"
 #include "Definition.h"
+#include "AbstractNodes.h"
 
 namespace SymbolTable
 {
 
-void Scope::InsertNewDefinition(const std::string &identifier, Definition *definition)
+void Scope::InsertNewDefinition(const std::string &identifier, Declaration *definition)
 {
-	std::pair<std::map<std::string,Definition *>::iterator,bool> insertTest;
-	insertTest = definitions.insert(std::pair<std::string, Definition *>(identifier, definition));
+	std::pair<std::map<std::string,Declaration *>::iterator,bool> insertTest;
+	insertTest = definitions.insert(std::pair<std::string, Declaration *>(identifier, definition));
 
 	if (insertTest.second == false)
 	{
@@ -15,9 +16,9 @@ void Scope::InsertNewDefinition(const std::string &identifier, Definition *defin
 	}
 }
 
-Definition *Scope::GetDefinition(const std::string &identifier) 
+Declaration *Scope::GetDefinition(const std::string &identifier) 
 {
-    std::map<std::string, Definition *>::iterator it;
+    std::map<std::string, Declaration *>::iterator it;
     it = definitions.find(identifier);
     
     if (it == definitions.end())

@@ -4,6 +4,8 @@
 #include<list>
 #include "Scope.h"
 
+class Declaration;
+
 namespace SymbolTable
 {
 
@@ -22,15 +24,33 @@ public:
 
 	/// Inserts a new Definition into the current scope. 
 	/// Throws a DefinitionAlreadyExistsException if there is already a definition with that identifier
-	void InsertDefinition(Definition *definition);
+	void InsertDefinition(Declaration *definition);
 
 	/// Returns the definition with given identifier. Starts the search in the current scope and continues
 	/// the search in the parent scope(s)
 	/// Throws a DefinitionNotFoundException if definition is not found
-	Definition *GetDefinition(const std::string &identifier);
+	Declaration *GetDefinition(const std::string &identifier);
 
 private:
 	std::list<Scope> scopes;
+};
+
+
+
+class DefinitionNotFoundException : public std::exception
+{
+  virtual const char* what() const throw()
+  {
+    return "Definition not found TODO";
+  }
+};
+
+class DefinitionAlreadyExistsException : public std::exception
+{
+    virtual const char* what() const throw()
+    {
+        return "Definition already exists TODO";
+    }
 };
 
 }

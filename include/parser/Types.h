@@ -1,5 +1,7 @@
 #include <list>
-#include "VariableDef.h"
+#include <string>
+
+class Variable;
 
 #pragma once
 
@@ -61,27 +63,13 @@ class TypeSimple : public Type
 class TypeStruct : public Type
 {
     public:
-        TypeStruct(const std::list<SymbolTable::VariableDef *> &members)
+        TypeStruct(const std::list<Variable *> &members)
             : members(members) { }
 
-        std::string getString() const
-        {
-            std::string result = "Struct of (";
-            for (std::list<SymbolTable::VariableDef *>::const_iterator it = members.begin(); it != members.end(); it++)
-            {
-                if (it != members.begin())
-                {
-                    result.append(", ");
-                }
-                result.append((*it)->getType()->getString());
-
-            }
-            result.append(")");
-            return result;
-        }
+        std::string getString() const;
 
     protected:
-        std::list<SymbolTable::VariableDef *> members;
+        std::list<Variable *> members;
 };
 
 class TypeArray : public Type
