@@ -17,87 +17,87 @@ enum BaseType {
 
 class Type
 {
-public:
-    virtual std::string getString() const { return "tmp. dummy type"; } //= 0;
+    public:
+        virtual std::string getString() const { return "tmp. dummy type"; } //= 0;
 };
 
 class TypeSimple : public Type
 {
-public:
-    TypeSimple(BaseType baseType)
-        : baseType(baseType) { }
+    public:
+        TypeSimple(BaseType baseType)
+            : baseType(baseType) { }
 
-    std::string getString() const
-    {
-        switch(baseType) 
+        std::string getString() const
         {
-        case Type_uint8:
-            return "uint8";
-        case Type_int8:
-            return "int8";
-        case Type_uint16:
-            return "uint16";
-        case Type_int16:
-            return "int16";
-        case Type_uint32:
-            return "uint32";
-        case Type_int32:
-            return "int32";
-        case Type_float32:
-            return "float32";
-        case Type_float64:
-            return "float64";
-        case Type_void:
-            return "void";
-        default:
-            return "unknown BaseType!";
+            switch(baseType) 
+            {
+                case Type_uint8:
+                    return "uint8";
+                case Type_int8:
+                    return "int8";
+                case Type_uint16:
+                    return "uint16";
+                case Type_int16:
+                    return "int16";
+                case Type_uint32:
+                    return "uint32";
+                case Type_int32:
+                    return "int32";
+                case Type_float32:
+                    return "float32";
+                case Type_float64:
+                    return "float64";
+                case Type_void:
+                    return "void";
+                default:
+                    return "unknown BaseType!";
+            }
         }
-    }
 
-protected:
-    BaseType baseType;
+    protected:
+        BaseType baseType;
 };
 
 class TypeStruct : public Type
 {
-public:
-    TypeStruct(const std::list<SymbolTable::VariableDef *> &members)
-        : members(members) { }
+    public:
+        TypeStruct(const std::list<SymbolTable::VariableDef *> &members)
+            : members(members) { }
 
-    std::string getString() const
-    {
-        std::string result = "Struct of (";
-        for (std::list<SymbolTable::VariableDef *>::const_iterator it = members.begin(); it != members.end(); it++)
+        std::string getString() const
         {
-            if (it != members.begin())
+            std::string result = "Struct of (";
+            for (std::list<SymbolTable::VariableDef *>::const_iterator it = members.begin(); it != members.end(); it++)
             {
-                result.append(", ");
-            }
-            result.append((*it)->getType()->getString());
-            
-        }
-        result.append(")");
-        return result;
-    }
+                if (it != members.begin())
+                {
+                    result.append(", ");
+                }
+                result.append((*it)->getType()->getString());
 
-protected:
-    std::list<SymbolTable::VariableDef *> members;
+            }
+            result.append(")");
+            return result;
+        }
+
+    protected:
+        std::list<SymbolTable::VariableDef *> members;
 };
 
 class TypeArray : public Type
 {
-public:
-    TypeArray(Type *type)
-        : type(type) { }
+    public:
+        TypeArray(Type *type)
+            : type(type) { }
 
-    std::string getString() const
-    {
-        std::string result = "Array of ";
-        result.append(type->getString());
-        return result;
-    }
+        std::string getString() const
+        {
+            std::string result = "Array of ";
+            result.append(type->getString());
+            return result;
+        }
 
-protected:
-    Type *type;
+    protected:
+        Type *type;
 };
 

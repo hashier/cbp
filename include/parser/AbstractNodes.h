@@ -10,17 +10,17 @@
 // Abstract superclasses a
 
 class Node {
-public:
-    virtual void dump(int num = 0) = 0;
+    public:
+        virtual void dump(int num = 0) = 0;
 
-    static void indent(int num) {
-      for(int i = 0; i < num; i++)
-        std::cout << "\t";
-    }
+        static void indent(int num) {
+            for(int i = 0; i < num; i++)
+                std::cout << "\t";
+        }
 
 
-protected:
-    static SymbolTable::SymbolTable *symbolTable;
+    protected:
+        static SymbolTable::SymbolTable *symbolTable;
 };
 
 class Statement : public Node {
