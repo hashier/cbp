@@ -20,7 +20,7 @@ if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
   find_path(UNISTD_DIR unistd.h
-    PATHS "C:\gnuwin32\include"
+    PATHS "C:/gnuwin32/include"
   )
   message(STATUS "MSVC: Adding ${UNISTD_DIR} to include path")
   include_directories(
