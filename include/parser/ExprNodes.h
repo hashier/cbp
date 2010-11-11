@@ -42,29 +42,25 @@ class Binary : public Expression {
 };
 
 // Precedence 11
-class Expr_Assign : public Expression {
-  public:
-    Expr_Assign(Expression *expr) : assigned(expr) {}
+class Expr_Assign : public Binary {
 
-    virtual void dump(int num = 0) {
-      indent(num); std::cout << "Assigned:" << std::endl;
-      if(assigned != NULL) {
-        assigned->dump(num + 1);
-      }
+  public: 
+    Expr_Assign(Expression* left, Expression* right) : Binary(left, right) { 
+        // TODO typecheck, left side can only be a single IDENTIFIER node!
     }
-  private:
-    Expression *assigned;
+
 };
 
 // Precedence 10
 class Expr_Cast : public Expression {
   public:
-    Expr_Cast(NodeType *_castType) : castType(_castType) {}
+    Expr_Cast(NodeType *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
 
     virtual void dump(int num = 0);
 
   private:
-    NodeType *castType;
+    NodeType* castType;
+    Expression* expr;
 };
 
 // Precedence 9
