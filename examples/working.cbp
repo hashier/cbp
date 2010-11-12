@@ -34,8 +34,9 @@ func main () : void {
         case 1 0
         case 2 0
    while 1 {
-#     for y = 0 .. 600
-#       for x = 0 .. 800
+      for y = 0 .. 600 by 1 
+         for x = 0 .. 800 by 2 {
+         }
 #         screen[0].pixels[x + 800 * y] =
 #           ((x | y + i) + 4 * i) +
 #           256 * ((x + 3 * i & y) + 5 * i) +

@@ -336,8 +336,12 @@ class Local : public Statement {
 class ForLoop : public Statement {
 
     public:
-        ForLoop(std::string* iterator, Expression* init_value, Expression* final_value, Statement* body) : iterator(iterator),init_value(init_value),final_value(final_value),body(body) {
-        }
+        //ForLoop without step expression
+        ForLoop(std::string* iterator, Expression* init_value, Expression* final_value, Statement* body) :
+                iterator(iterator),init_value(init_value),final_value(final_value),body(body) {}
+        //ForLoop with step expression
+        ForLoop(std::string* iterator, Expression* init_value, Expression* final_value, Expression* step, Statement* body) :
+                iterator(iterator),init_value(init_value),final_value(final_value),step(step),body(body) {}
 
         void dump(int num = 0) {
             indent(num); std::cout << "For Loop" << std::endl;
@@ -349,6 +353,11 @@ class ForLoop : public Statement {
             indent(num); std::cout << "FinalValue:" << std::endl;
             final_value->dump(num+1);
 
+            if(step!=NULL) {
+              indent(num); std::cout << "Step:" << std::endl;
+              step->dump(num+1);
+            }
+
             if(body==NULL) return;
             indent(num); std::cout << "Body:" << std::endl;
             body->dump(num+1);
@@ -358,6 +367,7 @@ class ForLoop : public Statement {
         std::string* iterator;
         Expression* init_value;
         Expression* final_value;
+        Expression* step;
         Statement* body;
 
 };

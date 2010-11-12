@@ -34,10 +34,10 @@ int yylex(void);
 %start input
 
 %token LETTER DIGIT WHITESPACE LINE_COMMENT EOL
-%token KEY_FUNC KEY_CALL KEY_TYPE KEY_VOID KEY_WHILE KEY_IF KEY_ELSE KEY_SWITCH KEY_CASE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN KEY_FOR
+%token KEY_FUNC KEY_CALL KEY_TYPE KEY_VOID KEY_WHILE KEY_IF KEY_ELSE KEY_SWITCH KEY_CASE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_AS KEY_RETURN
 %token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
-%token DOTDOT
+%token KEY_FOR KEY_DOTDOT KEY_BY
 
 /* expressions need associativity and precedence */
 %left ASSIGN
@@ -47,9 +47,9 @@ int yylex(void);
 %left PLUS SUBT
 %left MULT
 
-%token <int_val>	INTEGER_CONSTANT
-%token <float_val>	FLOAT_CONSTANT
-%token <string_val>	IDENTIFIER
+%token <int_val>    INTEGER_CONSTANT
+%token <float_val>  FLOAT_CONSTANT
+%token <string_val> IDENTIFIER
 
 %type <type_val>     type
 %type <type_val>     TYPE
@@ -120,7 +120,8 @@ statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
          | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
          | KEY_RETURN exp { $$ = new Return($2) }
          | KEY_RETURN KEY_VOID { $$ = new Return(NULL) }
-         | KEY_FOR IDENTIFIER ASSIGN exp DOTDOT exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new ForLoop($2,$4,$6,$7) }
+         | KEY_FOR IDENTIFIER ASSIGN exp KEY_DOTDOT exp statement            { Node::symbolTable->leaveCurrentScope(); $$ = new ForLoop($2,$4,$6,$7) }
+         | KEY_FOR IDENTIFIER ASSIGN exp KEY_DOTDOT exp KEY_BY exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new ForLoop($2,$4,$6,$8,$9) }
          | KEY_SWITCH exp case_list { $$ = new SwitchCase($2, $3) }
          ;
 

@@ -39,7 +39,9 @@ eol			[\r]?[\n]
 "switch"        { return KEY_SWITCH; }
 "case"          { return KEY_CASE; }
 "while"         { Node::symbolTable->enterNewScope(); return KEY_WHILE; }
-"for"           { Node::symbolTable->leaveCurrentScope(); return KEY_FOR; }
+"for"           { Node::symbolTable->enterNewScope(); return KEY_FOR; }
+".."            { return KEY_DOTDOT; }
+"by"            { return KEY_BY; }
 "return"        { return KEY_RETURN; }
 "abi_c"         { yylval.abi_val = Abi_c; return ABI; }
 "abi_default"   { yylval.abi_val = Abi_default; return ABI; }
@@ -89,7 +91,6 @@ eol			[\r]?[\n]
 "|"             { return BIT_OR; }
 "&"             { return BIT_AND; }
 "^"             { return BIT_XOR; }
-".."            { return DOTDOT; }
 
 [ \t]*          { /* return WHITESPACE; */ }
 {eol}           { yylineno++; /* return EOL; */ }
