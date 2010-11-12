@@ -1,7 +1,5 @@
 #include "main.h"
 
-
-
 // Hauptprogramm für das Compilerbaupraktikum
 // ##########################################
 //
@@ -40,8 +38,9 @@ int main(int argc, char *argv[])
 	yyparse();
 	std::cout << " -done" << std::endl << std::endl;
 
-	// Raimar: Have more fun without pressing return...
-//	getchar();
+#if defined (MSVC)
+	getchar();
+#endif
 
 	return 0;
 }

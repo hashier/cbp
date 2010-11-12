@@ -30,34 +30,16 @@
     <ClInclude Include="..\include\parser\ProgramNodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\symboltable\ArrayType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\symboltable\ConstantDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\symboltable\Definition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\symboltable\FunctionDef.h">
+    <ClInclude Include="..\include\parser\Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\symboltable\Scope.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\symboltable\SimpleType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\symboltable\StructType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\symboltable\SymbolTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\symboltable\Type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\symboltable\VariableDef.h">
+    <ClInclude Include="..\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,13 +53,16 @@
     <ClCompile Include="..\parser\bison\lex.yy.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\parser\src\Scope.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\parser\src\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\parser\src\Scope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\parser\src\SymbolTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\parser\src\Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

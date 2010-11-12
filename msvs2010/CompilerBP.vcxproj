@@ -22,16 +22,10 @@
     <ClInclude Include="..\include\parser\AbstractNodes.h" />
     <ClInclude Include="..\include\parser\ExprNodes.h" />
     <ClInclude Include="..\include\parser\ProgramNodes.h" />
-    <ClInclude Include="..\include\symboltable\ArrayType.h" />
-    <ClInclude Include="..\include\symboltable\ConstantDef.h" />
-    <ClInclude Include="..\include\symboltable\Definition.h" />
-    <ClInclude Include="..\include\symboltable\FunctionDef.h" />
+    <ClInclude Include="..\include\parser\Types.h" />
     <ClInclude Include="..\include\symboltable\Scope.h" />
-    <ClInclude Include="..\include\symboltable\SimpleType.h" />
-    <ClInclude Include="..\include\symboltable\StructType.h" />
     <ClInclude Include="..\include\symboltable\SymbolTable.h" />
-    <ClInclude Include="..\include\symboltable\Type.h" />
-    <ClInclude Include="..\include\symboltable\VariableDef.h" />
+    <ClInclude Include="..\main.h" />
     <ClInclude Include="..\parser\bison\cbp.tab.h" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +35,7 @@
     <ClCompile Include="..\parser\src\Node.cpp" />
     <ClCompile Include="..\parser\src\Scope.cpp" />
     <ClCompile Include="..\parser\src\SymbolTable.cpp" />
+    <ClCompile Include="..\parser\src\Types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\examples\sdl_surface.cbp" />
@@ -104,7 +99,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -117,7 +113,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\parser\include\parser;..\parser\include\symboltable;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -132,7 +129,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\parser\include\parser;..\parser\include\symboltable;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -149,7 +147,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\parser\include\parser;..\parser\include\symboltable;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
