@@ -1,5 +1,4 @@
 #include "SymbolTable.h"
-#include "Definition.h"
 #include "AbstractNodes.h"
 
 namespace SymbolTable
@@ -10,17 +9,17 @@ SymbolTable::SymbolTable()
     scopes.push_back(Scope());
 }
 
-void SymbolTable::EnterNewScope()
+void SymbolTable::enterNewScope()
 {
     scopes.push_back(Scope());
 }
 
-void SymbolTable::LeaveCurrentScope()
+void SymbolTable::leaveCurrentScope()
 {
     scopes.pop_back();
 }
 
-Declaration *SymbolTable::GetDefinition(const std::string &identifier)
+Declaration *SymbolTable::getDefinition(const std::string &identifier)
 {
     Declaration *result = NULL;
     for (std::list<Scope>::iterator it = scopes.begin(); it != scopes.end(); it++)
@@ -36,7 +35,7 @@ Declaration *SymbolTable::GetDefinition(const std::string &identifier)
     return NULL;
 }
 
-void SymbolTable::InsertDefinition(Declaration *definition)
+void SymbolTable::insertDefinition(Declaration *definition)
 {
     scopes.back().InsertNewDefinition(definition->getIdentifier(), definition);
 }

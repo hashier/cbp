@@ -41,7 +41,7 @@ class NodeType : public Node
             }
             else
             {
-                indent(num); std::cout << "TODO" << std::endl;
+                indent(num); std::cout << "TODO (undefined type)" << std::endl;
             }
         }
 
@@ -55,6 +55,14 @@ class Variable : public Declaration {
 
     public:
         Variable(std::string* identifier, NodeType *type) : Declaration(*identifier), type(type) {
+            try 
+            {
+                symbolTable->insertDefinition(this);
+            }
+            catch (SymbolTable::DefinitionAlreadyExistsException &e)
+            {
+                std::cerr << "Error: Variable already declared in current scope: " << *identifier << std::endl;
+            }
         }
 
         virtual void dump(int num = 0) {
@@ -87,7 +95,17 @@ class Function : public Declaration {
 
     public:
         Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement) 
-            : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement) { }
+            : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement) 
+        { 
+            try
+            {
+                symbolTable->insertDefinition(this);
+            }
+            catch (SymbolTable::DefinitionAlreadyExistsException &e)
+            {
+                std::cerr << "Error: Function already declared in current Scope: " << *identifier << std::endl;
+            }
+        }
 
         void dump(int num = 0) {
             indent(num); std::cout << "Function: " << identifier << std::endl;;
@@ -113,7 +131,7 @@ class TypeDecl : public Declaration {
         {
             try
             {
-                symbolTable->InsertDefinition(this); 
+                symbolTable->insertDefinition(this); 
             }
             catch (SymbolTable::DefinitionAlreadyExistsException &e)
             {

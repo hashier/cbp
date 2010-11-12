@@ -19,7 +19,6 @@ class Node {
         }
 
 
-    protected:
         static SymbolTable::SymbolTable *symbolTable;
 };
 

@@ -79,7 +79,7 @@ input: /* empty */
      | input func_decl { $2->dump(); }
      ;
 
-func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { $$ = new Function($3, $2, $5, $9); }
+func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { Node::symbolTable->leaveCurrentScope(); $$ = new Function($3, $2, $5, $9); }
            ;
 
 var: IDENTIFIER COLON type { $$ = new Variable($1, $3); }
@@ -113,14 +113,14 @@ case_list: /* empty */ { $$ = new std::list<SwitchCase::Case*>(); }
          ;
 
 statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
-         | KEY_WHILE exp statement { $$ = new WhileLoop($2, $3); }
-         | KEY_IF exp statement { $$ = new IfElse($2, $3, NULL); }
-         | KEY_IF exp statement KEY_ELSE statement { $$ = new IfElse($2, $3, $5); }
+         | KEY_WHILE exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new WhileLoop($2, $3); }
+         | KEY_IF exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new IfElse($2, $3, NULL); }
+         | KEY_IF exp statement KEY_ELSE statement { Node::symbolTable->leaveCurrentScope(); $$ = new IfElse($2, $3, $5); }
          | exp { $$ = $1 }
          | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
          | KEY_RETURN exp { $$ = new Return($2) }
          | KEY_RETURN KEY_VOID { $$ = new Return(NULL) }
-         | KEY_FOR IDENTIFIER ASSIGN exp DOTDOT exp statement { $$ = new ForLoop($2,$4,$6,$7) }
+         | KEY_FOR IDENTIFIER ASSIGN exp DOTDOT exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new ForLoop($2,$4,$6,$7) }
          | KEY_SWITCH exp case_list { $$ = new SwitchCase($2, $3) }
          ;
 

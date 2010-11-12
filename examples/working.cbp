@@ -8,9 +8,11 @@ type jan : struct {
 	var x : float32 
 	var y : float32
 	}
-	
+
+var j : float32
+
 type jan2 : struct {
-	var j : jan
+	var i : jan
 	var j : jan
 	}
 	

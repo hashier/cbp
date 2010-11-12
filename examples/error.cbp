@@ -2,3 +2,7 @@ type miep : int32
 type miep : float32
 
 type moep : fiep
+
+var j : float32
+var j : uint32
+

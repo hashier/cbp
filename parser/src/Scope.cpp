@@ -1,5 +1,4 @@
 #include "Scope.h"
-#include "Definition.h"
 #include "AbstractNodes.h"
 
 namespace SymbolTable

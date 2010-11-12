@@ -31,14 +31,15 @@ eol			[\r]?[\n]
 {int_const}     { yylval.int_val = atoi(yytext); return INTEGER_CONSTANT; }
 {float_const}   { yylval.float_val = (float)atof(yytext); return FLOAT_CONSTANT; }
 
-"func"          { return KEY_FUNC; }
+"func"          { Node::symbolTable->enterNewScope(); return KEY_FUNC; }
 "call"          { return KEY_CALL; }
 "type"          { return KEY_TYPE; }
-"if"            { return KEY_IF; }
+"if"            { Node::symbolTable->enterNewScope(); return KEY_IF; }
 "else"          { return KEY_ELSE; }
 "switch"        { return KEY_SWITCH; }
 "case"          { return KEY_CASE; }
-"while"         { return KEY_WHILE; }
+"while"         { Node::symbolTable->enterNewScope(); return KEY_WHILE; }
+"for"           { Node::symbolTable->leaveCurrentScope(); return KEY_FOR; }
 "return"        { return KEY_RETURN; }
 "abi_c"         { yylval.abi_val = Abi_c; return ABI; }
 "abi_default"   { yylval.abi_val = Abi_default; return ABI; }
@@ -53,7 +54,7 @@ eol			[\r]?[\n]
 "float64"       { yylval.type_val = new NodeType(Type_float64); return TYPE; }
 "void"          { yylval.type_val = new NodeType(Type_void);    return KEY_VOID; }
 "local"         { return KEY_LOCAL; }
-"for"           { return KEY_FOR; }
+
 
 "struct"        { return KEY_STRUCT; }
 
@@ -61,8 +62,8 @@ eol			[\r]?[\n]
 
 "as"            { return KEY_AS; }
 
-"{"             { return CURLY_BRACKET_LEFT; }
-"}"             { return CURLY_BRACKET_RIGHT; }
+"{"             { Node::symbolTable->enterNewScope(); return CURLY_BRACKET_LEFT; }
+"}"             { Node::symbolTable->leaveCurrentScope(); return CURLY_BRACKET_RIGHT; }
 "("             { return PAR_LEFT; }
 ")"             { return PAR_RIGHT; }
 "["             { return SQUARE_BRACKET_LEFT; }

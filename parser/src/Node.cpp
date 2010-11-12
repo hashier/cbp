@@ -10,7 +10,7 @@ NodeType::NodeType(std::string *identifier)
     TypeDecl *tdef = NULL;
     try
     {
-        if ((tdef = dynamic_cast<TypeDecl *>(symbolTable->GetDefinition(*identifier))))
+        if ((tdef = dynamic_cast<TypeDecl *>(symbolTable->getDefinition(*identifier))))
         {
             this->type = tdef->getType()->getType();
         }
