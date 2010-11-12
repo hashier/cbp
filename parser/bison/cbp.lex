@@ -9,7 +9,7 @@
 #include "cbp.tab.h"
 
 #if defined (MSVC) || defined (WIN32)
-int yylineno;
+int yylineno = 1; // first line number is 1
 #endif
 int yyerror(char *s);
 %}
