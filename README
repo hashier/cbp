@@ -1,0 +1,57 @@
+file ::= ( type_decl | var_decl | func_decl )*                                     --Stefan
+
+var_decl ::= 'var' IDENTIFIER ':' type ;                                           --Stefan
+
+func_decl ::= 'func' abi IDENTIFIER func_args ':' type statement? ;                --Christopher
+func_args ::= '(' ( IDENTIFIER ':' type )* ')' ;                                   --Christopher
+abi ::= | 'abi_c' | 'abi_default' ;                                                --Christopher
+
+type_decl ::= 'type' IDENTIFIER ':' type ;                                         --Jan
+type ::= 'uint8' | 'int8' | 'uint16' | 'int16' | 'uint32' | 'int32'                --Jan
+| 'float32' | 'float64'                                                            --Jan
+| 'void'                                                                           --Jan
+| 'struct' '{' struct_member* '}'                                                  --Alexander
+| IDENTIFIER                                                                       --Hendrik
+| '[]' type                                                                        --Hendrik
+;
+
+struct_member ::= var_decl ('@' INT_CONSTANT)? ;                                   --Alexander
+statement ::= expr                                                                 --Martin
+| 'local' var_decl                                                                 --Stefan
+| 'if' expr statement ( 'else' statement )?                                        --David
+| 'while' expr statement                                                           --David
+| 'switch' expr (  'case' INT_CONSTANT statement )*                                --Henning
+| 'for' IDENTIFIER '=' expr '..' expr ( 'by' expr )? statement                     --Torben
+| '{' statement* '}'                                                               --Johannes
+| 'return' expr                                                                    --Johannes
+| 'return' 'void'                                                                  --Johannes
+;
+
+expr ::= expr_assign ;                                                             --Martin
+expr_assign ::= expr_cast ( '=' expr )? ;                                          --Martin
+expr_cast ::= ('as' type)? expr_comp ;                                             --Martin
+expr_comp ::= expr_log ( ('==' | '!=' | '<=' | '>=' | '<' | '>') expr_log )* ;     --Matthias
+expr_log ::= expr_bit2 ( ('||' | '&&' | '^^') expr_bit2 )* ;                       --Matthias
+expr_bit2 ::= expr_bit ( ('<<' | '>>') expr_bit )* ;                               --Raimar
+expr_bit ::= expr_add ( ('|' | '&' | '^') expr_add )* ;                            --Raimar
+expr_add ::= expr_mul ( ('+' | '-') expr_mul )* ;                                  --Raimar
+expr_mul ::= expr_ptr ( ('*' | '/' | '%') expr_ptr )* ;                            --Vincent
+expr_ptr ::= expr_struc ( '$' )* ;                                                 --Alexander
+expr_struc ::= expr_atom ( ( '.' IDENTIFIER | '[' expr ']' ) )* ;                  --Alexander
+expr_atom ::= '(' expr ')'                                                         --Vincent
+| INT_CONSTANT                                                                     --Vincent
+| FLOAT_CONSTANT                                                                   --Vincent
+| IDENTIFIER                                                                       --Vincent
+| 'call' IDENTIFIER '(' expr* ')'                                                  --Christopher
+;
+
+IDENTIFIER ::= LETTER ( LETTER | DIGIT )* ;                                        -- Gehört zum Lexer vvvvvvvvvvvvvv
+
+LETTER ::= 'a' .. 'z' | 'A' .. 'Z' | '_' ;
+DIGIT ::= '0' .. '9' ;
+
+INT_CONSTANT ::= '-'? DIGIT+ ;
+FLOAT_CONSTANT ::= '-'? DIGIT+ '.' DIGIT+ ;
+
+WHITESPACE  ::= ( '\t' | ' ' | '\n' | '\r' )+
+LINE_COMMENT  ::= '#' ~('\n'|'\r')* '\r'? '\n'
