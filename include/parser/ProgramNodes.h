@@ -109,7 +109,7 @@ class Function : public Declaration {
 
         void dump(int num = 0) {
             indent(num); std::cout << "Function: " << identifier << std::endl;;
-            indent(num); std::cout << "Statement: ";
+            indent(num); std::cout << "Statement: " << std::endl;
             if(statement)
                 statement->dump(num+1);
             else
