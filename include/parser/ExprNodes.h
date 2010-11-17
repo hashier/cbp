@@ -167,16 +167,17 @@ class ConstFloat : public Constant {
             std::cout << "Const Float: " << value << std::endl;
         }
 };
-#if 0
-class Identifier : public Atom {
-    Variable* ref;
 
-    void dump(int num = 0) {
-        indent(num); std::cout << "Const Identifier:" << std::endl;
-        ref->dump(num+1);
-    }
+class Variable;
+class Expr_Identifier : public Atom {
+private:
+    Variable* ref;
+public:
+    Expr_Identifier(std::string *identifier);
+
+    void dump(int num = 0); 
 };
-#endif
+
 class Function;
 class FuncCall : public Atom {
     Function* func;

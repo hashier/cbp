@@ -45,7 +45,7 @@ func main () : void {
 #           65536 * ((x - 4 * i ^ y - 2 * i) + 6 *i)
 #     call SDL_UnlockSurface(screen)
 #     call SDL_UpdateRect(screen 0 0 0 0)
-#     i = i +1
+     i = i +1
    }
 #   call SDL_Flip(screen)
 #   while 1 0

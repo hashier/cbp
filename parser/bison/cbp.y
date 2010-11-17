@@ -157,6 +157,7 @@ exp: INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
    | exp BIT_OR exp    { $$ = new Expr_BitOR($1, $3); }
    | exp BIT_AND exp   { $$ = new Expr_BitAND($1, $3); }
    | exp BIT_XOR exp   { $$ = new Expr_BitXOR($1, $3); }
+   | IDENTIFIER        { $$ = new Expr_Identifier($1); }
    | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
    | KEY_AS type exp { $$ = new Expr_Cast($2, $3); }
    | exp ASSIGN exp { $$ = new Expr_Assign($1, $3); }

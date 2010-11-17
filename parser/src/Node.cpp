@@ -56,3 +56,25 @@ void FuncCall::dump(int num)
 {
     indent(num); std::cout << "Function Call: " << func->getIdentifier() << std::endl;
 }
+
+Expr_Identifier::Expr_Identifier(std::string *identifier)
+{
+    try
+    {
+        ref = dynamic_cast<Variable *>(symbolTable->getDefinition(*identifier));
+        if (ref == NULL)
+        {
+            std::cerr << "Error: Identifier '" << *identifier << "' in Expression is not declared as a variable." << std::endl;
+        }
+    }
+    catch (SymbolTable::DefinitionNotFoundException &e)
+    {
+        std::cerr << "Error: Undefined identifier in Expression: '" << *identifier << "'." << std::endl;
+    }
+}
+
+
+void Expr_Identifier::dump(int num) {
+    indent(num); std::cout << "Identifier in Expression:" << std::endl;
+    ref->dump(num+1);
+}
