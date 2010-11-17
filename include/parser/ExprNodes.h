@@ -179,19 +179,13 @@ class Identifier : public Atom {
 #endif
 class Function;
 class FuncCall : public Atom {
-    std::string identifier;
     Function* func;
     std::list<Expression*> exprs;
 
     public:
-        FuncCall(std::string* identifier, std::list<Expression*>* exprs) {
-            // is this safe?
-            this->identifier = *identifier;
-        }
+        FuncCall(std::string* identifier, std::list<Expression*>* exprs);
 
-        void dump(int num = 0) {
-            indent(num); std::cout << "Function Call: " << identifier << std::endl;
-        }
+        void dump(int num = 0);
 
 };
 

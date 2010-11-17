@@ -36,6 +36,8 @@ public:
         : identifier(identifier) { }
     std::string &getIdentifier() { return identifier; }
 
+    virtual ~Declaration() { }
+
 protected:
     std::string identifier;
 };

@@ -34,3 +34,26 @@ void Expr_Cast::dump(int num)
       }
 }
 
+
+
+FuncCall::FuncCall(std::string* identifier, std::list<Expression*>* exprs) 
+{
+    try 
+    {
+        func = NULL;
+        func = dynamic_cast<Function *>(Node::symbolTable->getDefinition(*identifier));
+        if (func == NULL)
+        {
+            std::cerr << "Error: Identifier '" << *identifier << "' is not a function, but is used as a function." << std::endl;
+        }
+    }
+    catch (SymbolTable::DefinitionNotFoundException &e)
+    {
+        std::cerr << "Error: Call to undeclared Function: " << *identifier << std::endl;
+    }
+}
+
+void FuncCall::dump(int num) 
+{
+    indent(num); std::cout << "Function Call: " << func->getIdentifier() << std::endl;
+}

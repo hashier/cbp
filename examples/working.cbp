@@ -16,6 +16,8 @@ type jan2 : struct {
 	var j : jan
 	}
 	
+func SDL_Init (flags:uint32) : uint32	
+	
 func main () : void {
    call SDL_Init(0)
    if 1 {

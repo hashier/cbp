@@ -94,7 +94,7 @@ class VariableInStruct : public Variable {
 class Function : public Declaration {
 
     public:
-        Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement) 
+        Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement = NULL) 
             : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement) 
         { 
             try
@@ -113,7 +113,7 @@ class Function : public Declaration {
             if(statement)
                 statement->dump(num+1);
             else
-                std::cout << "NULL" << std::endl;
+                std::cout << "NULL (only declaration)" << std::endl;
         }
 
     private:

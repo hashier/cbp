@@ -80,6 +80,7 @@ input: /* empty */
      ;
 
 func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { Node::symbolTable->leaveCurrentScope(); $$ = new Function($3, $2, $5, $9); }
+     | KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type { $$ = new Function($3, $2, $5); }
            ;
 
 var: IDENTIFIER COLON type { $$ = new Variable($1, $3); }
