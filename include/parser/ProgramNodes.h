@@ -337,15 +337,45 @@ class ForLoop : public Statement {
 
     public:
         //ForLoop without step expression
-        ForLoop(std::string* iterator, Expression* init_value, Expression* final_value, Statement* body) :
-                iterator(iterator),init_value(init_value),final_value(final_value),body(body) {}
+        ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Statement* body) :
+                init_value(init_value),final_value(final_value),body(body) 
+                {
+                    try
+                    {
+                        iterator = NULL;
+                        iterator = dynamic_cast<Variable *>(symbolTable->getDefinition(*iteratorname));
+                        if (iterator == NULL)
+                        {
+                            std::cerr << "Error: Iterator '" << *iteratorname << "'in For-Loop is not a variable." << std::endl; 
+                        }
+                    }
+                    catch (SymbolTable::DefinitionNotFoundException &e)
+                    {
+                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << std::endl; 
+                    }
+                }
         //ForLoop with step expression
-        ForLoop(std::string* iterator, Expression* init_value, Expression* final_value, Expression* step, Statement* body) :
-                iterator(iterator),init_value(init_value),final_value(final_value),step(step),body(body) {}
+        ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Expression* step, Statement* body) :
+                init_value(init_value),final_value(final_value),step(step),body(body) 
+                {
+                    try
+                    {
+                        iterator = NULL;
+                        iterator = dynamic_cast<Variable *>(symbolTable->getDefinition(*iteratorname));
+                        if (iterator == NULL)
+                        {
+                            std::cerr << "Error: Iterator '" << *iteratorname << "'in For-Loop is not a variable." << std::endl; 
+                        }
+                    }
+                    catch (SymbolTable::DefinitionNotFoundException &e)
+                    {
+                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << std::endl; 
+                    }
+                }
 
         void dump(int num = 0) {
             indent(num); std::cout << "For Loop" << std::endl;
-            indent(num); std::cout << "Iterator: " << *iterator << std::endl;
+            indent(num); std::cout << "Iterator: " << iterator->getIdentifier() << std::endl;
 
             indent(num); std::cout << "InitValue:" << std::endl;
             init_value->dump(num+1);
@@ -364,7 +394,7 @@ class ForLoop : public Statement {
         }
 
     private:
-        std::string* iterator;
+        Variable* iterator;
         Expression* init_value;
         Expression* final_value;
         Expression* step;

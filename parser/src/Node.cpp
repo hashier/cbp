@@ -40,7 +40,6 @@ FuncCall::FuncCall(std::string* identifier, std::list<Expression*>* exprs)
 {
     try 
     {
-        func = NULL;
         func = dynamic_cast<Function *>(Node::symbolTable->getDefinition(*identifier));
         if (func == NULL)
         {
