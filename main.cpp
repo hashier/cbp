@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
         std::cout << " -warning: missing input file. Using default 'in'." << std::endl;
         fname = "in";
     } else
-        fname = argv[2];
+        fname = argv[1];
 
     std::cout << "[Load File]" << std::endl << std::endl;
     std::cout << " -input file: " << fname << std::endl;
