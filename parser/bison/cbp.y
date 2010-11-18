@@ -8,9 +8,12 @@
 
 int yyerror(char *s);
 int yylex(void);
+
+#define YYPARSE_PARAM parm
 %}
 
 %union{
+	File*                   file_val;;
 	Function*               func_val;
 	Statement*              statement;
 	Expression*             expr_val;
@@ -39,7 +42,7 @@ int yylex(void);
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
 %token KEY_FOR KEY_DOTDOT KEY_BY
 
-/* expressions need associativity and precedence */
+/* expressions (and some statements) need associativity and precedence */
 %left KEY_SWITCH
 %left KEY_CASE
 %left KEY_IF
@@ -55,6 +58,8 @@ int yylex(void);
 %token <int_val>    INTEGER_CONSTANT
 %token <float_val>  FLOAT_CONSTANT
 %token <string_val> IDENTIFIER
+
+%type <file_val> input
 
 %type <type_val>     type
 %type <type_val>     TYPE
@@ -78,10 +83,10 @@ int yylex(void);
 
 %%
 
-input: /* empty */
-     | input type_decl { $2->dump(); }
-     | input var_decl  { $2->dump(); }
-     | input func_decl { $2->dump(); }
+input: { $$ = *((File**) parm) = new File(); }
+     | input type_decl { $1->add($2); }
+     | input var_decl  { $1->add($2); }
+     | input func_decl { $1->add($2); }
      ;
 
 func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { Node::symbolTable->leaveCurrentScope(); $$ = new Function($3, $2, $5, $9); }

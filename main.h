@@ -9,6 +9,6 @@
 #include <string>
 
 // prototype of bison-generated parser function
-int yyparse();
+int yyparse(void* parm);
 //extern int yydebug;
 

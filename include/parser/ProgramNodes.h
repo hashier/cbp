@@ -158,9 +158,47 @@ class TypeDecl : public Declaration {
  * It consists of global definitions for types, variables
  * and functions.
  */
-class File {
+class File : public Node {
+
+    public:
+        File() {
+        }
+
+        void add(TypeDecl* type) {
+            types.push_back(type);
+        }
+        void add(Variable* var) {
+            variables.push_back(var);
+        }
+        void add(Function* func) {
+            functions.push_back(func);
+        }
+
+        void dump(int num = 0) {
+            indent(num); std::cout << "Type declarations:" << std::endl; {
+                std::list<TypeDecl*>::iterator it;
+                for ( it = types.begin() ; it != types.end(); it++ ) {
+                    (*it)->dump(num+1);
+                }
+            }
+
+            indent(num); std::cout << "Variable declarations:" << std::endl; {
+                std::list<Variable*>::iterator it;
+                for ( it = variables.begin() ; it != variables.end(); it++ ) {
+                    (*it)->dump(num+1);
+                }
+            }
+
+            indent(num); std::cout << "Function declarations:" << std::endl; {
+                std::list<Function*>::iterator it;
+                for ( it = functions.begin() ; it != functions.end(); it++ ) {
+                    (*it)->dump(num+1);
+                }
+            }
+        }
+
     private:
-        std::list<Type*> types;
+        std::list<TypeDecl*> types;
         std::list<Variable*> variables;
         std::list<Function*> functions;
 };
