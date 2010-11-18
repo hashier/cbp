@@ -10,17 +10,19 @@ int main(int argc, char *argv[])
     std::cout << "CompilerBauPraktikum" << std::endl;
     std::cout << "--------------------" << std::endl << std::endl;
 
+    std::string fname;
     if(argc<2)
     {
-        std::cout << " -error: missing input file" << std::endl;
-        return 1;
-    }
+        std::cout << " -warning: missing input file. Using default 'in'." << std::endl;
+        fname = "in";
+    } else
+        fname = argv[2];
 
     std::cout << "[Load File]" << std::endl << std::endl;
-    std::cout << " -input file: " << argv[1] << std::endl;
+    std::cout << " -input file: " << fname << std::endl;
 
     //open file
-    FILE *file = fopen(argv[1], "r");
+    FILE *file = fopen(fname.c_str(), "r");
     if(file==NULL)
     {
         std::cout << " -error: file not found" << std::endl;
