@@ -13,7 +13,7 @@ func abi_c SDL_Init (flags:uint32) : uint32
 func abi_c SDL_SetVideoMode (width:uint32 height:uint32 bpp:uint32 flags:uint32) : []SDL_Surface
 func abi_c SDL_Flip (screen:[]SDL_Surface) : uint32
 func abi_c SDL_LockSurface (screen:[]SDL_Surface) : uint32
-func abi_c SDL_UnlockSurface (screen:[]SDL_Surface x:uint32 y:uint32 w:uint32 h:uint32)) : uint32
+func abi_c SDL_UnlockSurface (screen:[]SDL_Surface x:uint32 y:uint32 w:uint32 h:uint32) : uint32
 func abi_c SDL_Init (flags:uint32) : uint32
 func abi_c SDL_UpdateRect (screen:[]SDL_Surface) : uint32
 
