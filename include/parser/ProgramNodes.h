@@ -54,7 +54,7 @@ class NodeType : public Node
 class Variable : public Declaration {
 
     public:
-        Variable(std::string* identifier, NodeType *type) : Declaration(*identifier), type(type) {
+        Variable(std::string* identifier, NodeType *type) : Declaration(*identifier), type(type), offset(-1) {
             try 
             {
                 symbolTable->insertDefinition(this);
@@ -71,12 +71,15 @@ class Variable : public Declaration {
         }
 
         NodeType *getType() { return type; }
+        void setOffset(int offset) { this->offset = offset; }
 
     protected:
         NodeType *type;
+        int offset;
 
 };
 
+/*
 class VariableInStruct : public Variable {
     int offset;
 
@@ -90,6 +93,7 @@ class VariableInStruct : public Variable {
         type->dump(num+1);
     }
 };
+*/
 
 class Function : public Declaration {
 
