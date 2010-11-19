@@ -40,7 +40,7 @@ int yylex(void);
 %token KEY_FUNC KEY_CALL KEY_TYPE KEY_VOID KEY_WHILE KEY_STRUCT KEY_VAR KEY_LOCAL KEY_RETURN
 %token CURLY_BRACKET_LEFT CURLY_BRACKET_RIGHT PAR_LEFT PAR_RIGHT COLON SEMICOLON
 %token TYPE ABI AT DOLLAR SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT
-%token KEY_FOR KEY_DOTDOT KEY_BY
+%token KEY_FOR KEY_DOTDOT KEY_BY DOT
 
 /* expressions (and some statements) need associativity and precedence */
 %left KEY_SWITCH
@@ -112,7 +112,7 @@ type: TYPE
 
 struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
               | struct_members var_decl { $1->push_back($2); }
-              | struct_members var_decl AT INTEGER_CONSTANT { $1->push_back(new VariableInStruct($2,$4)); }
+              | struct_members var_decl AT INTEGER_CONSTANT { $1->push_back(new VariableInStruct($2,$4)); } // hier wird noch ne neue Variable erzeugt -> doof
               ;
 
 var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variable($2, $4); }
@@ -167,6 +167,10 @@ exp: INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
    | exp BIT_OR exp    { $$ = new Expr_BitOR($1, $3); }
    | exp BIT_AND exp   { $$ = new Expr_BitAND($1, $3); }
    | exp BIT_XOR exp   { $$ = new Expr_BitXOR($1, $3); }
+   | exp DOLLAR        { $$ = new Expr_Ptr($1); }
+   | exp DOT IDENTIFIER { $$ = new Expr_Struc($1, $3); }
+   | exp SQUARE_BRACKET_LEFT exp SQUARE_BRACKET_RIGHT { $$ = new Expr_Arr($1, $3); }
+   | PAR_LEFT exp PAR_RIGHT { $$ = new Expr_Atom($2); }
    | IDENTIFIER        { $$ = new Expr_Identifier($1); }
    | KEY_CALL IDENTIFIER PAR_LEFT exp_list PAR_RIGHT { $$ = new FuncCall($2, $4);  }
    | KEY_AS type exp { $$ = new Expr_Cast($2, $3); }

@@ -138,6 +138,22 @@ class Expr_Ptr : public Unary {
 };
 
 // Precedence 2
+class Expr_Struc : public Unary {
+private:
+    std::string *identifierInStruct;
+
+public: 
+    Expr_Struc(Expression* sub, std::string *identifier) : Unary(sub), identifierInStruct(identifier)
+    { }
+};
+
+class Expr_Arr : public Unary {
+private:
+    Expression *index;
+public:
+    Expr_Arr(Expression *sub, Expression *index) : Unary(sub), index(index) { }
+};
+
 // struc? No idea..
 
 // Precedence 1
@@ -188,5 +204,15 @@ class FuncCall : public Atom {
 
         void dump(int num = 0);
 
+};
+
+
+// Warum gabs das noch nicht?
+class Expr_Atom : public Atom {
+private:
+    Expression *sub;
+public:
+    Expr_Atom(Expression *sub) : sub(sub) { }
+    virtual void dump(int num = 0) { indent(num); sub->dump(); }
 };
 

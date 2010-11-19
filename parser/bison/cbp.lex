@@ -91,6 +91,7 @@ eol			[\r]?[\n]
 "|"             { return BIT_OR; }
 "&"             { return BIT_AND; }
 "^"             { return BIT_XOR; }
+"."             { return DOT; }
 
 [ \t]*          { /* return WHITESPACE; */ }
 {eol}           { yylineno++; /* return EOL; */ }
