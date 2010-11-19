@@ -35,7 +35,9 @@ include(${CMAKE_MODULE_PATH}/FindBison.cmake)
 
 # add the current binary dir - where the generated files are
 include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/parser
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/codegen
     ${CMAKE_CURRENT_SOURCE_DIR}/include/symboltable
   )
 
@@ -49,12 +51,14 @@ else(PARSERS_FOUND)
   message(SEND_ERROR "The Bison parsing tools can't be found.")
 endif(PARSERS_FOUND)
 
+add_subdirectory(codegen)
+
 if(WIN32)
   add_executable(cbp main.cpp)
-  target_link_libraries(cbp parser)
+  target_link_libraries(cbp parser codegen)
 else(WIN32)
   add_executable(cbp.out main.cpp)
-  target_link_libraries(cbp.out parser)
+  target_link_libraries(cbp.out parser codegen)
 endif(WIN32)
 
 message(STATUS "Found all required modules")

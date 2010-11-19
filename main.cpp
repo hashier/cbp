@@ -40,7 +40,10 @@ int main(int argc, char *argv[])
     std::cout << "[Parse File]" << std::endl;
     File* tree;
     yyparse((void*) &tree);
-    tree->dump();
+
+    CodeGen* out = new CodeGen("out.asm");
+    tree->gen(out);
+
     std::cout << " -done" << std::endl << std::endl;
 
 #if defined (MSVC)

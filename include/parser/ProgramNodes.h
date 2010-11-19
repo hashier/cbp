@@ -201,6 +201,8 @@ class File : public Node {
             }
         }
 
+        void gen(CodeGen* gen);
+
     private:
         std::list<TypeDecl*> types;
         std::list<Variable*> variables;
