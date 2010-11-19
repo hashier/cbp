@@ -25,6 +25,7 @@ class Node {
                 std::cout << "\t";
         }
 
+        virtual ~Node() { };
 
         static SymbolTable::SymbolTable *symbolTable;
 };

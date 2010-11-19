@@ -21,6 +21,8 @@ class Type
 {
     public:
         virtual std::string getString() const { return "tmp. dummy type"; } //= 0;
+
+        virtual ~Type() { }
 };
 
 class TypeSimple : public Type
@@ -83,6 +85,10 @@ class TypeArray : public Type
             std::string result = "Array of ";
             result.append(type->getString());
             return result;
+        }
+
+        virtual ~TypeArray() {
+            if (type) delete type; type = 0;
         }
 
     protected:

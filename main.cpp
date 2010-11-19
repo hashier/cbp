@@ -46,6 +46,9 @@ int main(int argc, char *argv[])
 
     std::cout << " -done" << std::endl << std::endl;
 
+    delete tree;
+    tree = 0;
+
 #if defined (MSVC)
     getchar();
 #endif

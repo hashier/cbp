@@ -47,6 +47,10 @@ class NodeType : public Node
 
         Type *getType() { return type; }
 
+        virtual ~NodeType() {
+            //if (type) delete type; type = 0; // TODO: wird mehrfach referenziert...
+        }
+
     protected:
         Type *type;
 };
@@ -72,6 +76,10 @@ class Variable : public Declaration {
 
         NodeType *getType() { return type; }
         void setOffset(int offset) { this->offset = offset; }
+
+        virtual ~Variable() {
+            //if (type) delete type; type = 0;
+        }
 
     protected:
         NodeType *type;
@@ -120,6 +128,11 @@ class Function : public Declaration {
                 std::cout << "NULL (only declaration)" << std::endl;
         }
 
+        virtual ~Function() {
+            if (arguments) delete arguments; arguments = 0;
+            if (statement) delete statement; statement = 0;
+        }
+
     private:
         Func_abi abi;
         std::list<Variable*>* arguments;
@@ -154,6 +167,10 @@ class TypeDecl : public Declaration {
         }
 
         NodeType *getType() { return type; }
+
+        virtual ~TypeDecl() {
+            if (type) delete type; type = 0;
+        }
     private:
         NodeType *type;
 };
@@ -203,6 +220,18 @@ class File : public Node {
 
         void gen(CodeGen* gen);
 
+        virtual ~File() {
+            for (std::list<TypeDecl *>::iterator it = types.begin() ; it != types.end(); it++ ) {
+                delete (*it);
+            }
+            for (std::list<Variable *>::iterator it = variables.begin() ; it != variables.end(); it++ ) {
+                delete (*it);
+            }
+            for (std::list<Function *>::iterator it = functions.begin() ; it != functions.end(); it++ ) {
+                delete (*it);
+            }
+        }
+
     private:
         std::list<TypeDecl*> types;
         std::list<Variable*> variables;
@@ -228,6 +257,12 @@ class Block : public Statement {
             indent(num); std::cout << "}" << std::endl;
         }
 
+        virtual ~Block() {
+            for (std::list<Statement*>::iterator it = subs.begin() ; it != subs.end(); it++ ) {
+                delete (*it);
+            }
+        }
+
     private:
         std::list<Statement*> subs;
 
@@ -250,6 +285,12 @@ class IfElse : public Statement {
                 indent(num); std::cout << "ELSE" << std::endl;
                 otherwise->dump(num+1);
             }
+        }
+
+        virtual ~IfElse() {
+            if (condition) delete condition; condition = 0;
+            if (then) delete then; then = 0;
+            if (otherwise) delete otherwise; otherwise = 0;
         }
 
     private:
@@ -319,6 +360,11 @@ class WhileLoop : public Statement {
             body->dump(num+1);
         }
 
+        virtual ~WhileLoop() {
+            if (condition) delete condition; condition = 0;
+            if (body) delete body; body = 0;
+        }
+
     private:
         Expression* condition;
         Statement* body;
@@ -338,6 +384,11 @@ class Return : public Statement {
             expr->dump(num+1);      
         }
 
+        virtual ~Return() {
+            if (expr) delete expr; expr = 0;
+        }
+
+
     private:
         Expression* expr;
 
@@ -352,6 +403,10 @@ class Local : public Statement {
         void dump(int num = 0) {
             indent(num); std::cout << "Local Variable:" << std::endl;
             var->dump(num+1);
+        }
+
+        virtual ~Local() {
+            if (var) delete var; var = 0;
         }
 
     private:
@@ -386,7 +441,6 @@ class ForLoop : public Statement {
                 {
                     try
                     {
-                        iterator = NULL;
                         iterator = dynamic_cast<Variable *>(symbolTable->getDefinition(*iteratorname));
                         if (iterator == NULL)
                         {
@@ -404,7 +458,6 @@ class ForLoop : public Statement {
                 {
                     try
                     {
-                        iterator = NULL;
                         iterator = dynamic_cast<Variable *>(symbolTable->getDefinition(*iteratorname));
                         if (iterator == NULL)
                         {
@@ -435,6 +488,14 @@ class ForLoop : public Statement {
             if(body==NULL) return;
             indent(num); std::cout << "Body:" << std::endl;
             body->dump(num+1);
+        }
+
+        virtual ~ForLoop() {
+            // don't delete Variable* iterator here!
+            if (init_value) delete init_value; init_value = 0;
+            if (final_value) delete final_value; final_value = 0;
+            if (step) delete step; step = 0;
+            if (body) delete body; init_value = 0;
         }
 
     private:
