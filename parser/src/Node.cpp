@@ -75,6 +75,6 @@ Expr_Identifier::Expr_Identifier(std::string *identifier)
 
 
 void Expr_Identifier::dump(int num) {
-    indent(num); std::cout << "Identifier in Expression:" << std::endl;
+    std::cout << "Identifier in Expression:" << std::endl;
     ref->dump(num+1);
 }

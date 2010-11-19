@@ -19,7 +19,7 @@ class Unary : public Expression {
             indent(num); std::cout << "Unary: " << typeid(*this).name() << std::endl;
             sub->dump(num);
         }
-    private:
+    protected:
         Expression* sub;
 };
 
@@ -143,8 +143,12 @@ private:
     std::string *identifierInStruct;
 
 public: 
-    Expr_Struc(Expression* sub, std::string *identifier) : Unary(sub), identifierInStruct(identifier)
-    { }
+    Expr_Struc(Expression* sub, std::string *identifier) : Unary(sub), identifierInStruct(identifier) { }
+    virtual void dump(int num = 0)
+    {
+        indent(num); std::cout << "Expr_Ptr:";
+        sub->dump(num);
+    }
 };
 
 class Expr_Arr : public Unary {

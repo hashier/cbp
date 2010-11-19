@@ -20,7 +20,7 @@ class Mark {
 class CodeGen : public std::ostream {
 
     public:
-        CodeGen(const char* fname) : std::ostream() {
+        CodeGen(const char* fname) : std::ostream(NULL) {
             std::filebuf* fbuf = new std::filebuf();
             fbuf->open(fname, std::ios::out);
             rdbuf(fbuf);
