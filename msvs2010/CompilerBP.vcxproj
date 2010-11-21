@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\codegen\CodeGen.h" />
     <ClInclude Include="..\include\parser\AbstractNodes.h" />
     <ClInclude Include="..\include\parser\ExprNodes.h" />
     <ClInclude Include="..\include\parser\ProgramNodes.h" />
@@ -29,6 +30,8 @@
     <ClInclude Include="..\parser\bison\cbp.tab.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\codegen\src\CodeGen.cpp" />
+    <ClCompile Include="..\codegen\src\ProgramNodes.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\parser\bison\cbp.cpp" />
     <ClCompile Include="..\parser\bison\lex.yy.cpp" />
@@ -99,7 +102,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -113,7 +116,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -129,7 +132,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -147,7 +150,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

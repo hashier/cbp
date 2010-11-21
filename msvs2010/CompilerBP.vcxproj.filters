@@ -42,6 +42,9 @@
     <ClInclude Include="..\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\codegen\CodeGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">
@@ -63,6 +66,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\parser\src\Types.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\codegen\src\CodeGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\codegen\src\ProgramNodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

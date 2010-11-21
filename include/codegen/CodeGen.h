@@ -4,6 +4,7 @@
 #include<iostream>
 #include<fstream>
 #include<map>
+#include<string>
 
 class Mark {
     std::string name;
@@ -30,3 +31,4 @@ class CodeGen : public std::ostream {
         static Mark mark(std::string name);
 
 };
+

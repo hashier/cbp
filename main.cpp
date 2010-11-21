@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
     } else
         fname = argv[1];
 
-    std::cout << "[Load File]" << std::endl << std::endl;
-    std::cout << " -input file: " << fname << std::endl;
+    std::cout << "[Load File]" << std::endl;
+    std::cout << " -file: " << fname << std::endl;
 
     //open file
     FILE *file = fopen(fname.c_str(), "r");
@@ -40,16 +40,17 @@ int main(int argc, char *argv[])
     std::cout << "[Parse File]" << std::endl;
     File* tree;
     yyparse((void*) &tree);
-
-    CodeGen* out = new CodeGen("out.asm");
-    tree->gen(out);
-
     std::cout << " -done" << std::endl << std::endl;
 
+    std::cout << "[Generate ASM-Source]" << std::endl;
+    CodeGen* out = new CodeGen("out.asm");
+    tree->gen(out);
     delete tree;
     tree = 0;
+    std::cout << " -done" << std::endl << std::endl;
 
-#if defined (MSVC)
+#ifdef MSVC
+    std::cout << "Press Any Key To Continue" << std::endl;
     getchar();
 #endif
 
