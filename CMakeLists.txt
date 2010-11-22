@@ -61,4 +61,9 @@ else(WIN32)
   target_link_libraries(cbp.out parser codegen)
 endif(WIN32)
 
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/examples/working.cbp 
+  ${CMAKE_CURRENT_BINARY_DIR}/in 
+  COPYONLY)
+
 message(STATUS "Found all required modules")

@@ -1,24 +1,13 @@
 #pragma once
 
-#include<sstream>
 #include<iostream>
 #include<fstream>
-#include<map>
 #include<string>
 
-class Mark {
-    std::string name;
-
-    public:
-        static int counter;
-        Mark(std::string name) {
-            std::stringstream ss(name);
-            ss << (counter++);
-            this->name = ss.str();
-        }
-};
+typedef std::string Mark;
 
 class CodeGen : public std::ostream {
+    int mark_counter;
 
     public:
         CodeGen(const char* fname) : std::ostream(NULL) {
@@ -27,8 +16,7 @@ class CodeGen : public std::ostream {
             rdbuf(fbuf);
         }
 
-        static std::map<std::string, Mark*> marks;
-        static Mark mark(std::string name);
+        Mark newMark(std::string name);
 
 };
 

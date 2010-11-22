@@ -1,12 +1,10 @@
 #include"CodeGen.h"
 
-int Mark::counter = 0;
-std::map<std::string, Mark*> CodeGen::marks;
+#include<sstream>
 
-Mark CodeGen::mark(std::string name) {
-    if(marks.count(name) == 0) {
-        marks[name] = new Mark(name);
-    }
-    return *(marks[name]);
+Mark CodeGen::newMark(std::string name) {
+    std::stringstream ss(name);
+    ss << (mark_counter++);
+    return ss.str();
 }
 

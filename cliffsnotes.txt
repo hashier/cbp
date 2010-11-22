@@ -19,9 +19,9 @@ Dabei wird ein out-of-source build gemacht, so dass alle Dateien im build ordner
 verbleiben, der dementsprechend auch nichts im repo zu suchen hat!
 
 Test:
-  ./cbp 5 < ../examples/whatever.cbp
+  ./cbp ../examples/whatever.cbp
 
-  
+
 -- HOWTO Visual Studio Solution erzeugen --
 
 CMake für Windows installieren: http://www.cmake.org
