@@ -42,6 +42,10 @@ int main(int argc, char *argv[])
     yyparse((void*) &tree);
     std::cout << " -done" << std::endl << std::endl;
 
+    std::cout << "[Calculate Variable offsets]" << std::endl;
+    tree->calcMemoryOffset();
+    std::cout << " -done" << std::endl << std::endl;
+
     std::cout << "[Generate ASM-Source]" << std::endl;
     CodeGen* out = new CodeGen("out.asm");
     tree->gen(out);

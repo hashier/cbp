@@ -47,6 +47,10 @@ class NodeType : public Node
 
         Type *getType() { return type; }
 
+        int getSize() {
+            return type->getSize();
+        }
+
         virtual ~NodeType() {
             //if (type) delete type; type = 0; // TODO: wird mehrfach referenziert...
         }
@@ -77,6 +81,20 @@ class Variable : public Declaration {
         NodeType *getType() { return type; }
         void setOffset(int offset) { this->offset = offset; }
 
+        int getMemoryOffset() {
+            return offset;
+        }
+
+        int calcMemoryOffset(int parentOffset = 0) {
+            // TODO: use manual offsets in structs
+            offset = parentOffset;
+            return parentOffset + type->getSize();
+        }
+
+        int getSize() {
+            return type->getSize();
+        }
+
         virtual ~Variable() {
             //if (type) delete type; type = 0;
         }
@@ -84,7 +102,6 @@ class Variable : public Declaration {
     protected:
         NodeType *type;
         int offset;
-
 };
 
 /*
@@ -126,6 +143,13 @@ class Function : public Declaration {
                 statement->dump(num+1);
             else
                 std::cout << "NULL (only declaration)" << std::endl;
+        }
+
+        virtual int calcMemoryOffset(int parentOffset = 0) {
+            if (statement)
+                return statement->calcMemoryOffset(parentOffset);
+            else
+                return parentOffset;
         }
 
         virtual ~Function() {
@@ -220,6 +244,22 @@ class File : public Node {
 
         void gen(CodeGen* gen);
 
+        virtual int calcMemoryOffset(int parentOffset = 0) {
+            int currentOffset = 0;
+
+            // calculate positions in memory for global variables...
+            for (std::list<Variable*>::iterator it = variables.begin() ; it != variables.end(); it++ ) {
+                currentOffset = (*it)->calcMemoryOffset(currentOffset);
+            }
+
+            // ... and calculate positions for local variables after the global ones
+            for (std::list<Function*>::iterator it = functions.begin() ; it != functions.end(); it++ ) {
+                /*currentOffset = */(*it)->calcMemoryOffset(currentOffset);
+            }
+            return currentOffset;
+        }
+
+
         virtual ~File() {
             for (std::list<TypeDecl *>::iterator it = types.begin() ; it != types.end(); it++ ) {
                 delete (*it);
@@ -257,6 +297,15 @@ class Block : public Statement {
             indent(num); std::cout << "}" << std::endl;
         }
 
+        virtual int calcMemoryOffset(int parentOffset = 0) {
+            int currentOffset = parentOffset;
+            std::list<Statement*>::iterator it;
+            for ( it = subs.begin() ; it != subs.end(); it++ ) {
+                currentOffset += (*it)->calcMemoryOffset(currentOffset);
+            }
+            return currentOffset;
+        }
+
         virtual ~Block() {
             for (std::list<Statement*>::iterator it = subs.begin() ; it != subs.end(); it++ ) {
                 delete (*it);
@@ -285,6 +334,13 @@ class IfElse : public Statement {
                 indent(num); std::cout << "ELSE" << std::endl;
                 otherwise->dump(num+1);
             }
+        }
+
+        virtual int calcMemoryOffset(int parentOffset = 0) {
+            parentOffset = then->calcMemoryOffset(parentOffset);
+            if (otherwise)
+                parentOffset = otherwise->calcMemoryOffset(parentOffset);
+            return parentOffset;
         }
 
         virtual ~IfElse() {
@@ -339,6 +395,14 @@ class SwitchCase : public Statement {
             indent(num); std::cout << "}" << std::endl;
         }
 
+        virtual int calcMemoryOffset(int parentOffset = 0) {
+            std::list<Case*>::const_iterator caseIter = cases->begin();
+            for(; caseIter != cases->end(); ++caseIter ) {
+                parentOffset += (*caseIter)->action->calcMemoryOffset(parentOffset);
+            }
+            return parentOffset;
+        }
+
     private:
         std::auto_ptr<Expression> condition;
         std::auto_ptr<std::list<Case*> > cases;
@@ -363,6 +427,11 @@ class WhileLoop : public Statement {
         virtual ~WhileLoop() {
             if (condition) delete condition; condition = 0;
             if (body) delete body; body = 0;
+        }
+
+        virtual int calcMemoryOffset(int parentOffset = 0) {
+            parentOffset = body->calcMemoryOffset(parentOffset);
+            return parentOffset;
         }
 
     private:
@@ -403,6 +472,11 @@ class Local : public Statement {
         void dump(int num = 0) {
             indent(num); std::cout << "Local Variable:" << std::endl;
             var->dump(num+1);
+        }
+
+        virtual int calcMemoryOffset(int parentOffset = 0) {
+            parentOffset = var->calcMemoryOffset(parentOffset);
+            return parentOffset;
         }
 
         virtual ~Local() {
@@ -563,6 +637,11 @@ class ForLoop : public Statement {
             //set label
             *out << ".L" << label_exit << ":" << std::endl;
         }
+
+    virtual int calcMemoryOffset(int parentOffset = 0) {
+        parentOffset = body->calcMemoryOffset(parentOffset);
+        return parentOffset;
+    }
 
     private:
         Variable* iterator;

@@ -16,3 +16,15 @@ std::string TypeStruct::getString() const
     result.append(")");
     return result;
 }
+
+int TypeStruct::getSize()
+{
+    // TODO: structs mit festen offsets beachten(sowas wie hoehster offset + size)
+    int sum = 0;
+    for (std::list<Variable *>::const_iterator it = members.begin(); it != members.end(); it++)
+    {
+        sum += (*it)->getSize();
+    }
+
+    return sum;
+}

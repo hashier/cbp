@@ -22,6 +22,8 @@ class Type
     public:
         virtual std::string getString() const { return "tmp. dummy type"; } //= 0;
 
+        virtual int getSize() = 0;
+
         virtual ~Type() { }
 };
 
@@ -58,6 +60,31 @@ class TypeSimple : public Type
             }
         }
 
+        virtual int getSize()
+        {
+            switch(baseType)
+            {
+                case Type_uint8:
+                    return 8;
+                case Type_int8:
+                    return 8;
+                case Type_uint16:
+                    return 16;
+                case Type_int16:
+                    return 16;
+                case Type_uint32:
+                    return 32;
+                case Type_int32:
+                    return 32;
+                case Type_float32:
+                    return 32;
+                case Type_float64:
+                    return 64;
+                case Type_void:
+                    return 0;   // TODO andere Zahl raten?
+            }
+        }
+
     protected:
         BaseType baseType;
 };
@@ -69,6 +96,8 @@ class TypeStruct : public Type
             : members(members) { }
 
         std::string getString() const;
+
+        virtual int getSize();
 
     protected:
         std::list<Variable *> members;
@@ -89,6 +118,11 @@ class TypeArray : public Type
 
         virtual ~TypeArray() {
             if (type) delete type; type = 0;
+        }
+
+        virtual int getSize() {
+            // TODO: size ist hier unbekannt, nur groesse des pointers? des ersten elements?
+            return 0;
         }
 
     protected:
