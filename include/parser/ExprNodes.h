@@ -38,7 +38,7 @@ class Binary : public Expression {
             right->dump(num+1);
         }
 
-    private:
+    protected:
         Expression* left;
         Expression* right;
 };
@@ -123,13 +123,19 @@ class Expr_Sub : public Binary {
 
 // Precedence 4
 class Expr_Mul : public Binary {
-    public: Expr_Mul(Expression* left, Expression* right) : Binary(left, right) { }
+    public:
+        Expr_Mul(Expression* left, Expression* right) : Binary(left, right) { }
+        virtual void gen(CodeGen* out);
 };
 class Expr_Div : public Binary {
-    public: Expr_Div(Expression* left, Expression* right) : Binary(left, right) { }
+    public:
+        Expr_Div(Expression* left, Expression* right) : Binary(left, right) { }
+        virtual void gen(CodeGen* out);
 };
 class Expr_Mod : public Binary {
-    public: Expr_Mod(Expression* left, Expression* right) : Binary(left, right) { }
+    public: 
+        Expr_Mod(Expression* left, Expression* right) : Binary(left, right) { }
+        virtual void gen(CodeGen* out);
 };
 
 // Precedence 3
@@ -169,12 +175,15 @@ class ConstInt : public Constant {
     int value;
 
     public:
-        ConstInt(int value) : value(value) { }
+        ConstInt(int value) : value(value) {
+        }
 
         void dump(int num = 0) {
             indent(num);
             std::cout << "Const Int: " << value << std::endl;
         }
+
+        virtual void gen(CodeGen* out);
 };
 class ConstFloat : public Constant {
     float value;
