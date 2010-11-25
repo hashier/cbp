@@ -1,6 +1,6 @@
 #include "main.h"
 #include "include/parser/ProgramNodes.h"
-#include "include/MsgHandler/MsgHandler.h"
+#include "include/msghandler/MsgHandler.h"
 
 // Hauptprogramm für das Compilerbaupraktikum
 // ##########################################
