@@ -39,6 +39,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/parser
     ${CMAKE_CURRENT_SOURCE_DIR}/include/codegen
     ${CMAKE_CURRENT_SOURCE_DIR}/include/symboltable
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/msghandler
   )
 
 if(PARSERS_FOUND)

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "include/parser/ProgramNodes.h"
+#include "include/MsgHandler/MsgHandler.h"
 
 // Hauptprogramm für das Compilerbaupraktikum
 // ##########################################
@@ -7,8 +8,8 @@
 // Parameter: 1. Quellcode-Datei zum Compilieren
 int main(int argc, char *argv[])
 {
-    std::cout << "CompilerBauPraktikum" << std::endl;
-    std::cout << "--------------------" << std::endl << std::endl;
+    MsgHandler::getInstance().printMessage("CompilerBauPraktikum");
+    MsgHandler::getInstance().printMessage("--------------------");
 
     std::string fname;
     if(argc<2)
