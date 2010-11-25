@@ -336,7 +336,9 @@ class IfElse : public Statement {
             }
         }
 
-        virtual int calcMemoryOffset(int parentOffset = 0) {
+        virtual void gen(CodeGen* out);
+        
+		virtual int calcMemoryOffset(int parentOffset = 0) {
             parentOffset = then->calcMemoryOffset(parentOffset);
             if (otherwise)
                 parentOffset = otherwise->calcMemoryOffset(parentOffset);
@@ -428,6 +430,8 @@ class WhileLoop : public Statement {
             if (condition) delete condition; condition = 0;
             if (body) delete body; body = 0;
         }
+
+        virtual void gen(CodeGen* out);
 
         virtual int calcMemoryOffset(int parentOffset = 0) {
             parentOffset = body->calcMemoryOffset(parentOffset);
