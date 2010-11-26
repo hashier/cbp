@@ -3,8 +3,7 @@
 /parser/bison   die .y und .lex dateien, die von bison zum parser generiert werden
 /main.{cpp|h}   hauptprogramm, wrappt bisher nur die parser lib
 /modules        CMake module, speziell ein bison macro
-/examples       ein Programm, das man in den parser pipen kann (irgendwann mal)
-/Makefile       schnelles build ohne cmake, fuer den eiligen user (legacy?)
+/examples       Test Programme
 
 -- HOWTO build --
 Reqs: Bison, [CMake]
@@ -19,7 +18,7 @@ Dabei wird ein out-of-source build gemacht, so dass alle Dateien im build ordner
 verbleiben, der dementsprechend auch nichts im repo zu suchen hat!
 
 Test:
-  ./cbp ../examples/whatever.cbp
+  ./cbp.out ../examples/whatever.cbp
 
 
 -- HOWTO Visual Studio Solution erzeugen --
