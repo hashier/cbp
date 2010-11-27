@@ -153,3 +153,14 @@ void WhileLoop::gen(CodeGen* out) {
             *out << ".L" << label_exit << ":" << std::endl;
 }
 
+void Variable::gen(CodeGen* out) {
+    // Declare global variable
+    // TODO: Must be placed between .file and .text on the top of the output
+    // file.
+    *out << ".comm " << identifier << "," << type->getSize() << "," << type->getSize() << std::endl;
+}
+
+void Local::gen(CodeGen* out) {
+    // Declare local variable
+    // Seems nothing is needed for local var declaration. It lives on the stack.
+}

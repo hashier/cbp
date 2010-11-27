@@ -95,6 +95,8 @@ class Variable : public Declaration {
             return type->getSize();
         }
 
+        virtual void gen(CodeGen* out);
+
         virtual ~Variable() {
             //if (type) delete type; type = 0;
         }
@@ -482,6 +484,8 @@ class Local : public Statement {
             parentOffset = var->calcMemoryOffset(parentOffset);
             return parentOffset;
         }
+
+        virtual void gen(CodeGen* out);
 
         virtual ~Local() {
             if (var) delete var; var = 0;
