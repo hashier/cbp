@@ -65,21 +65,21 @@ class TypeSimple : public Type
             switch(baseType)
             {
                 case Type_uint8:
-                    return 8;
+                    return 1;
                 case Type_int8:
-                    return 8;
+                    return 1;
                 case Type_uint16:
-                    return 16;
+                    return 2;
                 case Type_int16:
-                    return 16;
+                    return 2;
                 case Type_uint32:
-                    return 32;
+                    return 4;
                 case Type_int32:
-                    return 32;
+                    return 4;
                 case Type_float32:
-                    return 32;
+                    return 4;
                 case Type_float64:
-                    return 64;
+                    return 8;
                 case Type_void:
                     return 0;   // TODO andere Zahl raten?
             }
