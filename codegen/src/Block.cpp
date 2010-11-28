@@ -27,8 +27,10 @@ void Block::gen(CodeGen* out) {
 
     // Ok, now just output all the substatements one after another
     std::list<Statement*>::iterator it;
-    for ( it = subs.begin() ; it != subs.end(); it++ )
+    int i = 0;
+    for ( it = subs.begin() ; it != subs.end(); it++ ) {
         (*it)->gen(out);
+    }
 
     // Tidy up the cellar.
     if(!offset) {

@@ -2,6 +2,7 @@
 
 void File::gen(CodeGen* out) {
 
+
 #ifdef APPLE
     (*out) << "\t.text" << std::endl;
 #endif

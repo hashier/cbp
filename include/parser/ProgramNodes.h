@@ -124,7 +124,7 @@ class Function : public Declaration {
 
     public:
         Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement = NULL) 
-            : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement) 
+            : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement), gotMark(false)
         { 
             try
             {
@@ -145,6 +145,16 @@ class Function : public Declaration {
                 std::cout << "NULL (only declaration)" << std::endl;
         }
 
+        virtual void gen(CodeGen* out);
+
+        Mark getMark(CodeGen* out) {
+            if(!gotMark) {
+                gotMark = true;
+                mark = out->newMark(identifier);
+            }
+            return mark;
+        }
+
         virtual ~Function() {
             if (arguments) delete arguments; arguments = 0;
             if (statement) delete statement; statement = 0;
@@ -154,6 +164,8 @@ class Function : public Declaration {
         Func_abi abi;
         std::list<Variable*>* arguments;
         Statement* statement;
+        Mark mark;
+        bool gotMark;
 
 };
 
