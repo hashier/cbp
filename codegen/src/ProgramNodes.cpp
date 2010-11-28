@@ -2,6 +2,30 @@
 
 void File::gen(CodeGen* out) {
 
+#ifdef APPLE
+#endif
+
+#ifdef UNIX
+    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                          //Dateiname einfügen
+#endif
+
+#ifdef WIN32
+    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                           //Dateiname einfügen
+#endif
+
+    {
+        std::list<TypeDecl*>::iterator it;
+        for ( it = types.begin() ; it != types.end(); it++ ) {
+            (*it)->gen(out);
+        }
+    }
+
+    {
+        std::list<Variable*>::iterator it;
+        for ( it = variables.begin() ; it != variables.end(); it++ ) {
+            (*it)->gen(out);
+        }
+    }
 
 #ifdef APPLE
     (*out) << "\t.text" << std::endl;
@@ -17,7 +41,6 @@ void File::gen(CodeGen* out) {
 #endif
 
 #ifdef UNIX
-    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                          //Dateiname einfügen
     (*out) << "\t.text" << std::endl;
     (*out) << ".globl main" << std::endl;
     (*out) << "\t.type\tmain, @function" << std::endl;
@@ -32,7 +55,6 @@ void File::gen(CodeGen* out) {
 #endif
 
 #ifdef WIN32
-    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                           //Dateiname einfügen
     (*out) << "\t.def\t___main;\t.scl\t2;\t.type\t32;\t.endef" << std::endl;
     (*out) << "\t.text" << std::endl;
     (*out) << ".globl _main" << std::endl;
@@ -49,19 +71,6 @@ void File::gen(CodeGen* out) {
     (*out) << "\tret" << std::endl;
 #endif
 
-    {
-        std::list<TypeDecl*>::iterator it;
-        for ( it = types.begin() ; it != types.end(); it++ ) {
-            (*it)->gen(out);
-        }
-    }
-
-    {
-        std::list<Variable*>::iterator it;
-        for ( it = variables.begin() ; it != variables.end(); it++ ) {
-            (*it)->gen(out);
-        }
-    }
 
     {
         std::list<Function*>::iterator it;
