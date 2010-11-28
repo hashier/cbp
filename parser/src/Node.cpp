@@ -17,7 +17,7 @@ NodeType::NodeType(std::string *identifier)
     }
     catch (SymbolTable::DefinitionNotFoundException &e)
     {
-        std::cerr << "Error: Undefined Type: " << *identifier << std::endl;
+        std::cerr << "Error: Undefined Type: " << *identifier << " " << e.what() << std::endl;
     }
 }
 
@@ -48,7 +48,7 @@ FuncCall::FuncCall(std::string* identifier, std::list<Expression*>* exprs)
     }
     catch (SymbolTable::DefinitionNotFoundException &e)
     {
-        std::cerr << "Error: Call to undeclared Function: " << *identifier << std::endl;
+        std::cerr << "Error: Call to undeclared Function: " << *identifier << " " << e.what() << std::endl;
     }
 }
 
@@ -69,7 +69,7 @@ Expr_Identifier::Expr_Identifier(std::string *identifier)
     }
     catch (SymbolTable::DefinitionNotFoundException &e)
     {
-        std::cerr << "Error: Undefined identifier in Expression: '" << *identifier << "'." << std::endl;
+        std::cerr << "Error: Undefined identifier in Expression: '" << *identifier << "'. " << e.what() << std::endl;
     }
 }
 

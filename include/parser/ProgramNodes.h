@@ -69,7 +69,7 @@ class Variable : public Declaration {
             }
             catch (SymbolTable::DefinitionAlreadyExistsException &e)
             {
-                std::cerr << "Error: Variable already declared in current scope: " << *identifier << std::endl;
+                std::cerr << "Error: Variable already declared in current scope: " << *identifier << " " << e.what() << std::endl;
             }
         }
 
@@ -132,7 +132,7 @@ class Function : public Declaration {
             }
             catch (SymbolTable::DefinitionAlreadyExistsException &e)
             {
-                std::cerr << "Error: Function already declared in current Scope: " << *identifier << std::endl;
+                std::cerr << "Error: Function already declared in current Scope: " << *identifier << " " << e.what() << std::endl;
             }
         }
 
@@ -182,7 +182,7 @@ class TypeDecl : public Declaration {
             catch (SymbolTable::DefinitionAlreadyExistsException &e)
             {
                 // TODO: the existing definition can also be something else
-                std::cerr << "Error: Definition already exisits: " << std::endl;
+                std::cerr << "Error: Definition already exisits: " << " " << e.what() << std::endl;
                 //std::cerr << "'" << *identifier << "' is redefined from '" << 
                 //    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier))->getType()->getString()
                 //    << "' to '" << type->getType()->getString() << "'." << std::endl;
@@ -489,7 +489,7 @@ class ForLoop : public Statement {
                     }
                     catch (SymbolTable::DefinitionNotFoundException &e)
                     {
-                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << std::endl; 
+                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << " " << e.what() << std::endl; 
                     }
                 }
         //ForLoop with step expression
@@ -506,7 +506,7 @@ class ForLoop : public Statement {
                     }
                     catch (SymbolTable::DefinitionNotFoundException &e)
                     {
-                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << std::endl; 
+                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << " " << e.what() << std::endl; 
                     }
                 }
 

@@ -83,6 +83,8 @@ class TypeSimple : public Type
                 case Type_void:
                     return 0;   // TODO andere Zahl raten?
             }
+            //fix warning: not all control paths return a value
+            return 0;
         }
 
     protected:

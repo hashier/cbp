@@ -39,6 +39,7 @@ private:
 
 class DefinitionNotFoundException : public std::exception
 {
+public:
   virtual const char* what() const throw()
   {
     return "Definition not found TODO";
@@ -47,6 +48,7 @@ class DefinitionNotFoundException : public std::exception
 
 class DefinitionAlreadyExistsException : public std::exception
 {
+public:
     virtual const char* what() const throw()
     {
         return "Definition already exists TODO";
