@@ -49,6 +49,8 @@ int main(int argc, char *argv[])
 
     std::cout << " -done" << std::endl << std::endl;
 
+    delete(tree);
+
 #ifdef MSVC
     std::cout << "Press Any Key To Continue" << std::endl;
     getchar();

@@ -6,7 +6,7 @@ void Block::gen(CodeGen* out) {
     // Only do this once: Calculate offsets for variables, and total required stack space
     int offset = calcStackOffsets();
     // Do we even have local variables?
-    if(!offset) {
+    if(offset) {
         // Align to something divisible by 4.
         if(offset % 4 != 0)
             offset += offset % 4;
