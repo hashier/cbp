@@ -31,8 +31,6 @@ class Node {
 };
 
 class Statement : public Node {
-    public:
-    virtual int calcMemoryOffset(int parentOffset = 0) { return parentOffset; }
 };
 
 // Expressions, as in things that can be evaluated to numbers (at runtime)
