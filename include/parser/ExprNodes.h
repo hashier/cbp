@@ -66,32 +66,41 @@ class Expr_Cast : public Expression {
 // Precedence 9
 class Expr_EQ : public Binary {
     public: Expr_EQ(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_NEQ : public Binary {
     public: Expr_NEQ(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_LT : public Binary {
     public: Expr_LT(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_GT : public Binary {
     public: Expr_GT(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_LE : public Binary {
     public: Expr_LE(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_GE : public Binary {
     public: Expr_GE(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 
 // Precedence 8
 class Expr_BoolOR : public Binary {
     public: Expr_BoolOR(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_BoolAND : public Binary {
     public: Expr_BoolAND(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_BoolXOR : public Binary {
     public: Expr_BoolXOR(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 
 // Precedence 7
