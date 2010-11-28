@@ -30,11 +30,14 @@
     <ClInclude Include="..\parser\bison\cbp.tab.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\codegen\src\Block.cpp" />
     <ClCompile Include="..\codegen\src\CodeGen.cpp" />
+    <ClCompile Include="..\codegen\src\ExprNodes.cpp" />
     <ClCompile Include="..\codegen\src\ProgramNodes.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\parser\bison\cbp.cpp" />
     <ClCompile Include="..\parser\bison\lex.yy.cpp" />
+    <ClCompile Include="..\parser\src\MsgHandler.cpp" />
     <ClCompile Include="..\parser\src\Node.cpp" />
     <ClCompile Include="..\parser\src\Scope.cpp" />
     <ClCompile Include="..\parser\src\SymbolTable.cpp" />
@@ -102,7 +105,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\msghandler;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;..\include\msghandler;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -116,7 +119,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;..\include\msghandler;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -132,7 +135,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;..\include\msghandler;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -150,7 +153,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;..\include\msghandler;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
