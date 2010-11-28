@@ -12,7 +12,21 @@ void File::gen(CodeGen* out) {
 #endif
 
 #ifdef WIN32
+    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                           //Dateiname einfügen
+    (*out) << "\t.def\t___main;\t.scl\t2;\t.type\t32;\t.endef" << std::endl;
     (*out) << "\t.text" << std::endl;
+    (*out) << ".globl _main" << std::endl;
+    (*out) << "\t.def\t_main;\t.scl\t2;\t.type\t32;\t.endef" << std::endl;
+    (*out) << "_main" << std::endl;
+    (*out) << "\tpushq\t%rbp" << std::endl;
+    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
+    (*out) << "\tsubq\t$32, %rsp" << std::endl;
+//    (*out) << "\tmovl\t%ecx, 16(%rbp)" << std::endl;                            //Parameter von main??
+//    (*out) << "\tmovq\t%rdx, 24(%rbp)" << std::endl;
+    (*out) << "\tcall\t___main" << std::endl;                                     //___main aufrufen
+    (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
+    (*out) << "\tleave" << std::endl;
+    (*out) << "\tret" << std::endl;
 #endif
 
     {
