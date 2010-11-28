@@ -1,7 +1,9 @@
 #include"ProgramNodes.h"
 
-void File::gen(CodeGen* out) {
+//linking error: already twice in second ProgramNodes.cpp
 
-    (*out) << "this is some asm stuff" << std::endl;
-
-}
+//void File::gen(CodeGen* out) {
+//
+//    (*out) << "this is some asm stuff" << std::endl;
+//
+//}

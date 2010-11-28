@@ -83,6 +83,9 @@
     <ClCompile Include="..\parser\src\MsgHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\codegen\ProgramNodes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\parser\bison\cbp.lex">

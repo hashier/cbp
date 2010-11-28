@@ -145,7 +145,10 @@ class Function : public Declaration {
                 std::cout << "NULL (only declaration)" << std::endl;
         }
 
-        virtual void gen(CodeGen* out);
+        virtual void gen(CodeGen* out)
+        {
+            //TODO
+        }
 
         Mark getMark(CodeGen* out) {
             if(!gotMark) {
