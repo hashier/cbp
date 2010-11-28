@@ -55,7 +55,7 @@ void Expr_EQ::gen(CodeGen* out) {
     // set LSB of %ax if equal
     *out << "sete %al" << std::endl;
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl
+    *out << "movzbl %al, %eax" << std::endl;
     *out << "pop %ebx" << std::endl;
 }
 
@@ -72,7 +72,7 @@ void Expr_NEQ::gen(CodeGen* out) {
     // set LSB of %ax if not equal
     *out << "setne %al" << std::endl;
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl
+    *out << "movzbl %al, %eax" << std::endl;
     *out << "pop %ebx" << std::endl;
 }
 
@@ -89,7 +89,7 @@ void Expr_LT::gen(CodeGen* out) {
     // set LSB of %ax if less than
     *out << "setl %al" << std::endl;
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl
+    *out << "movzbl %al, %eax" << std::endl;
     *out << "pop %ebx" << std::endl;
 }
 
@@ -106,7 +106,7 @@ void Expr_GT::gen(CodeGen* out) {
     // set LSB of %ax if greater than
     *out << "setg %al" << std::endl;
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl
+    *out << "movzbl %al, %eax" << std::endl;
     *out << "pop %ebx" << std::endl;
 }
 
@@ -123,7 +123,7 @@ void Expr_LE::gen(CodeGen* out) {
     // set LSB of %ax if less than or equal
     *out << "setle %al" << std::endl;
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl
+    *out << "movzbl %al, %eax" << std::endl;
     *out << "pop %ebx" << std::endl;
 }
 
@@ -140,7 +140,7 @@ void Expr_GE::gen(CodeGen* out) {
     // set LSB of %ax if greater than or equal
     *out << "setge %al" << std::endl;
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl
+    *out << "movzbl %al, %eax" << std::endl;
     *out << "pop %ebx" << std::endl;
 }
 
@@ -191,7 +191,7 @@ void Expr_BoolAND::gen(CodeGen* out) {
     // if we reached this point, both operands are different from 0
     // thus, we moffel 1 into %eax
     *out << "movl $1, %eax" << std::endl;
-    *out << "jmp " << labelEnd << std<<endl;
+    *out << "jmp " << labelEnd << std::endl;
     // jump mark "false"
     *out << labelFalse << ":" << std::endl;
     *out << "movl $0, %eax" << std::endl;
