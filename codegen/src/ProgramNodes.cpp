@@ -2,7 +2,17 @@
 
 void File::gen(CodeGen* out) {
 
+#ifdef APPLE
+    (*out) << "\t.text" << std::endl;
+#endif
+
+#ifdef UNIX
     (*out) << "this is some asm stuff" << std::endl;
+#endif
+
+#ifdef WIN32
+    (*out) << "this is some asm stuff" << std::endl;
+#endif
 
     {
         std::list<TypeDecl*>::iterator it;
