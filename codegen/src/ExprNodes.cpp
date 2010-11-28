@@ -43,7 +43,6 @@ void ConstInt::gen(CodeGen* out) {
 }
 
 void Expr_EQ::gen(CodeGen* out) {
-    Mark labelEQ = out->newMark("EQ");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -53,15 +52,14 @@ void Expr_EQ::gen(CodeGen* out) {
     right->gen(out);
     // compare
     *out << "cmpl %eax, %ebx" << std::endl;
-    *out << "je " << labelEQ << std::endl;
-    *out << "movl $0, %eax" << std::endl;
-    *out << labelEQ << ":" << std::endl;
-    *out << "movl $1, %eax" << std::endl;
+    // set LSB of %ax if equal
+    *out << "sete %al" << std::endl;
+    // move from byte %al to long %eax and pad with zeros
+    *out << "movzbl %al, %eax" << std::endl
     *out << "pop %ebx" << std::endl;
 }
 
 void Expr_NEQ::gen(CodeGen* out) {
-    Mark labelEQ = out->newMark("EQ");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -71,10 +69,10 @@ void Expr_NEQ::gen(CodeGen* out) {
     right->gen(out);
     // compare
     *out << "cmpl %eax, %ebx" << std::endl;
-    *out << "jne " << labelEQ << std::endl;
-    *out << "movl $0, %eax" << std::endl;
-    *out << labelEQ << ":" << std::endl;
-    *out << "movl $1, %eax" << std::endl;
+    // set LSB of %ax if not equal
+    *out << "setne %al" << std::endl;
+    // move from byte %al to long %eax and pad with zeros
+    *out << "movzbl %al, %eax" << std::endl
     *out << "pop %ebx" << std::endl;
 }
 
