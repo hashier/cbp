@@ -26,10 +26,15 @@ if(MSVC)
   include_directories(
     ${UNISTD_DIR}
   )
-
-else(MSVC)
-  set(CMAKE_CXX_FLAGS "-Wall -g")
-endif(MSVC)
+elseif(APPLE)
+    add_definitions(-DAPPLE)
+    set(CMAKE_CXX_FLAGS "-Wall -g")
+elseif(UNIX)
+    add_definitions(-DUNIX)
+    set(CMAKE_CXX_FLAGS "-Wall -g")
+else()
+    set(CMAKE_CXX_FLAGS "-Wall -g")
+endif()
 
 include(${CMAKE_MODULE_PATH}/FindBison.cmake)
 
@@ -63,8 +68,8 @@ else(WIN32)
 endif(WIN32)
 
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/examples/working.cbp 
-  ${CMAKE_CURRENT_BINARY_DIR}/in 
+  ${CMAKE_CURRENT_SOURCE_DIR}/examples/working.cbp
+  ${CMAKE_CURRENT_BINARY_DIR}/in
   COPYONLY)
 
 message(STATUS "Found all required modules")

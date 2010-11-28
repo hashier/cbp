@@ -5,7 +5,7 @@ file(GLOB_RECURSE SRCS
   )
 
 # some visual studio dance steps to make headers show up in the file view
-if(WIN32)
+if(WIN32 OR APPLE)
   file(GLOB_RECURSE INCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${CBP_MAIN_DIR}/include/codegen/*.h")
   set_source_files_properties(${INCS} PROPERTIES HEADER_FILE_ONLY true)
   # source_group(Headers FILES ${INCS})
