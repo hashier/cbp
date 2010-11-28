@@ -8,11 +8,11 @@ void File::gen(CodeGen* out) {
 #endif
 
 #ifdef UNIX
-    (*out) << "this is some asm stuff" << std::endl;
+    (*out) << "\t.text" << std::endl;
 #endif
 
 #ifdef WIN32
-    (*out) << "this is some asm stuff" << std::endl;
+    (*out) << "\t.text" << std::endl;
 #endif
 
     {
@@ -41,11 +41,11 @@ void File::gen(CodeGen* out) {
 #endif
 
 #ifdef UNIX
-    (*out) << "this is some asm stuff" << std::endl;
+    (*out) << "" << std::endl;
 #endif
 
 #ifdef WIN32
-    (*out) << "this is some asm stuff" << std::endl;
+    (*out) << "" << std::endl;
 #endif
 
 }
