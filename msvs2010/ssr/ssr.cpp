@@ -9,6 +9,7 @@
 #include <cassert>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 int replace(int occurrence, std::string const & search, std::string const & replace, std::string & s);
 
@@ -78,20 +79,30 @@ int _tmain(int argc, _TCHAR* argv[])
     return 3;
   }
 
+  std::stringstream s;
   while( std::getline(input_file, line) )
   {
-    if( replace_all )
-    {
-      replace(0, search_text, replace_text, line);
-    }
-    else if( occurrence > 0 )
-    {
-      int found = replace(occurrence, search_text, replace_text, line);
-      occurrence -= found;
-    }
-    output_file << line;
-    output_file << "\n";
+    s << line << std::endl;
   }
+  std::string ss = s.str();
+  replace(0, search_text, replace_text, ss);
+  output_file << ss;
+
+  //BUGGY - KANN KEINE \n SUCHEN
+  //while( std::getline(input_file, line) )
+  //{
+  //  if( replace_all )
+  //  {
+  //    replace(0, search_text, replace_text, line);
+  //  }
+  //  else if( occurrence > 0 )
+  //  {
+  //    int found = replace(occurrence, search_text, replace_text, line);
+  //    occurrence -= found;
+  //  }
+  //  output_file << line;
+  //  output_file << "\n";
+  //}
 
   input_file.close();
   output_file.close();
