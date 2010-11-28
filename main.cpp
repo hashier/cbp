@@ -39,13 +39,13 @@ int main(int argc, char *argv[])
     //yydebug = 1;
     //parse file
     std::cout << "[Parse File]" << std::endl;
-    File tree;
+    File* tree;
     yyparse((void*) &tree);
     std::cout << " -done" << std::endl << std::endl;
 
     std::cout << "[Generate ASM-Source]" << std::endl;
     CodeGen* out = new CodeGen("out.asm");
-    tree.gen(out);
+    tree->gen(out);
 
     std::cout << " -done" << std::endl << std::endl;
 
