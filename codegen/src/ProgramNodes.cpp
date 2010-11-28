@@ -11,13 +11,24 @@ void File::gen(CodeGen* out) {
     (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
 //    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;                        //Parameter von main??
 //    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
-    (*out) << "\tcall\t__cbp_main" << std::endl;
+    (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
     (*out) << "\tleave" << std::endl;
     (*out) << "\tret" << std::endl;
 #endif
 
 #ifdef UNIX
+    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                          //Dateiname einfügen
     (*out) << "\t.text" << std::endl;
+    (*out) << ".globl main" << std::endl;
+    (*out) << "\t.type\tmain, @function" << std::endl;
+    (*out) << "main:" << std::endl;
+    (*out) << "\tpushq\t%rbp" << std::endl;
+    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
+//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;                            //Parameter von main??
+//    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
+    (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
+    (*out) << "\tleave" << std::endl;
+    (*out) << "\tret" << std::endl;
 #endif
 
 #ifdef WIN32
