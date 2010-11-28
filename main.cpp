@@ -16,8 +16,12 @@ int main(int argc, char *argv[])
     {
         std::cout << " -warning: missing input file. Using default 'in'." << std::endl;
         fname = "in";
-    } else
+    } else {
         fname = argv[1];
+	}
+
+//-----------------------------------------------------------------------------
+//Open File
 
     std::cout << "[Load File]" << std::endl;
     std::cout << " -file: " << fname << std::endl;
@@ -29,24 +33,27 @@ int main(int argc, char *argv[])
         std::cout << " -error: file not found" << std::endl;
         return 2;
     }
-
     std::cout << " -done" << std::endl << std::endl;
 
     //pass file to flex input
     extern FILE *yyin;
     yyin = file;
 
+//-----------------------------------------------------------------------------
+//Parse File
+
     //yydebug = 1;
-    //parse file
     std::cout << "[Parse File]" << std::endl;
     File* tree;
     yyparse((void*) &tree);
     std::cout << " -done" << std::endl << std::endl;
 
+//-----------------------------------------------------------------------------
+//Generate ASM Source
+
     std::cout << "[Generate ASM-Source]" << std::endl;
     CodeGen* out = new CodeGen("out.asm");
     tree->gen(out);
-
     std::cout << " -done" << std::endl << std::endl;
 
     delete(tree);

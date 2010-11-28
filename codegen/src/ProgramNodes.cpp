@@ -86,16 +86,14 @@ void File::gen(CodeGen* out) {
 
 void ForLoop::gen(CodeGen* out) {
 
-    int offset_it    = 4; //getVarOffsetInStackFrame(iteratorname);
+    int offset_it     = 4; //getOffsetInStackFrame(iteratorname);
     Mark label_repeat = out->newMark("repeat");
     Mark label_exit   = out->newMark("exit");
 
     //-----------------------------------------------------------------
     //set iterator to init
-    *out << "push %eax" << std::endl;                            //save eax
     init_value->gen(out);                                        //get inital value to eax
     *out << "mov %eax, " << offset_it << "(%esp)" << std::endl;  //mov eax to iterator
-    *out << "pop %eax" << std::endl;                             //restore eax
 
     //-----------------------------------------------------------------
     //set label
@@ -103,10 +101,8 @@ void ForLoop::gen(CodeGen* out) {
 
     //-----------------------------------------------------------------
     //compare 1
-    *out << "push %eax" << std::endl;                           //save eax
     final_value->gen(out);                                      //get final value to eax
     *out << "cmp " << offset_it << "(%esp), %eax" << std::endl; //compare x(%esp), eax [iterator, final value]
-    *out << "pop %eax" << std::endl;                            //restore eax
 
     //-----------------------------------------------------------------
     //compare 2 (alternative)
@@ -140,7 +136,6 @@ void ForLoop::gen(CodeGen* out) {
          //TODO
     }
 
-
     //-----------------------------------------------------------------
     //repeat
     *out << "jmp .L" << label_repeat << std::endl;              //jump to body begin
@@ -150,9 +145,9 @@ void ForLoop::gen(CodeGen* out) {
     *out << ".L" << label_exit << ":" << std::endl;
 }
 void IfElse::gen(CodeGen* out) {
-            int label_else			= 3; //getNewLabelID();
-            int label_exit			= 5; //getNewLabelID();
-	
+            int label_else = 3; //getNewLabelID();
+            int label_exit = 5; //getNewLabelID();
+
             //-----------------------------------------------------------------
             condition->gen(out);                                     //get condition
             *out << "cmp " << "$0, %eax" << std::endl;	             //compare %ecx, eax [false,condition]
@@ -168,7 +163,7 @@ void IfElse::gen(CodeGen* out) {
             //jump to exit
             *out << "jmp .L" << label_exit << std::endl;
 
-			//-----------------------------------------------------------------
+            //-----------------------------------------------------------------
             //set label
             *out << ".L" << label_else << ":" << std::endl;
 
@@ -187,7 +182,7 @@ void WhileLoop::gen(CodeGen* out) {
             int label_repeat = 3; //getNewLabelID();
             int label_exit   = 5; //getNewLabelID();
 
-			//-----------------------------------------------------------------
+            //-----------------------------------------------------------------
             //set label
             *out << ".L" << label_repeat << ":" << std::endl;
 
