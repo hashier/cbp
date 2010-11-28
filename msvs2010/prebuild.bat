@@ -41,3 +41,7 @@ ssr 0 "register int number_to_move = yy_n_chars + 2;" "register size_t number_to
 echo [Rename] "lex.yy.c" to "lex.yy.cpp" 
 del ..\parser\bison\lex.yy.cpp
 move .\tools\bin\lex.yy.c ..\parser\bison\lex.yy.cpp
+
+REM echo [Fix Warnings]
+ssr 0 "  switch (yytype)/SSR_NL/    {/SSR_NL/      default:/SSR_NL//SSR_TAB/break;/SSR_NL/    }" "" ..\parser\bison\cbp.cpp
+ssr 0 "  switch (yytype)/SSR_NL/    {/SSR_NL//SSR_NL/      default:/SSR_NL//SSR_TAB/break;/SSR_NL/    }" "" ..\parser\bison\cbp.cpp
