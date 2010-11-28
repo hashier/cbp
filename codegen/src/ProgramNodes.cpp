@@ -140,7 +140,8 @@ void IfElse::gen(CodeGen* out) {
 
             //-----------------------------------------------------------------
             //write then
-            otherwise->gen(out);                                      //write body code
+            if(otherwise)
+                otherwise->gen(out);                                      //write body code
 
             //-----------------------------------------------------------------
             //set label
