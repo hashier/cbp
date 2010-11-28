@@ -145,9 +145,59 @@ void Expr_GE::gen(CodeGen* out) {
 }
 
 void Expr_BoolOR::gen(CodeGen* out) {
+    Mark labelTrue = out->newMark("true");
+    Mark labelFalse = out->newMark("false");
+    Mark labelEnd = out->newMark("end");
+    // left hand operand into %eax
+    left->gen(out);
+    // save to local var
+    *out << "pushl  %ebx" << std::endl;
+    *out << "movl %eax, %ebx" << std::endl;
+    // compare %ebx and 0; if not equal, jump to labelTrue
+    *out << "cmpl $0, %ebx" << std::endl;
+    *out << "jne " << labelTrue << std::endl;
+    // right operand into %eax
+    right->gen(out);
+    *out << "cmpl $0, %eax" << std::endl;
+    *out << "je " << labelFalse << std::endl;
+    // jump mark "true"
+    *out << labelTrue << ":" << std::endl;
+    *out << "movl $1, %eax" << std::endl;
+    *out << "jmp " << labelEnd << std::endl;
+    // jump mark "false"
+    *out << labelFalse << ":" << std::endl;
+    *out << "movl $0, %eax" << std::endl;
+    // jump mark "end"
+    *out << labelEnd << ":" << std::endl;
+    *out << "pop %ebx" << std::endl;
 }
 
 void Expr_BoolAND::gen(CodeGen* out) {
+    Mark labelFalse = out->newMark("false");
+    Mark labelEnd = out->newMark("end");
+    // left hand operand into %eax
+    left->gen(out);
+    // save to local var
+    *out << "pushl  %ebx" << std::endl;
+    *out << "movl %eax, %ebx" << std::endl;
+    // compare %ebx and 0; if equal, jump to labelFalse
+    *out << "cmpl $0, %ebx" << std::endl;
+    *out << "je " << labelFalse << std::endl;
+    // right operand into %eax
+    right->gen(out);
+    // compare %eax and 0; if equal, jump to labelFalse
+    *out << "cmpl $0, %eax" << std::endl;
+    *out << "je " << labelFalse << std::endl;
+    // if we reached this point, both operands are different from 0
+    // thus, we moffel 1 into %eax
+    *out << "movl $1, %eax" << std::endl;
+    *out << "jmp " << labelEnd << std<<endl;
+    // jump mark "false"
+    *out << labelFalse << ":" << std::endl;
+    *out << "movl $0, %eax" << std::endl;
+    // jump mark "end"
+    *out << labelEnd << ":" << std::endl;
+    *out << "pop %ebx" << std::endl; 
 }
 
 void Expr_BoolXOR::gen(CodeGen* out) {
