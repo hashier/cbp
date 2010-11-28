@@ -5,6 +5,15 @@ void File::gen(CodeGen* out) {
 
 #ifdef APPLE
     (*out) << "\t.text" << std::endl;
+    (*out) << ".globl _main" << std::endl;
+    (*out) << "_main" << std::endl;
+    (*out) << "\tpushq\t%rbp" << std::endl;
+    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
+//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;                        //Parameter von main??
+//    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
+    (*out) << "\tcall\t__cbp_main" << std::endl;
+    (*out) << "\tleave" << std::endl;
+    (*out) << "\tret" << std::endl;
 #endif
 
 #ifdef UNIX
