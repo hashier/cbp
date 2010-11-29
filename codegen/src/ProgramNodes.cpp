@@ -30,7 +30,7 @@ void File::gen(CodeGen* out) {
 #ifdef APPLE
     (*out) << "\t.text" << std::endl;
     (*out) << ".globl _main" << std::endl;
-    (*out) << "_main" << std::endl;
+    (*out) << "_main:" << std::endl;
     (*out) << "\tpushq\t%rbp" << std::endl;
     (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
 //    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;                        //Parameter von main??
