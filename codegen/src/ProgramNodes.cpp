@@ -95,7 +95,7 @@ void File::gen(CodeGen* out) {
 
 void ForLoop::gen(CodeGen* out) {
 
-	int offset_it     = iterator->getMemoryOffset(); 
+    int offset_it     = iterator->getMemoryOffset(); 
     Mark label_repeat = out->newMark("repeat");
     Mark label_exit   = out->newMark("exit");
 
@@ -154,65 +154,65 @@ void ForLoop::gen(CodeGen* out) {
     *out << ".L" << label_exit << ":" << std::endl;
 }
 void IfElse::gen(CodeGen* out) {
-            Mark label_else = out->newMark("else"); 
-			Mark label_exit = out->newMark("exit");
+    Mark label_else = out->newMark("else"); 
+    Mark label_exit = out->newMark("exit");
 
-            //-----------------------------------------------------------------
-            condition->gen(out);                                     //get condition
-            *out << "cmp " << "$0, %eax" << std::endl;	             //compare 0, %eax [false,condition]
-            //-----------------------------------------------------------------
-            //jump to else
-            *out << "je .L" << label_else << std::endl;
+    //-----------------------------------------------------------------
+    condition->gen(out);                                     //get condition
+    *out << "cmp " << "$0, %eax" << std::endl;	             //compare 0, %eax [false,condition]
+    //-----------------------------------------------------------------
+    //jump to else
+    *out << "je .L" << label_else << std::endl;
 
-            //-----------------------------------------------------------------
-            //write then
-            then->gen(out);                                          //write body code
+    //-----------------------------------------------------------------
+    //write then
+    then->gen(out);                                          //write body code
 
-            //-----------------------------------------------------------------
-            //jump to exit
-            *out << "jmp .L" << label_exit << std::endl;
+    //-----------------------------------------------------------------
+    //jump to exit
+    *out << "jmp .L" << label_exit << std::endl;
 
-            //-----------------------------------------------------------------
-            //set label
-            *out << ".L" << label_else << ":" << std::endl;
+    //-----------------------------------------------------------------
+    //set label
+    *out << ".L" << label_else << ":" << std::endl;
 
-            //-----------------------------------------------------------------
-            //write then
-            if(otherwise)
-                otherwise->gen(out);                                      //write body code
+    //-----------------------------------------------------------------
+    //write then
+    if(otherwise)
+        otherwise->gen(out);                                      //write body code
 
-            //-----------------------------------------------------------------
-            //set label
-            *out << ".L" << label_exit << ":" << std::endl;
+    //-----------------------------------------------------------------
+    //set label
+    *out << ".L" << label_exit << ":" << std::endl;
 }
 
 void WhileLoop::gen(CodeGen* out) {
 
-            Mark label_repeat = out->newMark("repeat");
-			Mark label_exit   = out->newMark("exit");
+    Mark label_repeat = out->newMark("repeat");
+    Mark label_exit   = out->newMark("exit");
 
-            //-----------------------------------------------------------------
-            //set label
-            *out << ".L" << label_repeat << ":" << std::endl;
+    //-----------------------------------------------------------------
+    //set label
+    *out << ".L" << label_repeat << ":" << std::endl;
 
-            //-----------------------------------------------------------------
-            condition->gen(out);                                     //get condition
-            *out << "cmp " << "$0, %eax" << std::endl; //compare $0, eax [false,condition]
-            //-----------------------------------------------------------------
-            //jump if exit
-            *out << "je .L" << label_exit << std::endl;
+    //-----------------------------------------------------------------
+    condition->gen(out);                                     //get condition
+    *out << "cmp " << "$0, %eax" << std::endl; //compare $0, eax [false,condition]
+    //-----------------------------------------------------------------
+    //jump if exit
+    *out << "je .L" << label_exit << std::endl;
 
-            //-----------------------------------------------------------------
-            //write body
-            body->gen(out);                                           //write body code
+    //-----------------------------------------------------------------
+    //write body
+    body->gen(out);                                           //write body code
 
-            //-----------------------------------------------------------------
-            //repeat
-            *out << "jmp .L" << label_repeat << std::endl;            //jump to check condition
+    //-----------------------------------------------------------------
+    //repeat
+    *out << "jmp .L" << label_repeat << std::endl;            //jump to check condition
 
-            //-----------------------------------------------------------------
-            //set label
-            *out << ".L" << label_exit << ":" << std::endl;
+    //-----------------------------------------------------------------
+    //set label
+    *out << ".L" << label_exit << ":" << std::endl;
 }
 
 void Variable::gen(CodeGen* out) {
