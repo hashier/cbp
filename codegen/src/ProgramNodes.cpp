@@ -219,7 +219,7 @@ void Variable::gen(CodeGen* out) {
     // Declare global variable
     // TODO: Must be placed between .file and .text on the top of the output
     // file.
-    *out << ".comm " << identifier << "," << type->getSize() << "," << type->getSize() << std::endl;
+    *out << "\t.comm " << identifier << "," << type->getSize() << "," << type->getSize() << std::endl;
 }
 
 void Local::gen(CodeGen* out) {
