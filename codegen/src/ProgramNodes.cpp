@@ -95,7 +95,7 @@ void File::gen(CodeGen* out) {
 
 void ForLoop::gen(CodeGen* out) {
 
-    int offset_it     = 4; //getOffsetInStackFrame(iteratorname);
+	int offset_it     = iterator->getMemoryOffset(); 
     Mark label_repeat = out->newMark("repeat");
     Mark label_exit   = out->newMark("exit");
 
@@ -154,8 +154,8 @@ void ForLoop::gen(CodeGen* out) {
     *out << ".L" << label_exit << ":" << std::endl;
 }
 void IfElse::gen(CodeGen* out) {
-            int label_else = 3; //getNewLabelID();
-            int label_exit = 5; //getNewLabelID();
+            Mark label_else = out->newMark("else"); 
+			Mark label_exit = out->newMark("exit");
 
             //-----------------------------------------------------------------
             condition->gen(out);                                     //get condition
@@ -188,8 +188,8 @@ void IfElse::gen(CodeGen* out) {
 
 void WhileLoop::gen(CodeGen* out) {
 
-            int label_repeat = 3; //getNewLabelID();
-            int label_exit   = 5; //getNewLabelID();
+            Mark label_repeat = out->newMark("repeat");
+			Mark label_exit   = out->newMark("exit");
 
             //-----------------------------------------------------------------
             //set label
