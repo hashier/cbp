@@ -217,9 +217,7 @@ void WhileLoop::gen(CodeGen* out) {
 
 void Variable::gen(CodeGen* out) {
     // Declare global variable
-    // TODO: Must be placed between .file and .text on the top of the output
-    // file.
-    *out << "\t.comm " << identifier << "," << type->getSize() << "," << type->getSize() << std::endl;
+    *out << "\t.comm " << identifier << "," << type->getSize() << ",8" << std::endl;
 }
 
 void Local::gen(CodeGen* out) {
