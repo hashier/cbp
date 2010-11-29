@@ -159,7 +159,7 @@ void IfElse::gen(CodeGen* out) {
 
             //-----------------------------------------------------------------
             condition->gen(out);                                     //get condition
-            *out << "cmp " << "$0, %eax" << std::endl;	             //compare %ecx, eax [false,condition]
+            *out << "cmp " << "$0, %eax" << std::endl;	             //compare 0, %eax [false,condition]
             //-----------------------------------------------------------------
             //jump to else
             *out << "je .L" << label_else << std::endl;
