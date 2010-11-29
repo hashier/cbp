@@ -150,11 +150,8 @@ void Expr_BoolOR::gen(CodeGen* out) {
     Mark labelEnd = out->newMark("end");
     // left hand operand into %eax
     left->gen(out);
-    // save to local var
-    *out << "pushl  %ebx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
-    // compare %ebx and 0; if not equal, jump to labelTrue
-    *out << "cmpl $0, %ebx" << std::endl;
+    // compare %eax and 0; if not equal, jump to labelTrue
+    *out << "cmpl $0, %eax" << std::endl;
     *out << "jne " << labelTrue << std::endl;
     // right operand into %eax
     right->gen(out);
@@ -169,7 +166,6 @@ void Expr_BoolOR::gen(CodeGen* out) {
     *out << "movl $0, %eax" << std::endl;
     // jump mark "end"
     *out << labelEnd << ":" << std::endl;
-    *out << "pop %ebx" << std::endl;
 }
 
 void Expr_BoolAND::gen(CodeGen* out) {
@@ -177,13 +173,10 @@ void Expr_BoolAND::gen(CodeGen* out) {
     Mark labelEnd = out->newMark("end");
     // left hand operand into %eax
     left->gen(out);
-    // save to local var
-    *out << "pushl  %ebx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
-    // compare %ebx and 0; if equal, jump to labelFalse
-    *out << "cmpl $0, %ebx" << std::endl;
+    // compare %eax and 0; if equal, jump to labelFalse
+    *out << "cmpl $0, %eax" << std::endl;
     *out << "je " << labelFalse << std::endl;
-    // right operand into %eax
+    // right hand operand into %eax
     right->gen(out);
     // compare %eax and 0; if equal, jump to labelFalse
     *out << "cmpl $0, %eax" << std::endl;
@@ -197,7 +190,6 @@ void Expr_BoolAND::gen(CodeGen* out) {
     *out << "movl $0, %eax" << std::endl;
     // jump mark "end"
     *out << labelEnd << ":" << std::endl;
-    *out << "pop %ebx" << std::endl; 
 }
 
 void Expr_BoolXOR::gen(CodeGen* out) {
