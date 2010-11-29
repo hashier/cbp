@@ -193,5 +193,23 @@ void Expr_BoolAND::gen(CodeGen* out) {
 }
 
 void Expr_BoolXOR::gen(CodeGen* out) {
+    *out << "pushl %ebx" << std::endl;
+    // left hand operand into %eax
+    left->gen(out);
+    // compare %eax and 0
+    *out << "cmpl $0, %eax" << std::endl;
+    // set LSB of %bl if equal
+    *out << "sete %bl" << std::endl;
+    // right hand operand into %eax
+    right->gen(out);
+    // compare %eax and 0
+    *out << "cmpl $0, %eax" << std::endl;
+    // set LSB of %bh if equal
+    *out << "sete %bh" << std::endl;
+    // compare %bl and %bh; if equal, xor returns false
+    *out << "cmpl %bh, %bl" << std::endl;
+    *out << "sete %al" << std::endl;
+    *out << "movzbl %al, %eax" << std::endl;
+    *out << "pop %ebx" << std::endl;
 }
 
