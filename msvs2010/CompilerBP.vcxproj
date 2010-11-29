@@ -30,15 +30,10 @@
     <ClInclude Include="..\parser\bison\cbp.tab.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\codegen\ProgramNodes.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ProgrammNodes_B</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ProgrammNodes_B</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ProgrammNodes_B</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ProgrammNodes_B</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\codegen\src\Block.cpp" />
     <ClCompile Include="..\codegen\src\CodeGen.cpp" />
     <ClCompile Include="..\codegen\src\ExprNodes.cpp" />
+    <ClCompile Include="..\codegen\src\FunctionNodes.cpp" />
     <ClCompile Include="..\codegen\src\ProgramNodes.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ProgrammNodes_A</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\ProgrammNodes_A</ObjectFileName>

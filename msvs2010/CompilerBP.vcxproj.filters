@@ -83,7 +83,7 @@
     <ClCompile Include="..\parser\src\MsgHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\codegen\ProgramNodes.cpp">
+    <ClCompile Include="..\codegen\src\FunctionNodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
