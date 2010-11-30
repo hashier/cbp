@@ -213,3 +213,40 @@ void Expr_BoolXOR::gen(CodeGen* out) {
     *out << "popl %ebx" << std::endl;
 }
 
+// TODO: Shift does not work now
+void Expr_BitLeft::gen(CodeGen* out) {
+    right->gen(out);                            // left hand operand into %eax
+//    *out << "\tpushl\t%cl"       << std::endl; // store ebx to the stack
+    *out << "\tmov\t%eax, cl"  << std::endl; // %ebx = %eax
+    left->gen(out);                            // right hand operand into %eax
+    *out << "\tsall\tcl, %eax"  << std::endl; // %eax = %eax << %ebx
+//    *out << "\tpopl\t%cl"        << std::endl; // restore ebx from the stack
+}
+
+void Expr_BitOR::gen(CodeGen* out) {
+    right->gen(out);                            // left hand operand into %eax
+    *out << "\tpushl\t%ebx"       << std::endl; // store ebx to the stack
+    *out << "\tmovl\t%eax, %ebx"  << std::endl; // %ebx = %eax
+    left->gen(out);                             // right hand operand into %eax
+    *out << "\torl\t%ebx, %eax"   << std::endl; // %eax = %eax or %ebx
+    *out << "\tpopl\t%ebx"        << std::endl; // restore ebx from the stack
+}
+
+void Expr_BitAND::gen(CodeGen* out) {
+    right->gen(out);                            // left hand operand into %eax
+    *out << "\tpushl\t%ebx"       << std::endl; // store ebx to the stack
+    *out << "\tmovl\t%eax, %ebx"  << std::endl; // %ebx = %eax
+    left->gen(out);                             // right hand operand into %eax
+    *out << "\tandl\t%ebx, %eax"  << std::endl; // %eax = %eax and %ebx
+    *out << "\tpopl\t%ebx"        << std::endl; // restore ebx from the stack
+}
+
+void Expr_BitXOR::gen(CodeGen* out) {
+    right->gen(out);                            // left hand operand into %eax
+    *out << "\tpushl\t%ebx"       << std::endl; // store ebx to the stack
+    *out << "\tmovl\t%eax, %ebx"  << std::endl; // %ebx = %eax
+    left->gen(out);                             // right hand operand into %eax
+    *out << "\txorl\t%ebx, %eax"  << std::endl; // %eax = %eax xor %ebx
+    *out << "\tpopl\t%ebx"        << std::endl; // restore ebx from the stack
+}
+
