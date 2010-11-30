@@ -223,3 +223,18 @@ void Local::gen(CodeGen* out) {
     // Declare local variable
     // Seems nothing is needed for local var declaration. It lives on the stack.
 }
+
+void Return::gen(CodeGen* out) {
+    //*out << "push ebp" << std::endl;
+    //*out << "mov esp, ebp" << std::endl;
+    //*out << "sub esp, 16" << std::endl;
+
+    if(expr != NULL)
+        expr->gen(out);                                                 // write expression
+    else
+        *out << "mov $0xdeadbeef, %eax" << std::endl;                   // mov 0xdeadbeef to eax
+            
+    *out << "mov %ebp, %esp" << std::endl;                              // set pointers of the stack back
+    *out << "pop %ebp" << std::endl;
+    *out << "ret" << std::endl;                                         // return
+}

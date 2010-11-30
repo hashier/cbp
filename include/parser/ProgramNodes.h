@@ -421,6 +421,7 @@ class Return : public Statement {
             if (expr) delete expr; expr = 0;
         }
 
+        virtual void gen(CodeGen* out);
 
     private:
         Expression* expr;
