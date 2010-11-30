@@ -110,6 +110,7 @@ class Expr_BitLeft : public Binary {
 };
 class Expr_BitRight : public Binary {
     public: Expr_BitRight(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 
 // Precedence 6

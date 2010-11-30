@@ -213,40 +213,51 @@ void Expr_BoolXOR::gen(CodeGen* out) {
     *out << "popl %ebx" << std::endl;
 }
 
-// TODO: Shift does not work now
+// Shift operators use the 8-bit %cl register, which is equal to the lowest 8 bits of %ecx.
+// arithmetic left shift
 void Expr_BitLeft::gen(CodeGen* out) {
-    right->gen(out);                            // left hand operand into %eax
-//    *out << "\tpushl\t%cl"       << std::endl; // store ebx to the stack
-    *out << "\tmov\t%eax, cl"  << std::endl; // %ebx = %eax
-    left->gen(out);                            // right hand operand into %eax
-    *out << "\tsall\tcl, %eax"  << std::endl; // %eax = %eax << %ebx
-//    *out << "\tpopl\t%cl"        << std::endl; // restore ebx from the stack
+    right->gen(out);                          // left hand operand into %eax
+    *out << "\tpushl\t%ecx"     << std::endl; // store %ecx including %cl to the stack
+    *out << "\tmov\t%eax, %ecx" << std::endl; // %ecx = %eax including %cl = %eax & 0x1F
+    left->gen(out);                           // right hand operand into %eax
+    *out << "\tsal\t%cl, %eax"  << std::endl; // %eax = %eax << %cl
+    *out << "\tpopl\t%ecx"      << std::endl; // restore %ecx from the stack
+}
+
+// arithmetic right shift
+void Expr_BitRight::gen(CodeGen* out) {
+    right->gen(out);                          // left hand operand into %eax
+    *out << "\tpushl\t%ecx"     << std::endl; // store %ecx including %cl to the stack
+    *out << "\tmov\t%eax, %ecx" << std::endl; // %ecx = %eax including %cl = %eax & 0x1F
+    left->gen(out);                           // right hand operand into %eax
+    *out << "\tsar\t%cl, %eax"  << std::endl; // %eax = %eax >> %cl
+    *out << "\tpopl\t%ecx"      << std::endl; // restore %ecx from the stack
 }
 
 void Expr_BitOR::gen(CodeGen* out) {
-    right->gen(out);                            // left hand operand into %eax
-    *out << "\tpushl\t%ebx"       << std::endl; // store ebx to the stack
-    *out << "\tmovl\t%eax, %ebx"  << std::endl; // %ebx = %eax
-    left->gen(out);                             // right hand operand into %eax
-    *out << "\torl\t%ebx, %eax"   << std::endl; // %eax = %eax or %ebx
-    *out << "\tpopl\t%ebx"        << std::endl; // restore ebx from the stack
+    right->gen(out);                           // left hand operand into %eax
+    *out << "\tpushl\t%ebx"      << std::endl; // store %ebx to the stack
+    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
+    left->gen(out);                            // right hand operand into %eax
+    *out << "\torl\t%ebx, %eax"  << std::endl; // %eax = %eax or %ebx
+    *out << "\tpopl\t%ebx"       << std::endl; // restore %ebx from the stack
 }
 
 void Expr_BitAND::gen(CodeGen* out) {
-    right->gen(out);                            // left hand operand into %eax
-    *out << "\tpushl\t%ebx"       << std::endl; // store ebx to the stack
-    *out << "\tmovl\t%eax, %ebx"  << std::endl; // %ebx = %eax
-    left->gen(out);                             // right hand operand into %eax
-    *out << "\tandl\t%ebx, %eax"  << std::endl; // %eax = %eax and %ebx
-    *out << "\tpopl\t%ebx"        << std::endl; // restore ebx from the stack
+    right->gen(out);                           // left hand operand into %eax
+    *out << "\tpushl\t%ebx"      << std::endl; // store ebx to the stack
+    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
+    left->gen(out);                            // right hand operand into %eax
+    *out << "\tandl\t%ebx, %eax" << std::endl; // %eax = %eax and %ebx
+    *out << "\tpopl\t%ebx"       << std::endl; // restore %ebx from the stack
 }
 
 void Expr_BitXOR::gen(CodeGen* out) {
-    right->gen(out);                            // left hand operand into %eax
-    *out << "\tpushl\t%ebx"       << std::endl; // store ebx to the stack
-    *out << "\tmovl\t%eax, %ebx"  << std::endl; // %ebx = %eax
-    left->gen(out);                             // right hand operand into %eax
-    *out << "\txorl\t%ebx, %eax"  << std::endl; // %eax = %eax xor %ebx
-    *out << "\tpopl\t%ebx"        << std::endl; // restore ebx from the stack
+    right->gen(out);                           // left hand operand into %eax
+    *out << "\tpushl\t%ebx"      << std::endl; // store ebx to the stack
+    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
+    left->gen(out);                            // right hand operand into %eax
+    *out << "\txorl\t%ebx, %eax" << std::endl; // %eax = %eax xor %ebx
+    *out << "\tpopl\t%ebx"       << std::endl; // restore %ebx from the stack
 }
 
