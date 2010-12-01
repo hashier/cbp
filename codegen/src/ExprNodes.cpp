@@ -275,6 +275,6 @@ void Expr_Sub::gen(CodeGen* out) {
     *out << "\tpushl\t%ebx"      << std::endl; // store ebx to the stack
     *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
     left->gen(out);                            // left hand operand into %eax
-    *out << "\tsubl\t%ebx, %eax" << std::endl; // %eax = %eax + %ebx
+    *out << "\tsubl\t%ebx, %eax" << std::endl; // %eax = %eax - %ebx
     *out << "\tpopl\t%ebx"       << std::endl; // restore %ebx from the stack
 }
