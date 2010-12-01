@@ -105,34 +105,43 @@ class Expr_BoolXOR : public Binary {
 
 // Precedence 7
 class Expr_BitLeft : public Binary {
-    public: Expr_BitLeft(Expression* left, Expression* right) : Binary(left, right) { }
+public:
+    Expr_BitLeft(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
 };
 class Expr_BitRight : public Binary {
-    public: Expr_BitRight(Expression* left, Expression* right) : Binary(left, right) { }
+public:
+    Expr_BitRight(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
 };
 
 // Precedence 6
 class Expr_BitOR : public Binary {
-    public: Expr_BitOR(Expression* left, Expression* right) : Binary(left, right) { }
+public:
+    Expr_BitOR(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
 };
 class Expr_BitAND : public Binary {
-    public: Expr_BitAND(Expression* left, Expression* right) : Binary(left, right) { }
+public:
+    Expr_BitAND(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
 };
 class Expr_BitXOR : public Binary {
-    public: Expr_BitXOR(Expression* left, Expression* right) : Binary(left, right) { }
+public:
+    Expr_BitXOR(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
 };
 
 // Precedence 5
 class Expr_Add : public Binary {
-    public: Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
+public:
+    Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 class Expr_Sub : public Binary {
-    public: Expr_Sub(Expression* left, Expression* right) : Binary(left, right) { }
+public:
+    Expr_Sub(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual void gen(CodeGen* out);
 };
 
 // Precedence 4
