@@ -3,8 +3,8 @@
 #include<sstream>
 
 Mark CodeGen::newMark(std::string name) {
-    std::stringstream ss(name);
-    ss << (mark_counter++);
+    std::stringstream ss;
+    ss << name << (mark_counter++);
     return ss.str();
 }
 
