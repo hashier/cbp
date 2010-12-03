@@ -10,7 +10,7 @@ void Block::gen(CodeGen* out) {
         // Align to something divisible by 4.
         if(offset % 4 != 0)
             offset += offset % 4;
-        *out << "pushl %ebp" << endl;
+        *out << "pushq %rbp" << endl;
         *out << "movl %esp, %ebp" << endl;
         *out << "subl $" << offset << ", %esp" << endl;
 
@@ -34,7 +34,7 @@ void Block::gen(CodeGen* out) {
     // Tidy up the cellar.
     if(!offset) {
         *out << "movl %ebp, %esp" << endl;
-        *out << "pop %ebp" << endl;
+        *out << "popq %rbp" << endl;
     }
 
 }
