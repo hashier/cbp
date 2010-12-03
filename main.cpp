@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 //Generate ASM Source
 
     std::cout << "[Generate ASM-Source]" << std::endl;
-    CodeGen* out = new CodeGen("out.s");
+    CodeGen* out = new CodeGen("out.s", fname);
     tree->gen(out);
     std::cout << " -done" << std::endl << std::endl;
 

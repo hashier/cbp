@@ -2,15 +2,21 @@
 
 void File::gen(CodeGen* out) {
 
+    std::string filename = out->getInputFileName();
+    size_t found;
+    found=filename.find_last_of("/\\");
+    filename = filename.substr(found+1);
+
+
 #ifdef APPLE
 #endif
 
 #ifdef UNIX
-    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                          //Dateiname einfügen
+    (*out) << "\t.file\t\"" << filename << "\"" << std::endl;                          //Dateiname einfügen
 #endif
 
 #ifdef WIN32
-    (*out) << "\t.file\t\"DATEINAME\"" << std::endl;                           //Dateiname einfügen
+    (*out) << "\t.file\t\"" << filename << "\"" << std::endl;                           //Dateiname einfügen
 #endif
 
     {
