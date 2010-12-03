@@ -8,7 +8,7 @@ void Function::gen(CodeGen* out) {
     *out << mark << ":" << endl;
 
     if (identifier == "main")
-	*out << "__cbp_main:" << endl;
+        *out << "__cbp_main:" << endl;
 
     if(statement)
         statement->gen(out);
