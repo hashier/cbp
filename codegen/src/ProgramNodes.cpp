@@ -1,5 +1,7 @@
 #include"ProgramNodes.h"
 
+#include <sstream>
+
 void File::gen(CodeGen* out) {
 
     std::string filename = out->getInputFileName();
@@ -189,6 +191,51 @@ void IfElse::gen(CodeGen* out) {
     //-----------------------------------------------------------------
     //set label
     *out << ".L" << label_exit << ":" << std::endl;
+}
+
+void SwitchCase::gen(CodeGen* out) {
+    Mark exitLabel = out->newMark("switchExit");
+    
+    // execute condition -> result in %eax
+    which->gen(out);
+    
+    std::list<Mark> jumpLabels;
+    std::stringstream convert;
+    
+    // generate comparison for each possibility
+	std::list<Case*>::const_iterator caseIterator = cases->begin();
+	std::list<Case*>::const_iterator caseEnd = cases->end();
+	for(; caseIterator != caseEnd; ++caseIterator){
+	    int condition = (*caseIterator)->condition->val();
+	    
+	    convert << "case" << condition;
+	    jumpLabels.push_back(out->newMark(convert.str()));
+	    convert.str(""); convert.clear();
+	    
+	    *out << '\t' << "cmpl $" << condition << ", %eax" << std::endl;
+	    *out << '\t' << "je .L" << jumpLabels.back() << std::endl;
+	}
+	
+	// Jump to exit if no comparsion matched.
+	// If the comparison for the first case is moved to the back
+	// this extra jump instruction can be removed.
+	*out << '\t' << "jmp .L" << exitLabel << std::endl;
+	
+	// generate jump labels and corresponding code
+	// for statements
+	caseIterator = cases->begin();
+	std::list<Mark>::const_iterator labelIterator = jumpLabels.begin();
+	for(; caseIterator != caseEnd; ++caseIterator, ++labelIterator){
+	    // jump label
+	    *out << ".L" << *labelIterator << ':' << std::endl;
+	    // statement for this case
+	    (*caseIterator)->action->gen(out);	    
+	    // jump to exit after execution
+	    *out << '\t' << "jmp .L" << exitLabel << std::endl;
+	}
+	
+	// exit label
+	*out << ".L" << exitLabel << ':' << std::endl;
 }
 
 void WhileLoop::gen(CodeGen* out) {

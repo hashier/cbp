@@ -207,6 +207,10 @@ class ConstInt : public Constant {
         }
 
         virtual void gen(CodeGen* out);
+        
+        int val() const {
+            return value;
+        }
 };
 class ConstFloat : public Constant {
     float value;

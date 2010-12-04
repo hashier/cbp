@@ -343,8 +343,8 @@ class SwitchCase : public Statement {
             std::auto_ptr<Statement> action;
         };
 
-        SwitchCase(Expression* condition_, std::list<Case*>* cases_)
-            : condition(condition_),
+        SwitchCase(Expression* which_, std::list<Case*>* cases_)
+            : which(which_),
             cases(cases_) { }
 
         ~SwitchCase(){
@@ -358,7 +358,7 @@ class SwitchCase : public Statement {
             indent(num); std::cout << "SwitchCase {" << std::endl;
             num += 1;
             indent(num); std::cout << "Condition:" << std::endl;
-            condition->dump(num + 1);
+            which->dump(num + 1);
             std::list<Case*>::const_iterator caseIter = cases->begin();
             for(; caseIter != cases->end(); ++caseIter ){
                 indent(num); std::cout << "Case" << std::endl;
@@ -369,9 +369,11 @@ class SwitchCase : public Statement {
             num -= 1;
             indent(num); std::cout << "}" << std::endl;
         }
+        
+        void gen(CodeGen* out);
 
     private:
-        std::auto_ptr<Expression> condition;
+        std::auto_ptr<Expression> which;
         std::auto_ptr<std::list<Case*> > cases;
 
 };

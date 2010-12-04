@@ -1,0 +1,7 @@
+func main () : void {
+	local var local_var : uint32
+	# local_var = 1
+	switch 1 #local_var
+        case 1 3 << 2
+        case 2 10 + 1
+}
