@@ -31,6 +31,14 @@ class Node {
 };
 
 class Statement : public Node {
+    public:
+        /** Recursively calculates stack offsets.
+         * @param offset Current position on stack.
+         * @return Total size required in entire subtree.
+         */
+        virtual int calcStackOffset(int offset) {
+            return 0;
+        }
 };
 
 // Expressions, as in things that can be evaluated to numbers (at runtime)

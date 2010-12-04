@@ -81,8 +81,8 @@ class Variable : public Declaration {
         NodeType *getType() { return type; }
 
         int setStackOffset(int offset) {
-            this->offset = offset -type->getSize();
-            return type->getSize();
+            this->offset = offset -getSize();
+            return -getSize();
         }
 
         int getSize() {
@@ -159,6 +159,12 @@ class Function : public Declaration {
             if (arguments) delete arguments; arguments = 0;
             if (statement) delete statement; statement = 0;
         }
+
+    protected:
+        /** Calculates the total required stack for all statements and
+         * their recursive sub-statements.
+         */
+        int calcStackOffsets();
 
     private:
         Func_abi abi;
@@ -288,15 +294,13 @@ class Block : public Statement {
 
         virtual void gen(CodeGen* out);
 
+        virtual int calcStackOffset(int offset);
+
         virtual ~Block() {
             for (std::list<Statement*>::iterator it = subs.begin() ; it != subs.end(); it++ ) {
                 delete (*it);
             }
         }
-
-    protected:
-        /** Calculates the total required */
-        int calcStackOffsets();
 
     private:
         std::list<Statement*> subs;
@@ -442,7 +446,7 @@ class Local : public Statement {
         }
 
         /** Sets the memory offset of the wrapped Variable and returns its size. */
-        inline int setStackOffset(int offset) {
+        inline int calcStackOffset(int offset) {
             return var->setStackOffset(offset);
         }
 
