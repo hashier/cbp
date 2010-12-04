@@ -167,16 +167,13 @@ class Expr_Ptr : public Unary {
 };
 
 // Precedence 2
-class Expr_Struc : public Unary {
-private:
-    std::string *identifierInStruct;
-
+class Expr_Struc : public Expression {
 public: 
-    Expr_Struc(Expression* sub, std::string *identifier) : Unary(sub), identifierInStruct(identifier) { }
+    Expr_Struc(Expression* sub, std::string *identifier);
     virtual void dump(int num = 0)
     {
         indent(num); std::cout << "Expr_Ptr:";
-        sub->dump(num);
+        // sub->dump(num);
     }
 };
 
@@ -230,6 +227,8 @@ private:
     Variable* ref;
 public:
     Expr_Identifier(std::string *identifier);
+
+    virtual void gen(CodeGen* out);
 
     void dump(int num = 0); 
 };

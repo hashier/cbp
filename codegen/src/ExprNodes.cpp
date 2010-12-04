@@ -1,4 +1,5 @@
 #include"ExprNodes.h"
+#include"ProgramNodes.h"
 
 void Expr_Mul::gen(CodeGen* out) {
     // left hand operand into %eax
@@ -277,4 +278,8 @@ void Expr_Sub::gen(CodeGen* out) {
     left->gen(out);                            // left hand operand into %eax
     *out << "\tsubl\t%ebx, %eax" << std::endl; // %eax = %eax - %ebx
     *out << "\tpopq\t%rbx"       << std::endl; // restore %ebx from the stack
+}
+
+void Expr_Identifier::gen(CodeGen* out) {
+    *out << "\tmovl\t" << ref->getMemoryOffset() << "(%rbp), %eax" << std::endl;
 }

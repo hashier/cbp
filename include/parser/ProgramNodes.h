@@ -62,7 +62,7 @@ class NodeType : public Node
 class Variable : public Declaration {
 
     public:
-        Variable(std::string* identifier, NodeType *type) : Declaration(*identifier), type(type), offset(-1) {
+        Variable(std::string* identifier, NodeType *type) : Declaration(*identifier), type(type), offset(-1), explicitSize(0) {
             try 
             {
                 symbolTable->insertDefinition(this);
@@ -85,12 +85,16 @@ class Variable : public Declaration {
             return -getSize();
         }
 
-        int getSize() {
-            return type->getSize();
+        inline int getSize() {
+            return explicitSize > 0 ? explicitSize : type->getSize();
         }
 
-        int getMemoryOffset() {
+        inline int getMemoryOffset() {
             return offset;
+        }
+
+        inline void setExplicitSize(int explicitSize) {
+            this->explicitSize = explicitSize;
         }
 
         virtual void gen(CodeGen* out);
@@ -102,6 +106,7 @@ class Variable : public Declaration {
     protected:
         NodeType *type;
         int offset;
+        int explicitSize;
 };
 
 /*

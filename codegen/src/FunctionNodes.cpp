@@ -21,16 +21,16 @@ void Function::gen(CodeGen* out) {
             // Align to something divisible by 4.
             if(offset % 4 != 0)
                 offset += offset % 4;
-            *out << "pushq %rbp" << endl;
-            *out << "movq %rsp, %rbp" << endl;
-            *out << "subq $" << offset << ", %rsp" << endl;
+            *out << "\tpushq\t%rbp" << endl;
+            *out << "\tmovq\t%rsp, %rbp" << endl;
+            *out << "\tsubq\t$" << offset << ", %rsp" << endl;
 
             statement->gen(out);
 
             // TODO use this?
             // *out << "leave" << endl;
-            *out << "movq %rbp, %rsp" << endl;
-            *out << "popq %rbp" << endl;
+            *out << "\tmovq\t%rbp, %rsp" << endl;
+            *out << "\tpopq\t%rbp" << endl;
 
         } else {
             statement->gen(out);
