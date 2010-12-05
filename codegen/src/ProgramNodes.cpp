@@ -33,12 +33,17 @@ void File::gen(CodeGen* out) {
     (*out) << "\t.text" << std::endl;
     (*out) << ".globl _main" << std::endl;
     (*out) << "_main:" << std::endl;
-    (*out) << "\tpushq\t%rbp" << std::endl;
-    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
-//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;                        //Parameter von main??
+
+    // I don't think we need any stack management here.
+//    (*out) << "\tpushq\t%rbp" << std::endl;
+//    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
+//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;
 //    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
+
     (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
-    (*out) << "\tleave" << std::endl;
+
+//    (*out) << "\tleave" << std::endl;
+
     (*out) << "\tret" << std::endl;
 #endif
 
@@ -47,12 +52,17 @@ void File::gen(CodeGen* out) {
     (*out) << ".globl main" << std::endl;
     (*out) << "\t.type\tmain, @function" << std::endl;
     (*out) << "main:" << std::endl;
-    (*out) << "\tpushq\t%rbp" << std::endl;
-    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
-//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;                            //Parameter von main??
+
+    // I don't think we need any stack management here.
+//    (*out) << "\tpushq\t%rbp" << std::endl;
+//    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
+//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;
 //    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
+
     (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
-    (*out) << "\tleave" << std::endl;
+
+//    (*out) << "\tleave" << std::endl;
+
     (*out) << "\tret" << std::endl;
 #endif
 
@@ -62,13 +72,17 @@ void File::gen(CodeGen* out) {
     (*out) << ".globl _main" << std::endl;
     (*out) << "\t.def\t_main;\t.scl\t2;\t.type\t32;\t.endef" << std::endl;
     (*out) << "_main:" << std::endl;
-    (*out) << "\tpushq\t%rbp" << std::endl;
-    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
-    (*out) << "\tsubq\t$32, %rsp" << std::endl;
-//    (*out) << "\tmovl\t%ecx, 16(%rbp)" << std::endl;                            //Parameter von main??
-//    (*out) << "\tmovq\t%rdx, 24(%rbp)" << std::endl;
+
+    // I don't think we need any stack management here.
+//    (*out) << "\tpushq\t%rbp" << std::endl;
+//    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
+//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;
+//    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
+
     (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
-    (*out) << "\tleave" << std::endl;
+
+//    (*out) << "\tleave" << std::endl;
+
     (*out) << "\tret" << std::endl;
 #endif
 
