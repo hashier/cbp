@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	}
 
 //-----------------------------------------------------------------------------
-//Open File
+// Open File
 
     std::cout << "[Load File]" << std::endl;
     std::cout << " -file: " << fname << std::endl;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     yyin = file;
 
 //-----------------------------------------------------------------------------
-//Parse File
+// Parse File
 
     //yydebug = 1;
     std::cout << "[Parse File]" << std::endl;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     std::cout << " -done" << std::endl << std::endl;
 
 //-----------------------------------------------------------------------------
-//Generate ASM Source
+// Generate ASM Source
 
     std::cout << "[Generate ASM-Source]" << std::endl;
     CodeGen* out = new CodeGen("out.s", fname);
