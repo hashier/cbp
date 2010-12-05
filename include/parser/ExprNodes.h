@@ -247,12 +247,5 @@ class FuncCall : public Atom {
 };
 
 
-// Warum gabs das noch nicht?
-class Expr_Atom : public Atom {
-private:
-    Expression *sub;
-public:
-    Expr_Atom(Expression *sub) : sub(sub) { }
-    virtual void dump(int num = 0) { indent(num); sub->dump(); }
 };
 
