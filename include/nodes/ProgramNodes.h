@@ -13,52 +13,6 @@ enum Func_abi {
     Abi_default
 };
 
-class Variable;
-
-
-class NodeType : public Node
-{
-    public:
-        NodeType(BaseType baseType)
-        {
-            this->type = new TypeSimple(baseType);
-        }
-
-        NodeType(std::string *identifier);
-
-        NodeType(NodeType *type_)
-        {
-            this->type = new TypeArray(type_->getType());
-        }
-
-        NodeType(std::list<Variable *>* members);
-
-        void dump(int num = 0) {
-            indent(num); std::cout << "Type: " << std::endl;
-            if (type != NULL)
-            {
-                indent(num); std::cout << type->getString() << std::endl;
-            }
-            else
-            {
-                indent(num); std::cout << "TODO (undefined type)" << std::endl;
-            }
-        }
-
-        Type *getType() { return type; }
-
-        int getSize() {
-            return type->getSize();
-        }
-
-        virtual ~NodeType() {
-            //if (type) delete type; type = 0; // TODO: wird mehrfach referenziert...
-        }
-
-    protected:
-        Type *type;
-};
-
 class Variable : public Declaration {
 
     public:
