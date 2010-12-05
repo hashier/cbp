@@ -280,6 +280,9 @@ void Expr_Sub::gen(CodeGen* out) {
     *out << "\tpopq\t%rbx"       << std::endl; // restore %ebx from the stack
 }
 
+void Expr_Identifier::genLeft(CodeGen* out) {
+    *out << "\tleal\t" << ref->getMemoryOffset() << "(%rbp), %eax" << std::endl;
+}
 void Expr_Identifier::gen(CodeGen* out) {
     *out << "\tmovl\t" << ref->getMemoryOffset() << "(%rbp), %eax" << std::endl;
 }

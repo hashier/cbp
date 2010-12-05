@@ -50,8 +50,9 @@ class Binary : public Expression {
 class Expr_Assign : public Binary {
     public: 
         Expr_Assign(Expression* left, Expression* right) : Binary(left, right) { 
-            // TODO typecheck, left side can only be a single IDENTIFIER node!
         }
+
+        // virtual void gen(CodeGen* out);
 };
 
 // Precedence 10
@@ -60,6 +61,13 @@ class Expr_Cast : public Expression {
         Expr_Cast(Type *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
 
         virtual void dump(int num = 0);
+
+        virtual void genLeft(CodeGen* out) {
+            expr->genLeft(out);
+        }
+        virtual void gen(CodeGen* out) {
+            expr->gen(out);
+        }
 
         virtual Type* getType() {
             // Fun fact: Returning this is pretty much the entire functionality of Expr_Cast!
@@ -207,8 +215,6 @@ public:
     }
 };
 
-// struc? No idea..
-
 // Precedence 1
 class Atom : public Expression {
 };
@@ -267,6 +273,7 @@ private:
 public:
     Expr_Identifier(std::string *identifier);
 
+    virtual void genLeft(CodeGen* out);
     virtual void gen(CodeGen* out);
 
     virtual Type* getType() {
