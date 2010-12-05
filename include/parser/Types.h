@@ -13,8 +13,7 @@ enum BaseType {
     Type_uint32,
     Type_int32,
     Type_float32,
-    Type_float64,
-    Type_void
+    Type_float64
 };
 
 class Type
@@ -53,8 +52,6 @@ class TypeSimple : public Type
                     return "float32";
                 case Type_float64:
                     return "float64";
-                case Type_void:
-                    return "void";
                 default:
                     return "unknown BaseType!";
             }
@@ -80,8 +77,6 @@ class TypeSimple : public Type
                     return 4;
                 case Type_float64:
                     return 8;
-                case Type_void:
-                    return 0;   // TODO andere Zahl raten?
             }
             //fix warning: not all control paths return a value
             return 0;
@@ -90,6 +85,16 @@ class TypeSimple : public Type
     protected:
         BaseType baseType;
 };
+
+class TypeVoid : public Type {
+    public:
+        TypeVoid() {
+        }
+
+        virtual int getSize() {
+            return 0;
+        }
+}
 
 class TypeStruct : public Type
 {

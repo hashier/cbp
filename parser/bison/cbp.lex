@@ -55,7 +55,7 @@ eol			[\r]?[\n]
 "int32"         { yylval.type_val = new TypeSimple(Type_int32);   return TYPE; }
 "float32"       { yylval.type_val = new TypeSimple(Type_float32); return TYPE; }
 "float64"       { yylval.type_val = new TypeSimple(Type_float64); return TYPE; }
-"void"          { yylval.type_val = new TypeSimple(Type_void);    return KEY_VOID; }
+"void"          { yylval.type_val = new TypeVoid();               return KEY_VOID; }
 "local"         { return KEY_LOCAL; }
 
 
