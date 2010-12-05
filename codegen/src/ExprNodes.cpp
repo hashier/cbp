@@ -10,7 +10,7 @@ void Expr_Mul::gen(CodeGen* out) {
     // right operand into %eax
     right->gen(out);
     // multiply
-    *out << "imull %ebx, %eax" << std::endl;
+    *out << "imull %ebx" << std::endl;
     *out << "popq  %rbx" << std::endl;
 
 }
@@ -23,7 +23,7 @@ void Expr_Div::gen(CodeGen* out) {
     // right operand into %eax
     right->gen(out);
     // multiply
-    *out << "divl %ebx, %eax" << std::endl;
+    *out << "divl %ebx" << std::endl;
     *out << "popq  %rbx" << std::endl;
 }
 void Expr_Mod::gen(CodeGen* out) {
@@ -35,7 +35,8 @@ void Expr_Mod::gen(CodeGen* out) {
     // right operand into %eax
     right->gen(out);
     // multiply
-    *out << "modl %ebx, %eax" << std::endl;
+    *out << "divl %ebx" << std::endl;
+    *out << "movl %edx, %eax" << std::endl;
     *out << "popq  %rbx" << std::endl;
 }
 
