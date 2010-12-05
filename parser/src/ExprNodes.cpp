@@ -29,9 +29,9 @@ void Expr_Identifier::dump(int num) {
 void Expr_Cast::dump(int num)
 {
       indent(num); std::cout << "Cast as:" << std::endl;
-      if(castType != NULL) {
-        castType->dump(num + 1);
-      }
+      // if(castType != NULL) {
+        // castType->dump(num + 1);
+      // }
 }
 
 

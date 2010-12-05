@@ -1,6 +1,7 @@
 #pragma once
 
 #include"AbstractNodes.h"
+#include"ProgramNodes.h"
 
 #include<string>
 #include<iostream>
@@ -54,12 +55,12 @@ class Expr_Assign : public Binary {
 // Precedence 10
 class Expr_Cast : public Expression {
     public:
-        Expr_Cast(NodeType *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
+        Expr_Cast(Type *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
 
         virtual void dump(int num = 0);
 
     private:
-        NodeType* castType;
+        Type* castType;
         Expression* expr;
 };
 

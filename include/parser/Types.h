@@ -94,7 +94,7 @@ class TypeSimple : public Type
 class TypeStruct : public Type
 {
     public:
-        TypeStruct(const std::list<Variable *> &members)
+        TypeStruct(std::list<Variable *>* members)
             : members(members) { }
 
         std::string getString() const;
@@ -102,7 +102,7 @@ class TypeStruct : public Type
         virtual int getSize();
 
     protected:
-        std::list<Variable *> members;
+        std::list<Variable *>* members;
 };
 
 class TypeArray : public Type

@@ -24,7 +24,7 @@ int yylex(void);
 	std::list<Expression*>* expr_list;
 	std::list<SwitchCase::Case*>* case_list;
 	TypeDecl*               typeDecl_val;
-	NodeType*               type_val;
+	Type*                   type_val;
 	BaseType                simpletype_val;
 	Func_abi                abi_val;
 	float                   float_val;
@@ -109,9 +109,9 @@ type_decl: KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
 
 type: TYPE
     | KEY_VOID
-    | KEY_STRUCT CURLY_BRACKET_LEFT struct_members CURLY_BRACKET_RIGHT { $$ = new NodeType($3) }
-    | IDENTIFIER { $$ = new NodeType($1); }
-    | SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT type { $$ = new NodeType($3); }
+    | KEY_STRUCT CURLY_BRACKET_LEFT struct_members CURLY_BRACKET_RIGHT { $$ = new TypeStruct($3) }
+    | IDENTIFIER { $$ = TypeDecl::getDeclaredType($1); }
+    | SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT type { $$ = new TypeArray($3); }
     ;
 
 struct_members: /* empty */ { $$ = new std::list<Variable*>(); }

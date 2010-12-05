@@ -2,7 +2,7 @@
 
 #include"AbstractNodes.h"
 #include"Types.h"
-#include "ExprNodes.h"
+// #include"ExprNodes.h"
 
 #include<string>
 #include<iostream>
@@ -62,7 +62,7 @@ class NodeType : public Node
 class Variable : public Declaration {
 
     public:
-        Variable(std::string* identifier, NodeType *type) : Declaration(*identifier), type(type), offset(-1), explicitSize(0) {
+        Variable(std::string* identifier, Type* type) : Declaration(*identifier), type(type), offset(-1), explicitSize(0) {
             try 
             {
                 symbolTable->insertDefinition(this);
@@ -75,10 +75,10 @@ class Variable : public Declaration {
 
         virtual void dump(int num = 0) {
             indent(num); std::cout << "Variable '" << identifier << "': " << std::endl;
-            type->dump(num+1);
+            // type->dump(num+1);
         }
 
-        NodeType *getType() { return type; }
+        const Type* getType() { return type; }
 
         int setStackOffset(int offset) {
             this->offset = offset -getSize();
@@ -99,12 +99,8 @@ class Variable : public Declaration {
 
         virtual void gen(CodeGen* out);
 
-        virtual ~Variable() {
-            //if (type) delete type; type = 0;
-        }
-
     protected:
-        NodeType *type;
+        Type* type;
         int offset;
         int explicitSize;
 };
@@ -183,7 +179,7 @@ class Function : public Declaration {
 class TypeDecl : public Declaration {
 
     public:
-        TypeDecl(std::string* identifier, NodeType *type)
+        TypeDecl(std::string* identifier, Type* type)
             : Declaration(*identifier), type(type) 
         {
             try
@@ -203,16 +199,17 @@ class TypeDecl : public Declaration {
         void dump(int num = 0)
         {
             indent(num); std::cout << "Type declaration: " << identifier << " of type " << std::endl;
-            type->dump(num+1);
+            // type->dump(num+1);
         }
 
-        NodeType *getType() { return type; }
-
-        virtual ~TypeDecl() {
-            if (type) delete type; type = 0;
+        Type* getType() { 
+            return type;
         }
-    private:
-        NodeType *type;
+
+        static Type* getDeclaredType(std::string *identifier);
+
+    protected:
+        Type* type;
 };
 
 /** A file holds exactly one Program.
@@ -339,6 +336,7 @@ class IfElse : public Statement {
         Statement* otherwise;
 };
 
+class ConstInt;
 /** Switch-Case-Block. */
 class SwitchCase : public Statement {
 
@@ -363,22 +361,8 @@ class SwitchCase : public Statement {
             }
         }
 
-        void dump(int num = 0) {
-            indent(num); std::cout << "SwitchCase {" << std::endl;
-            num += 1;
-            indent(num); std::cout << "Condition:" << std::endl;
-            which->dump(num + 1);
-            std::list<Case*>::const_iterator caseIter = cases->begin();
-            for(; caseIter != cases->end(); ++caseIter ){
-                indent(num); std::cout << "Case" << std::endl;
-                (*caseIter)->condition->dump(num + 1);
-                indent(num); std::cout << "Action:" << std::endl;
-                (*caseIter)->action->dump(num + 1);
-            }
-            num -= 1;
-            indent(num); std::cout << "}" << std::endl;
-        }
-        
+        void dump(int num = 0);
+
         void gen(CodeGen* out);
 
     private:
