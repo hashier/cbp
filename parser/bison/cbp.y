@@ -93,8 +93,8 @@ input: { $$ = *((File**) parm) = new File(); }
      | input func_decl { $1->add($2); }
      ;
 
-func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { Node::symbolTable->leaveCurrentScope(); $$ = new Function($3, $2, $5, $9); }
-     | KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type { $$ = new Function($3, $2, $5); }
+func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { Node::symbolTable->leaveCurrentScope(); $$ = new Function($3, $2, $5, $8, $9); }
+     | KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type { $$ = new Function($3, $2, $5, $8); }
            ;
 
 var: IDENTIFIER COLON type { $$ = new Variable($1, $3); }

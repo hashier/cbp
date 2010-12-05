@@ -124,8 +124,8 @@ class VariableInStruct : public Variable {
 class Function : public Declaration {
 
     public:
-        Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Statement* statement = NULL) 
-            : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement), gotMark(false)
+        Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Type* type, Statement* statement = NULL)
+            : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement), type(type), gotMark(false)
         { 
             try
             {
@@ -147,6 +147,10 @@ class Function : public Declaration {
         }
 
         virtual void gen(CodeGen* out);
+
+        Type* getType() {
+            return type;
+        }
 
         Mark getMark(CodeGen* out) {
             if(!gotMark) {
@@ -171,6 +175,7 @@ class Function : public Declaration {
         Func_abi abi;
         std::list<Variable*>* arguments;
         Statement* statement;
+        Type* type;
         Mark mark;
         bool gotMark;
 
