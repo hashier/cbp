@@ -294,8 +294,26 @@ void Return::gen(CodeGen* out) {
         expr->gen(out);                                                 // write expression
     else
         *out << "mov $0xdeadbeef, %eax" << std::endl;                   // mov 0xdeadbeef to eax
-            
+
     *out << "mov %ebp, %esp" << std::endl;                              // set pointers of the stack back
     *out << "pop %ebp" << std::endl;
     *out << "ret" << std::endl;                                         // return
+}
+
+int IfElse::calcStackOffset(int offset) {
+    offset += then->calcStackOffset(offset);
+    if(otherwise)
+        offset += otherwise->calcStackOffset(offset);
+    // Return the offset
+    return offset;
+}
+int WhileLoop::calcStackOffset(int offset) {
+    offset += body->calcStackOffset(offset);
+    // Return the offset
+    return offset;
+}
+int ForLoop::calcStackOffset(int offset) {
+    offset += body->calcStackOffset(offset);
+    // Return the offset
+    return offset;
 }

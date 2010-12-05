@@ -80,7 +80,7 @@ class Function : public Declaration {
     public:
         Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Type* type, Statement* statement = NULL)
             : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement), type(type), gotMark(false)
-        { 
+        {
             try
             {
                 symbolTable->insertDefinition(this);
@@ -289,6 +289,8 @@ class IfElse : public Statement {
 
         virtual void gen(CodeGen* out);
 
+        virtual int calcStackOffset(int offset);
+
     private:
         Expression* condition;
         Statement* then;
@@ -351,6 +353,8 @@ class WhileLoop : public Statement {
         }
 
         virtual void gen(CodeGen* out);
+
+        virtual int calcStackOffset(int offset);
 
     private:
         Expression* condition;
@@ -494,6 +498,8 @@ class ForLoop : public Statement {
         }
 
         virtual void gen(CodeGen* out);
+
+        virtual int calcStackOffset(int offset);
 
     private:
         Variable* iterator;
