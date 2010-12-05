@@ -78,7 +78,7 @@ class Variable : public Declaration {
             // type->dump(num+1);
         }
 
-        const Type* getType() { return type; }
+        Type* getType() { return type; }
 
         int setStackOffset(int offset) {
             this->offset = offset -getSize();

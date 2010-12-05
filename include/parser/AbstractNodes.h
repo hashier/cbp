@@ -41,8 +41,11 @@ class Statement : public Node {
         }
 };
 
+class Type;
 // Expressions, as in things that can be evaluated to numbers (at runtime)
 class Expression : public Statement {
+    public:
+        virtual Type* getType() = 0;
 };
 
 // Declarations can be stored in the symbol table and then retrieved by identifier

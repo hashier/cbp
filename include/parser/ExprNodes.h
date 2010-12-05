@@ -39,6 +39,8 @@ class Binary : public Expression {
             right->dump(num+1);
         }
 
+        virtual Type* getType();
+
     protected:
         Expression* left;
         Expression* right;
@@ -58,6 +60,11 @@ class Expr_Cast : public Expression {
         Expr_Cast(Type *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
 
         virtual void dump(int num = 0);
+
+        virtual Type* getType() {
+            // Fun fact: Returning this is pretty much the entire functionality of Expr_Cast!
+            return castType;
+        }
 
     private:
         Type* castType;
@@ -165,6 +172,11 @@ class Expr_Mod : public Binary {
 // Precedence 3
 class Expr_Ptr : public Unary {
     public: Expr_Ptr(Expression* sub) : Unary(sub) { }
+
+    virtual Type* getType() {
+        // TODO implement this
+        return NULL;
+    }
 };
 
 // Precedence 2
@@ -176,6 +188,11 @@ public:
         indent(num); std::cout << "Expr_Ptr:";
         // sub->dump(num);
     }
+
+    virtual Type* getType() {
+        // TODO implement this
+        return NULL;
+    }
 };
 
 class Expr_Arr : public Unary {
@@ -183,6 +200,11 @@ private:
     Expression *index;
 public:
     Expr_Arr(Expression *sub, Expression *index) : Unary(sub), index(index) { }
+
+    virtual Type* getType() {
+        // TODO implement this
+        return NULL;
+    }
 };
 
 // struc? No idea..
@@ -194,9 +216,12 @@ class Constant : public Atom {
 };
 class ConstInt : public Constant {
     int value;
+    Type* type;
 
     public:
         ConstInt(int value) : value(value) {
+            // TODO always 32 bit?
+            type = new TypeSimple(Type_int32);
         }
 
         void dump(int num = 0) {
@@ -205,24 +230,37 @@ class ConstInt : public Constant {
         }
 
         virtual void gen(CodeGen* out);
-        
+
         int val() const {
             return value;
         }
+
+        virtual Type* getType() {
+            return type;
+        }
+
 };
 class ConstFloat : public Constant {
     float value;
+    Type* type;
 
     public:
-        ConstFloat(float value) : value(value) { }
+        ConstFloat(float value) : value(value) {
+            // TODO always 32 bit?
+            type = new TypeSimple(Type_float32);
+        }
 
         void dump(int num = 0) {
             indent(num);
             std::cout << "Const Float: " << value << std::endl;
         }
+
+        virtual Type* getType() {
+            return type;
+        }
+
 };
 
-class Variable;
 class Expr_Identifier : public Atom {
 private:
     Variable* ref;
@@ -231,10 +269,13 @@ public:
 
     virtual void gen(CodeGen* out);
 
+    virtual Type* getType() {
+        return ref->getType();
+    }
+
     void dump(int num = 0); 
 };
 
-class Function;
 class FuncCall : public Atom {
     Function* func;
     std::list<Expression*> exprs;
@@ -244,8 +285,8 @@ class FuncCall : public Atom {
 
         void dump(int num = 0);
 
+        virtual Type* getType() {
+            return func->getType();
+        }
+
 };
-
-
-};
-

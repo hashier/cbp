@@ -82,6 +82,15 @@ class TypeSimple : public Type
             return 0;
         }
 
+        /** Returns whether or not this is a floating type. */
+        bool isFloating() {
+            return (baseType == Type_float32 || baseType == Type_float64);
+        }
+
+        bool operator>(TypeSimple& other) {
+            return getSize() > other.getSize();
+        }
+
     protected:
         BaseType baseType;
 };
@@ -94,7 +103,7 @@ class TypeVoid : public Type {
         virtual int getSize() {
             return 0;
         }
-}
+};
 
 class TypeStruct : public Type
 {
