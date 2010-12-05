@@ -41,7 +41,7 @@ include(${CMAKE_MODULE_PATH}/FindBison.cmake)
 # add the current binary dir - where the generated files are
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/parser
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/nodes
     ${CMAKE_CURRENT_SOURCE_DIR}/include/codegen
     ${CMAKE_CURRENT_SOURCE_DIR}/include/symboltable
     ${CMAKE_CURRENT_SOURCE_DIR}/include/msghandler
