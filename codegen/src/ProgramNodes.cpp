@@ -15,11 +15,11 @@ void File::gen(CodeGen* out) {
 #endif
 
 #ifdef UNIX
-    (*out) << Command(".file \"")(noSpace, filename)(noSpace, "\""); //Dateiname einfügen
+    (*out) << (Directive(".file") << ' ' << '"' << filename << '"'); //Dateiname einfügen
 #endif
 
 #ifdef WIN32
-    (*out) << Command(".file \"")(noSpace, filename)(noSpace, "\"");  //Dateiname einfügen
+    (*out) << (Directive(".file") << ' ' << '"' << filename << '"');  //Dateiname einfügen
 #endif
 
     {
@@ -30,15 +30,15 @@ void File::gen(CodeGen* out) {
     }
 
 #ifdef APPLE
-    (*out) << Command(".text");
+    (*out) << Directive(".text");
 #endif
 
 #ifdef UNIX
-    (*out) << Command(".text");
+    (*out) << Directive(".text");
 #endif
 
 #ifdef WIN32
-    (*out) << Command(".text");
+    (*out) << Directive(".text");
 #endif
 
 
@@ -72,7 +72,7 @@ void ForLoop::gen(CodeGen* out) {
     //-----------------------------------------------------------------
     //set iterator to init
     init_value->gen(out);                                        //get inital value to eax
-    *out << Command("mov")("%eax,")(offset_it, "(%esp)");        //mov eax to iterator
+    *out << Command("mov")("%eax")(Reg("esp") + offset_it);        //mov eax to iterator
 
     //-----------------------------------------------------------------
     //set label
@@ -81,16 +81,16 @@ void ForLoop::gen(CodeGen* out) {
     //-----------------------------------------------------------------
     //compare 1
     final_value->gen(out);                                      //get final value to eax
-    *out << Command("cmp")(offset_it,"(%esp),")("%eax");        //compare x(%esp), eax [iterator, final value]
+    *out << Command("cmp")(Reg("esp") + offset_it)("%eax");        //compare x(%esp), eax [iterator, final value]
 
     //-----------------------------------------------------------------
     //compare 2 (alternative)
     *out << Command("push")("%ebx");                            //save ebx
-    *out << Command("push")("%eax");                            //save eax
+    *out << Command("push")(Reg("%eax"));                            //save eax
     final_value->gen(out);                                      //get final value to eax
-    *out << Command("mov")("%eax,")("%ebx");                    //mov eax to ebx
-    *out << Command("mov")(offset_it,"(%esp),")("%eax");        //mov iterator to eax
-    *out << Command("cmp")("%eax,")("%ebx");                    //compare eax, ebx [iterator, final value]
+    *out << Command("mov")("%eax")("%ebx");                    //mov eax to ebx
+    *out << Command("mov")(Reg("esp") + offset_it)("%eax");        //mov iterator to eax
+    *out << Command("cmp")("%eax")("%ebx");                    //compare eax, ebx [iterator, final value]
     *out << Command("pop")("%eax");                             //restore eax
     *out << Command("pop")("%ebx");                             //restore ebx
 
@@ -107,9 +107,9 @@ void ForLoop::gen(CodeGen* out) {
     if(step==NULL)
     {
          *out << Command("push")("%eax");                      //save eax
-         *out << Command("mov")(offset_it,"(%esp),")("%eax");  //mov iterator to eax
+         *out << Command("mov")(Reg("esp") + offset_it)("%eax");  //mov iterator to eax
          *out << Command("inc")("%eax");                       //eax++
-         *out << Command("mov")("%eax,")(offset_it,"(%esp)");  //mov eax to iterator
+         *out << Command("mov")("%eax")(Reg("esp") + offset_it);  //mov eax to iterator
          *out << Command("pop")("%eax");                       //restore eax
     }else{
          //TODO
@@ -129,7 +129,7 @@ void IfElse::gen(CodeGen* out) {
 
     //-----------------------------------------------------------------
     condition->gen(out);                                     //get condition
-    *out << Command("cmp")("$0,")("%eax");  	             //compare 0, %eax [false,condition]
+    *out << Command("cmp")(0)("%eax");  	             //compare 0, %eax [false,condition]
     //-----------------------------------------------------------------
     //jump to else
     *out << Command("je")(label_else);
@@ -175,7 +175,7 @@ void SwitchCase::gen(CodeGen* out) {
 	    jumpLabels.push_back(out->newMark(convert.str()));
 	    convert.str(""); convert.clear();
 	    
-	    *out << Command("cmpl")("$",condition)(", %eax");
+	    *out << Command("cmpl")(condition)("%eax");
 	    *out << Command("je")(jumpLabels.back());
 	}
 	
@@ -212,7 +212,7 @@ void WhileLoop::gen(CodeGen* out) {
 
     //-----------------------------------------------------------------
     condition->gen(out);                                     //get condition
-    *out << Command("cmp")("$0,")("%eax");                   //compare $0, eax [false,condition]
+    *out << Command("cmp")(0)("%eax");                   //compare $0, eax [false,condition]
     //-----------------------------------------------------------------
     //jump if exit
     *out << Command("je")(label_exit);
@@ -232,7 +232,7 @@ void WhileLoop::gen(CodeGen* out) {
 
 void Variable::gen(CodeGen* out) {
     // Declare global variable
-    *out << Command(".comm")(identifier)(",",type->getSize())(",8");
+    *out << (Directive(".comm") << ' ' << identifier << "," << type->getSize() << ",8");
 }
 
 void Local::gen(CodeGen* out) {
@@ -248,9 +248,9 @@ void Return::gen(CodeGen* out) {
     if(expr != NULL)
         expr->gen(out);                                                 // write expression
     else
-        *out << Command("mov")("$0xdeadbeef,")("%eax");                 // mov 0xdeadbeef to eax
+        *out << Command("mov")("$0xdeadbeef")("%eax");                 // mov 0xdeadbeef to eax
 
-    *out << Command("mov")("%ebp,")("%esp");                            // set pointers of the stack back
+    *out << Command("mov")("%ebp")("%esp");                            // set pointers of the stack back
     *out << Command("pop")("%ebp");
     *out << Command("ret");                                             // return
 }

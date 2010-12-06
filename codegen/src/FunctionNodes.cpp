@@ -6,7 +6,7 @@ void Function::gen(CodeGen* out) {
     Label mark = getMark(out);
 
     if (identifier == "main") {
-        *out << Command(".globl")((out->isWithUnderscore() ? "_" : ""), string("_cbp_main"));
+        *out << (Directive(".globl") << ' ' << (out->isWithUnderscore() ? "_" : "") << "_cbp_main");
         *out << Label((out->isWithUnderscore() ? "_" : "") + string("_cbp_main"));
     }
 
@@ -24,14 +24,14 @@ void Function::gen(CodeGen* out) {
             if(offset % 4 != 0)
                 offset += offset % 4;
             *out << Command("pushq")("%rbp");
-            *out << Command("movq")("%rsp,")("%rbp");
-            *out << Command("subq")("$",offset)(", %rsp");
+            *out << Command("movq")("%rsp")("%rbp");
+            *out << Command("subq")(offset)("%rsp");
 
             statement->gen(out);
 
             // TODO use this?
             // *out << Command("leave");
-            *out << Command("movq")("%rbp,")("%rsp");
+            *out << Command("movq")("%rbp")("%rsp");
             *out << Command("popq")("%rbp");
 
         } else {
