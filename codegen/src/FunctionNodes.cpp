@@ -3,14 +3,14 @@
 using namespace std;
 
 void Function::gen(CodeGen* out) {
-    Mark mark = getMark(out);
+    Label mark = getMark(out);
 
     if (identifier == "main") {
-        *out << ".globl " << (out->isWithUnderscore() ? "_" : "") << "_cbp_main" << endl;
-        *out << (out->isWithUnderscore() ? "_" : "") << "_cbp_main:" << endl;
+        *out << Command(".globl")((out->isWithUnderscore() ? "_" : ""), string("_cbp_main"));
+        *out << Label((out->isWithUnderscore() ? "_" : "") + string("_cbp_main"));
     }
 
-    *out << mark << ":" << endl;
+    *out << mark;
 
     if(statement) {
 
@@ -23,16 +23,16 @@ void Function::gen(CodeGen* out) {
             // Align to something divisible by 4.
             if(offset % 4 != 0)
                 offset += offset % 4;
-            *out << "\tpushq\t%rbp" << endl;
-            *out << "\tmovq\t%rsp, %rbp" << endl;
-            *out << "\tsubq\t$" << offset << ", %rsp" << endl;
+            *out << Command("pushq")("%rbp");
+            *out << Command("movq")("%rsp,")("%rbp");
+            *out << Command("subq")("$",offset)(", %rsp");
 
             statement->gen(out);
 
             // TODO use this?
-            // *out << "leave" << endl;
-            *out << "\tmovq\t%rbp, %rsp" << endl;
-            *out << "\tpopq\t%rbp" << endl;
+            // *out << Command("leave");
+            *out << Command("movq")("%rbp,")("%rsp");
+            *out << Command("popq")("%rbp");
 
         } else {
             statement->gen(out);
@@ -40,6 +40,6 @@ void Function::gen(CodeGen* out) {
 
 
     } else
-        *out << "NULL function!" << endl;
+        *out << Command("NULL function!");
 
 }

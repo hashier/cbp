@@ -2,9 +2,14 @@
 
 #include<sstream>
 
-Mark CodeGen::newMark(std::string name) {
+Label CodeGen::newMark(std::string name) {
     std::stringstream ss;
-    ss << name << (mark_counter++);
-    return ss.str();
+    ss << ".L" << name << (mark_counter++);
+    return Label(ss.str());
+}
+
+CodeGen& operator<<(CodeGen& cg, Mnemonic const& mnemonic){
+    mnemonic.write(cg.outputStream());
+    return cg;
 }
 

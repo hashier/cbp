@@ -5,285 +5,285 @@ void Expr_Mul::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax, %ebx");
     // right operand into %eax
     right->gen(out);
     // multiply
-    *out << "imull %ebx" << std::endl;
-    *out << "popq  %rbx" << std::endl;
+    *out << Command("imull")("%ebx");
+    *out << Command("popq")("%rbx");
 
 }
 void Expr_Div::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // multiply
-    *out << "divl %ebx" << std::endl;
-    *out << "popq  %rbx" << std::endl;
+    *out << Command("divl")("%ebx");
+    *out << Command("popq")("%rbx");
 }
 void Expr_Mod::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // multiply
-    *out << "divl %ebx" << std::endl;
-    *out << "movl %edx, %eax" << std::endl;
-    *out << "popq  %rbx" << std::endl;
+    *out << Command("divl")("%ebx");
+    *out << Command("movl")("%edx,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 void ConstInt::gen(CodeGen* out) {
-    *out << "movl $" << value << ", %eax" << std::endl;
+    *out << Command("movl")("$",value)(", %eax");
 }
 
 void Expr_EQ::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // compare
-    *out << "cmpl %eax, %ebx" << std::endl;
+    *out << Command("cmpl")("%eax,")("%ebx");
     // set LSB of %ax if equal
-    *out << "sete %al" << std::endl;
+    *out << Command("sete")("%al");
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl;
-    *out << "popq %rbx" << std::endl;
+    *out << Command("movzbl")("%al,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 void Expr_NEQ::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // compare
-    *out << "cmpl %eax, %ebx" << std::endl;
+    *out << Command("cmpl")("%eax,")("%ebx");
     // set LSB of %ax if not equal
-    *out << "setne %al" << std::endl;
+    *out << Command("setne")("%al");
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl;
-    *out << "popq %rbx" << std::endl;
+    *out << Command("movzbl")("%al,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 void Expr_LT::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // compare
-    *out << "cmpl %eax, %ebx" << std::endl;
+    *out << Command("cmpl")("%eax,")("%ebx");
     // set LSB of %ax if less than
-    *out << "setl %al" << std::endl;
+    *out << Command("setl")("%al");
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl;
-    *out << "popq %rbx" << std::endl;
+    *out << Command("movzbl")("%al,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 void Expr_GT::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // compare
-    *out << "cmpl %eax, %ebx" << std::endl;
+    *out << Command("cmpl")("%eax,")("%ebx");
     // set LSB of %ax if greater than
-    *out << "setg %al" << std::endl;
+    *out << Command("setg")("%al");
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl;
-    *out << "popq %rbx" << std::endl;
+    *out << Command("movzbl")("%al,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 void Expr_LE::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // compare
-    *out << "cmpl %eax, %ebx" << std::endl;
+    *out << Command("cmpl")("%eax,")("%ebx");
     // set LSB of %ax if less than or equal
-    *out << "setle %al" << std::endl;
+    *out << Command("setle")("%al");
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl;
-    *out << "popq %rbx" << std::endl;
+    *out << Command("movzbl")("%al,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 void Expr_GE::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
-    *out << "pushq  %rbx" << std::endl;
-    *out << "movl %eax, %ebx" << std::endl;
+    *out << Command("pushq")("%rbx");
+    *out << Command("movl")("%eax,")("%ebx");
     // right operand into %eax
     right->gen(out);
     // compare
-    *out << "cmpl %eax, %ebx" << std::endl;
+    *out << Command("cmpl")("%eax,")("%ebx");
     // set LSB of %ax if greater than or equal
-    *out << "setge %al" << std::endl;
+    *out << Command("setge")("%al");
     // move from byte %al to long %eax and pad with zeros
-    *out << "movzbl %al, %eax" << std::endl;
-    *out << "popq %rbx" << std::endl;
+    *out << Command("movzbl")("%al,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 void Expr_BoolOR::gen(CodeGen* out) {
-    Mark labelTrue = out->newMark("true");
-    Mark labelFalse = out->newMark("false");
-    Mark labelEnd = out->newMark("end");
+    Label labelTrue = out->newMark("true");
+    Label labelFalse = out->newMark("false");
+    Label labelEnd = out->newMark("end");
     // left hand operand into %eax
     left->gen(out);
     // compare %eax and 0; if not equal, jump to labelTrue
-    *out << "cmpl $0, %eax" << std::endl;
-    *out << "jne " << labelTrue << std::endl;
+    *out << Command("cmpl")("$0,")("%eax");
+    *out << Command("jne")(labelTrue);
     // right operand into %eax
     right->gen(out);
-    *out << "cmpl $0, %eax" << std::endl;
-    *out << "je " << labelFalse << std::endl;
+    *out << Command("cmpl")("$0,")("%eax");
+    *out << Command("je")(labelFalse);
     // jump mark "true"
-    *out << labelTrue << ":" << std::endl;
-    *out << "movl $1, %eax" << std::endl;
-    *out << "jmp " << labelEnd << std::endl;
+    *out << labelTrue;
+    *out << Command("movl")("$1,")("%eax");
+    *out << Command("jmp")(labelEnd);
     // jump mark "false"
-    *out << labelFalse << ":" << std::endl;
-    *out << "movl $0, %eax" << std::endl;
+    *out << labelFalse;
+    *out << Command("movl")("$0,")("%eax");
     // jump mark "end"
-    *out << labelEnd << ":" << std::endl;
+    *out << labelEnd;
 }
 
 void Expr_BoolAND::gen(CodeGen* out) {
-    Mark labelFalse = out->newMark("false");
-    Mark labelEnd = out->newMark("end");
+    Label labelFalse = out->newMark("false");
+    Label labelEnd = out->newMark("end");
     // left hand operand into %eax
     left->gen(out);
     // compare %eax and 0; if equal, jump to labelFalse
-    *out << "cmpl $0, %eax" << std::endl;
-    *out << "je " << labelFalse << std::endl;
+    *out << Command("cmpl")("$0,")("%eax");
+    *out << Command("je")(labelFalse);
     // right hand operand into %eax
     right->gen(out);
     // compare %eax and 0; if equal, jump to labelFalse
-    *out << "cmpl $0, %eax" << std::endl;
-    *out << "je " << labelFalse << std::endl;
+    *out << Command("cmpl")("$0,")("%eax");
+    *out << Command("je")(labelFalse);
     // if we reached this point, both operands are different from 0
     // thus, we moffel 1 into %eax
-    *out << "movl $1, %eax" << std::endl;
-    *out << "jmp " << labelEnd << std::endl;
+    *out << Command("movl")("$1,")("%eax");
+    *out << Command("jmp")(labelEnd);
     // jump mark "false"
-    *out << labelFalse << ":" << std::endl;
-    *out << "movl $0, %eax" << std::endl;
+    *out << labelFalse;
+    *out << Command("movl")("$0,")("%eax");
     // jump mark "end"
-    *out << labelEnd << ":" << std::endl;
+    *out << labelEnd;
 }
 
 void Expr_BoolXOR::gen(CodeGen* out) {
-    *out << "pushq %rbx" << std::endl;
+    *out << Command("pushq")("%rbx");
     // left hand operand into %eax
     left->gen(out);
     // compare %eax and 0
-    *out << "cmpl $0, %eax" << std::endl;
+    *out << Command("cmpl")("$0,")("%eax");
     // set LSB of %bl if equal
-    *out << "sete %bl" << std::endl;
+    *out << Command("sete")("%bl");
     // right hand operand into %eax
     right->gen(out);
     // compare %eax and 0
-    *out << "cmpl $0, %eax" << std::endl;
+    *out << Command("cmpl")("$0,")("%eax");
     // set LSB of %bh if equal
-    *out << "sete %bh" << std::endl;
+    *out << Command("sete")("%bh");
     // compare %bl and %bh; if equal, xor returns false
-    *out << "cmpl %bh, %bl" << std::endl;
-    *out << "sete %al" << std::endl;
-    *out << "movzbl %al, %eax" << std::endl;
-    *out << "popq %rbx" << std::endl;
+    *out << Command("cmpl")("%bh,")("%bl");
+    *out << Command("sete")("%al");
+    *out << Command("movzbl")("%al,")("%eax");
+    *out << Command("popq")("%rbx");
 }
 
 // Shift operators use the 8-bit %cl register, which is equal to the lowest 8 bits of %ecx.
 // arithmetic left shift
 void Expr_BitLeft::gen(CodeGen* out) {
-    right->gen(out);                          // right hand operand into %eax
-    *out << "\tpushq\t%rcx"     << std::endl; // store %ecx including %cl to the stack
-    *out << "\tmov\t%eax, %ecx" << std::endl; // %ecx = %eax including %cl = %eax & 0x1F
-    left->gen(out);                           // left hand operand into %eax
-    *out << "\tsal\t%cl, %eax"  << std::endl; // %eax = %eax << %cl
-    *out << "\tpopq\t%rcx"      << std::endl; // restore %ecx from the stack
+    right->gen(out);                            // right hand operand into %eax
+    *out << Command("pushq")("%rcx");           // store %ecx including %cl to the stack
+    *out << Command("mov")("%eax,")("%ecx");    // %ecx = %eax including %cl = %eax & 0x1F
+    left->gen(out);                             // left hand operand into %eax
+    *out << Command("sal")("%cl,")("%eax");     // %eax = %eax << %cl
+    *out << Command("popq")("%rcx");            // restore %ecx from the stack
 }
 
 // arithmetic right shift
 void Expr_BitRight::gen(CodeGen* out) {
-    right->gen(out);                          // right hand operand into %eax
-    *out << "\tpushq\t%rcx"     << std::endl; // store %ecx including %cl to the stack
-    *out << "\tmov\t%eax, %ecx" << std::endl; // %ecx = %eax including %cl = %eax & 0x1F
-    left->gen(out);                           // left hand operand into %eax
-    *out << "\tsar\t%cl, %eax"  << std::endl; // %eax = %eax >> %cl
-    *out << "\tpopq\t%rcx"      << std::endl; // restore %ecx from the stack
+    right->gen(out);                            // right hand operand into %eax
+    *out << Command("pushq")("%rcx");           // store %ecx including %cl to the stack
+    *out << Command("mov")("%eax,")("%ecx");    // %ecx = %eax including %cl = %eax & 0x1F
+    left->gen(out);                             // left hand operand into %eax
+    *out << Command("sar")("%cl,")("%eax");     // %eax = %eax >> %cl
+    *out << Command("popq")("%rcx");            // restore %ecx from the stack
 }
 
 void Expr_BitOR::gen(CodeGen* out) {
-    right->gen(out);                           // right hand operand into %eax
-    *out << "\tpushq\t%rbx"      << std::endl; // store %ebx to the stack
-    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
-    left->gen(out);                            // left hand operand into %eax
-    *out << "\torl\t%ebx, %eax"  << std::endl; // %eax = %eax or %ebx
-    *out << "\tpopq\t%rbx"       << std::endl; // restore %ebx from the stack
+    right->gen(out);                            // right hand operand into %eax
+    *out << Command("pushq")("%rbx");           // store %ebx to the stack
+    *out << Command("movl")("%eax,")("%ebx");   // %ebx = %eax
+    left->gen(out);                             // left hand operand into %eax
+    *out << Command("orl")("%ebx,")("%eax");    // %eax = %eax or %ebx
+    *out << Command("popq")("%rbx");            // restore %ebx from the stack
 }
 
 void Expr_BitAND::gen(CodeGen* out) {
-    right->gen(out);                           // right hand operand into %eax
-    *out << "\tpushq\t%rbx"      << std::endl; // store ebx to the stack
-    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
-    left->gen(out);                            // left hand operand into %eax
-    *out << "\tandl\t%ebx, %eax" << std::endl; // %eax = %eax and %ebx
-    *out << "\tpopq\t%rbx"       << std::endl; // restore %ebx from the stack
+    right->gen(out);                            // right hand operand into %eax
+    *out << Command("pushq")("%rbx");           // store ebx to the stack
+    *out << Command("movl")("%eax,")("%ebx");   // %ebx = %eax
+    left->gen(out);                             // left hand operand into %eax
+    *out << Command("andl")("%ebx,")("%eax");   // %eax = %eax and %ebx
+    *out << Command("popq")("%rbx");            // restore %ebx from the stack
 }
 
 void Expr_BitXOR::gen(CodeGen* out) {
-    right->gen(out);                           // right hand operand into %eax
-    *out << "\tpushq\t%rbx"      << std::endl; // store ebx to the stack
-    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
-    left->gen(out);                            // left hand operand into %eax
-    *out << "\txorl\t%ebx, %eax" << std::endl; // %eax = %eax xor %ebx
-    *out << "\tpopq\t%rbx"       << std::endl; // restore %ebx from the stack
+    right->gen(out);                            // right hand operand into %eax
+    *out << Command("pushq")("%rbx");           // store ebx to the stack
+    *out << Command("movl")("%eax,")("%ebx");   // %ebx = %eax
+    left->gen(out);                             // left hand operand into %eax
+    *out << Command("xorl")("%ebx,")("%eax");   // %eax = %eax xor %ebx
+    *out << Command("popq")("%rbx");            // restore %ebx from the stack
 }
 
 void Expr_Add::gen(CodeGen* out) {
-    right->gen(out);                           // right hand operand into %eax
-    *out << "\tpushq\t%rbx"      << std::endl; // store ebx to the stack
-    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
-    left->gen(out);                            // left hand operand into %eax
-    *out << "\taddl\t%ebx, %eax" << std::endl; // %eax = %eax + %ebx
-    *out << "\tpopq\t%rbx"       << std::endl; // restore %ebx from the stack
+    right->gen(out);                            // right hand operand into %eax
+    *out << Command("pushq")("%rbx");           // store ebx to the stack
+    *out << Command("movl")("%eax,")("%ebx");   // %ebx = %eax
+    left->gen(out);                             // left hand operand into %eax
+    *out << Command("addl")("%ebx,")("%eax");   // %eax = %eax + %ebx
+    *out << Command("popq")("%rbx");            // restore %ebx from the stack
 }
 
 void Expr_Sub::gen(CodeGen* out) {
-    right->gen(out);                           // right hand operand into %eax
-    *out << "\tpushq\t%rbx"      << std::endl; // store ebx to the stack
-    *out << "\tmovl\t%eax, %ebx" << std::endl; // %ebx = %eax
-    left->gen(out);                            // left hand operand into %eax
-    *out << "\tsubl\t%ebx, %eax" << std::endl; // %eax = %eax - %ebx
-    *out << "\tpopq\t%rbx"       << std::endl; // restore %ebx from the stack
+    right->gen(out);                            // right hand operand into %eax
+    *out << Command("pushq")("%rbx");           // store ebx to the stack
+    *out << Command("movl")("%eax,")("%ebx");   // %ebx = %eax
+    left->gen(out);                             // left hand operand into %eax
+    *out << Command("subl")("%ebx,")("%eax");   // %eax = %eax - %ebx
+    *out << Command("popq")("%rbx");            // restore %ebx from the stack
 }
 
 void Expr_Identifier::genLeft(CodeGen* out) {
-    *out << "\tleal\t" << ref->getMemoryOffset() << "(%rbp), %eax" << std::endl;
+    *out << Command("leal")(ref->getMemoryOffset(),"(%rbp),")("%eax");
 }
 void Expr_Identifier::gen(CodeGen* out) {
-    *out << "\tmovl\t" << ref->getMemoryOffset() << "(%rbp), %eax" << std::endl;
+    *out << Command("movl")(ref->getMemoryOffset(),"(%rbp),")("%eax");
 }

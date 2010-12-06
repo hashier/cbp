@@ -15,11 +15,11 @@ void File::gen(CodeGen* out) {
 #endif
 
 #ifdef UNIX
-    (*out) << "\t.file\t\"" << filename << "\"" << std::endl;                          //Dateiname einfügen
+    (*out) << Command(".file \"")(noSpace, filename)(noSpace, "\""); //Dateiname einfügen
 #endif
 
 #ifdef WIN32
-    (*out) << "\t.file\t\"" << filename << "\"" << std::endl;                           //Dateiname einfügen
+    (*out) << Command(".file \"")(noSpace, filename)(noSpace, "\"");  //Dateiname einfügen
 #endif
 
     {
@@ -30,15 +30,15 @@ void File::gen(CodeGen* out) {
     }
 
 #ifdef APPLE
-    (*out) << "\t.text" << std::endl;
+    (*out) << Command(".text");
 #endif
 
 #ifdef UNIX
-    (*out) << "\t.text" << std::endl;
+    (*out) << Command(".text");
 #endif
 
 #ifdef WIN32
-    (*out) << "\t.text" << std::endl;
+    (*out) << Command(".text");
 #endif
 
 
@@ -50,15 +50,15 @@ void File::gen(CodeGen* out) {
     }
 
 #ifdef APPLE
-    (*out) << "\t.subsections_via_symbols" << std::endl;
+    (*out) << Command(".subsections_via_symbols");
 #endif
 
 #ifdef UNIX
-    (*out) << "" << std::endl;
+    (*out) << Command("");
 #endif
 
 #ifdef WIN32
-    (*out) << "" << std::endl;
+    (*out) << Command("");
 #endif
 
 }
@@ -66,37 +66,37 @@ void File::gen(CodeGen* out) {
 void ForLoop::gen(CodeGen* out) {
 
     int offset_it     = iterator->getMemoryOffset(); 
-    Mark label_repeat = out->newMark("repeat");
-    Mark label_exit   = out->newMark("exit");
+    Label label_repeat = out->newMark("repeat");
+    Label label_exit   = out->newMark("exit");
 
     //-----------------------------------------------------------------
     //set iterator to init
     init_value->gen(out);                                        //get inital value to eax
-    *out << "mov %eax, " << offset_it << "(%esp)" << std::endl;  //mov eax to iterator
+    *out << Command("mov")("%eax,")(offset_it, "(%esp)");        //mov eax to iterator
 
     //-----------------------------------------------------------------
     //set label
-    *out << ".L" << label_repeat << ":" << std::endl;
+    *out << label_repeat;
 
     //-----------------------------------------------------------------
     //compare 1
     final_value->gen(out);                                      //get final value to eax
-    *out << "cmp " << offset_it << "(%esp), %eax" << std::endl; //compare x(%esp), eax [iterator, final value]
+    *out << Command("cmp")(offset_it,"(%esp),")("%eax");        //compare x(%esp), eax [iterator, final value]
 
     //-----------------------------------------------------------------
     //compare 2 (alternative)
-    *out << "push %ebx" << std::endl;                           //save ebx
-    *out << "push %eax" << std::endl;                           //save eax
+    *out << Command("push")("%ebx");                            //save ebx
+    *out << Command("push")("%eax");                            //save eax
     final_value->gen(out);                                      //get final value to eax
-    *out << "mov %eax, %ebx" << std::endl;                      //mov eax to ebx
-    *out << "mov " << offset_it << "(%esp), %eax" << std::endl; //mov iterator to eax
-    *out << "cmp %eax, %ebx" << std::endl;                      //compare eax, ebx [iterator, final value]
-    *out << "pop %eax" << std::endl;                            //restore eax
-    *out << "pop %ebx" << std::endl;                            //restore ebx
+    *out << Command("mov")("%eax,")("%ebx");                    //mov eax to ebx
+    *out << Command("mov")(offset_it,"(%esp),")("%eax");        //mov iterator to eax
+    *out << Command("cmp")("%eax,")("%ebx");                    //compare eax, ebx [iterator, final value]
+    *out << Command("pop")("%eax");                             //restore eax
+    *out << Command("pop")("%ebx");                             //restore ebx
 
     //-----------------------------------------------------------------
     //jump if exit
-    *out << "je .L" << label_exit << std::endl;
+    *out << Command("je")(label_exit);
 
     //-----------------------------------------------------------------
     //write body
@@ -106,33 +106,33 @@ void ForLoop::gen(CodeGen* out) {
     //increment iterator
     if(step==NULL)
     {
-         *out << "push %eax" << std::endl;                      //save eax
-         *out << "mov " << offset_it << "(%esp), %eax" << std::endl;  //mov iterator to eax
-         *out << "inc %eax" << std::endl;                       //eax++
-         *out << "mov %eax, " << offset_it << "(%esp)" << std::endl;  //mov eax to iterator
-         *out << "pop %eax" << std::endl;                       //restore eax
+         *out << Command("push")("%eax");                      //save eax
+         *out << Command("mov")(offset_it,"(%esp),")("%eax");  //mov iterator to eax
+         *out << Command("inc")("%eax");                       //eax++
+         *out << Command("mov")("%eax,")(offset_it,"(%esp)");  //mov eax to iterator
+         *out << Command("pop")("%eax");                       //restore eax
     }else{
          //TODO
     }
 
     //-----------------------------------------------------------------
     //repeat
-    *out << "jmp .L" << label_repeat << std::endl;              //jump to body begin
+    *out << Command("jmp")(label_repeat);                      //jump to body begin
 
     //-----------------------------------------------------------------
     //set label
-    *out << ".L" << label_exit << ":" << std::endl;
+    *out << label_exit;
 }
 void IfElse::gen(CodeGen* out) {
-    Mark label_else = out->newMark("else"); 
-    Mark label_exit = out->newMark("exit");
+    Label label_else = out->newMark("else"); 
+    Label label_exit = out->newMark("exit");
 
     //-----------------------------------------------------------------
     condition->gen(out);                                     //get condition
-    *out << "cmp " << "$0, %eax" << std::endl;	             //compare 0, %eax [false,condition]
+    *out << Command("cmp")("$0,")("%eax");  	             //compare 0, %eax [false,condition]
     //-----------------------------------------------------------------
     //jump to else
-    *out << "je .L" << label_else << std::endl;
+    *out << Command("je")(label_else);
 
     //-----------------------------------------------------------------
     //write then
@@ -140,11 +140,11 @@ void IfElse::gen(CodeGen* out) {
 
     //-----------------------------------------------------------------
     //jump to exit
-    *out << "jmp .L" << label_exit << std::endl;
+    *out << Command("jmp")(label_exit);
 
     //-----------------------------------------------------------------
     //set label
-    *out << ".L" << label_else << ":" << std::endl;
+    *out << label_else;
 
     //-----------------------------------------------------------------
     //write then
@@ -153,16 +153,16 @@ void IfElse::gen(CodeGen* out) {
 
     //-----------------------------------------------------------------
     //set label
-    *out << ".L" << label_exit << ":" << std::endl;
+    *out << label_exit;
 }
 
 void SwitchCase::gen(CodeGen* out) {
-    Mark exitLabel = out->newMark("switchExit");
+    Label exitLabel = out->newMark("switchExit");
     
     // execute condition -> result in %eax
     which->gen(out);
     
-    std::list<Mark> jumpLabels;
+    std::list<Label> jumpLabels;
     std::stringstream convert;
     
     // generate comparison for each possibility
@@ -175,47 +175,47 @@ void SwitchCase::gen(CodeGen* out) {
 	    jumpLabels.push_back(out->newMark(convert.str()));
 	    convert.str(""); convert.clear();
 	    
-	    *out << '\t' << "cmpl $" << condition << ", %eax" << std::endl;
-	    *out << '\t' << "je .L" << jumpLabels.back() << std::endl;
+	    *out << Command("cmpl")("$",condition)(", %eax");
+	    *out << Command("je")(jumpLabels.back());
 	}
 	
 	// Jump to exit if no comparsion matched.
 	// If the comparison for the first case is moved to the back
 	// this extra jump instruction can be removed.
-	*out << '\t' << "jmp .L" << exitLabel << std::endl;
+	*out << Command("jmp")(exitLabel);
 	
 	// generate jump labels and corresponding code
 	// for statements
 	caseIterator = cases->begin();
-	std::list<Mark>::const_iterator labelIterator = jumpLabels.begin();
+	std::list<Label>::const_iterator labelIterator = jumpLabels.begin();
 	for(; caseIterator != caseEnd; ++caseIterator, ++labelIterator){
 	    // jump label
-	    *out << ".L" << *labelIterator << ':' << std::endl;
+	    *out << *labelIterator;
 	    // statement for this case
 	    (*caseIterator)->action->gen(out);	    
 	    // jump to exit after execution
-	    *out << '\t' << "jmp .L" << exitLabel << std::endl;
+	    *out << Command("jmp")(exitLabel);
 	}
 	
 	// exit label
-	*out << ".L" << exitLabel << ':' << std::endl;
+	*out << exitLabel;
 }
 
 void WhileLoop::gen(CodeGen* out) {
 
-    Mark label_repeat = out->newMark("repeat");
-    Mark label_exit   = out->newMark("exit");
+    Label label_repeat = out->newMark("repeat");
+    Label label_exit   = out->newMark("exit");
 
     //-----------------------------------------------------------------
     //set label
-    *out << ".L" << label_repeat << ":" << std::endl;
+    *out << label_repeat;
 
     //-----------------------------------------------------------------
     condition->gen(out);                                     //get condition
-    *out << "cmp " << "$0, %eax" << std::endl; //compare $0, eax [false,condition]
+    *out << Command("cmp")("$0,")("%eax");                   //compare $0, eax [false,condition]
     //-----------------------------------------------------------------
     //jump if exit
-    *out << "je .L" << label_exit << std::endl;
+    *out << Command("je")(label_exit);
 
     //-----------------------------------------------------------------
     //write body
@@ -223,16 +223,16 @@ void WhileLoop::gen(CodeGen* out) {
 
     //-----------------------------------------------------------------
     //repeat
-    *out << "jmp .L" << label_repeat << std::endl;            //jump to check condition
+    *out << Command("jmp")(label_repeat);                   //jump to check condition
 
     //-----------------------------------------------------------------
     //set label
-    *out << ".L" << label_exit << ":" << std::endl;
+    *out << label_exit;
 }
 
 void Variable::gen(CodeGen* out) {
     // Declare global variable
-    *out << "\t.comm " << identifier << "," << type->getSize() << ",8" << std::endl;
+    *out << Command(".comm")(identifier)(",",type->getSize())(",8");
 }
 
 void Local::gen(CodeGen* out) {
@@ -248,11 +248,11 @@ void Return::gen(CodeGen* out) {
     if(expr != NULL)
         expr->gen(out);                                                 // write expression
     else
-        *out << "mov $0xdeadbeef, %eax" << std::endl;                   // mov 0xdeadbeef to eax
+        *out << Command("mov")("$0xdeadbeef,")("%eax");                 // mov 0xdeadbeef to eax
 
-    *out << "mov %ebp, %esp" << std::endl;                              // set pointers of the stack back
-    *out << "pop %ebp" << std::endl;
-    *out << "ret" << std::endl;                                         // return
+    *out << Command("mov")("%ebp,")("%esp");                            // set pointers of the stack back
+    *out << Command("pop")("%ebp");
+    *out << Command("ret");                                             // return
 }
 
 int IfElse::calcStackOffset(int offset) {

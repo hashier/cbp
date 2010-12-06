@@ -17,7 +17,7 @@ class Node {
         virtual void dump(int num = 0) = 0;
 
         virtual void gen(CodeGen* out) {
-            (*out) << typeid(this).name() << ": to be implemented!" << std::endl;
+            (*out) << Nothing(typeid(this).name());
         }
 
         static void indent(int num) {

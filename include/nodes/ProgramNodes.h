@@ -106,7 +106,7 @@ class Function : public Declaration {
             return type;
         }
 
-        Mark getMark(CodeGen* out) {
+        Label getMark(CodeGen* out) {
             if(!gotMark) {
                 gotMark = true;
                 mark = out->newMark(identifier);
@@ -130,7 +130,7 @@ class Function : public Declaration {
         std::list<Variable*>* arguments;
         Statement* statement;
         Type* type;
-        Mark mark;
+        Label mark;
         bool gotMark;
 
 };
