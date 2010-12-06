@@ -5,10 +5,12 @@ using namespace std;
 void Function::gen(CodeGen* out) {
     Mark mark = getMark(out);
 
-    *out << mark << ":" << endl;
+    if (identifier == "main") {
+        *out << ".globl " << (out->isWithUnderscore() ? "_" : "") << "_cbp_main" << endl;
+        *out << (out->isWithUnderscore() ? "_" : "") << "_cbp_main:" << endl;
+    }
 
-    if (identifier == "main")
-        *out << "__cbp_main:" << endl;
+    *out << mark << ":" << endl;
 
     if(statement) {
 

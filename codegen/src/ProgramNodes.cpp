@@ -31,59 +31,14 @@ void File::gen(CodeGen* out) {
 
 #ifdef APPLE
     (*out) << "\t.text" << std::endl;
-    (*out) << ".globl _main" << std::endl;
-    (*out) << "_main:" << std::endl;
-
-    // I don't think we need any stack management here.
-//    (*out) << "\tpushq\t%rbp" << std::endl;
-//    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
-//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;
-//    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
-
-    (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
-
-//    (*out) << "\tleave" << std::endl;
-
-    (*out) << "\tret" << std::endl;
 #endif
 
 #ifdef UNIX
     (*out) << "\t.text" << std::endl;
-    (*out) << ".globl main" << std::endl;
-    (*out) << "\t.type\tmain, @function" << std::endl;
-    (*out) << "main:" << std::endl;
-
-    // I don't think we need any stack management here.
-//    (*out) << "\tpushq\t%rbp" << std::endl;
-//    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
-//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;
-//    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
-
-    (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
-
-//    (*out) << "\tleave" << std::endl;
-
-    (*out) << "\tret" << std::endl;
 #endif
 
 #ifdef WIN32
-    (*out) << "\t.def\t__cbp_main;\t.scl\t2;\t.type\t32;\t.endef" << std::endl;
     (*out) << "\t.text" << std::endl;
-    (*out) << ".globl _main" << std::endl;
-    (*out) << "\t.def\t_main;\t.scl\t2;\t.type\t32;\t.endef" << std::endl;
-    (*out) << "_main:" << std::endl;
-
-    // I don't think we need any stack management here.
-//    (*out) << "\tpushq\t%rbp" << std::endl;
-//    (*out) << "\tmovq\t%rsp, %rbp" << std::endl;
-//    (*out) << "\tmovl\t%edi, -4(%rbp)" << std::endl;
-//    (*out) << "\tmovq\t%rsi, -16(%rbp)" << std::endl;
-
-    (*out) << "\tcall\t__cbp_main" << std::endl;                                  //"echte" main aufrufen
-
-//    (*out) << "\tleave" << std::endl;
-
-    (*out) << "\tret" << std::endl;
 #endif
 
 

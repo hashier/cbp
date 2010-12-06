@@ -51,8 +51,31 @@ int main(int argc, char *argv[])
 //-----------------------------------------------------------------------------
 // Generate ASM Source
 
+    //check for underscore
+    int withUnderscore = -1;
+    if(argc > 2) {
+        std::string arg = argv[2];
+        if(!arg.compare("nounderscore")) {
+            withUnderscore = 0;
+        }
+        else if(!arg.compare("underscore")) {
+            withUnderscore = 1;
+        }
+    }
+    if(withUnderscore == -1) { //generating default values
+#ifdef APPLE
+        withUnderscore = 1;
+#endif
+#ifdef UNIX
+        withUnderscore = 0;
+#endif
+#ifdef WIN32
+        withUnderscore = 0;
+#endif
+    }
+
     std::cout << "[Generate ASM-Source]" << std::endl;
-    CodeGen* out = new CodeGen("out.s", fname);
+    CodeGen* out = new CodeGen("out.s", fname, withUnderscore);
     tree->gen(out);
     std::cout << " -done" << std::endl << std::endl;
 
