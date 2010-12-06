@@ -1,3 +1,32 @@
+Hauptprogramm:                       Alexander
+Parser:                              Chris
+Symboltabelle:                       Jan
+Constant Propagation:                Johannes
+Inlining:                            Thorben
+Abhängigkeitsanalyse:                Martin
+Codeerzeugungs-Hilfsklassen:         Vincent
+Assembler-Rahmenprogramm:            Hendrik
+Benchmarking:                        David
+Peephole-Optimizer:                  Stefan
+Debugging Informationen:             Raimar
+Mathematische Umwandlungen:          Matthias
+
+Constraint Solving:                  Henning
+ Nachdem Abhängigkeitsanalyse + Constant Propagation durchgelaufen sind, analysierst
+ du die möglichen Werte von Variablen an bestimmten Punkten. Entgegen der
+ Constant-Propagation hast du die Aufgabe, heraus zu finden, dass z.B. in
+   a = 5
+   a = a * 2
+   if a % 2
+ das if niemals zu true evaluierien kann. Sprich: Du verfolgst für alle
+ Integer-Variablen den möglichen Wertebereich, und versuchst Muster zu finden.
+ Konkret: Für jede Variable eine Bitmaske mit Bits, die gesetzt sein müssen,
+ eine Bitmaske mit Bits die nicht gesetzt sein können, und jeweils ein Interval
+ mit Minimum und Maximum.
+
+Die Grammatik wird wie folgt aufgeteilt (Änderungen nur neue Nichtterminale für Henning):
+
+
 file ::= ( type_decl | var_decl | func_decl )*                                     --Stefan
 
 var_decl ::= 'var' IDENTIFIER ':' type ;                                           --Stefan
