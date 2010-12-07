@@ -191,7 +191,12 @@ Address operator+(int displacement, Address const& base);
 Address operator*(Reg const& lhs, int rhs);
 
 class Command : public Mnemonic {
-public:        
+public:
+    Command(Command const& other)
+        :gotFirstArg(other.gotFirstArg){
+        command << other.command.str();
+    }
+     
     explicit Command(std::string const& command_)
         : gotFirstArg(false) {
         assert(command_[0] != '.');
@@ -264,7 +269,11 @@ private:
 
 // use this to get ostream formatting
 class Directive : public Mnemonic {
-public:        
+public:
+    Directive(Directive const& other){
+        directive << other.directive.str();
+    }
+
     explicit Directive(std::string const& directive_){
         directive << directive_;    
     }
