@@ -74,8 +74,13 @@ int main(int argc, char *argv[])
 #endif
     }
 
+    std::stringstream ss;
+    ss << fname.substr(fname.find_last_of("/")+1) << ".s";
+
     std::cout << "[Generate ASM-Source]" << std::endl;
-    CodeGen* out = new CodeGen("out.s", fname, withUnderscore);
+    std::cout << " -outfile: " << ss.str() << std::endl;
+
+    CodeGen* out = new CodeGen(ss.str().c_str(), fname, withUnderscore);
     tree->gen(out);
     std::cout << " -done" << std::endl << std::endl;
 
