@@ -38,6 +38,8 @@ void Function::gen(CodeGen* out) {
             statement->gen(out);
         }
 
+        // Return from this function
+        *out << Command("ret");
 
     } else
         *out << Command("NULL function!");
