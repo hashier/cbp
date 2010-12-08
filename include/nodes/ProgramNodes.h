@@ -16,15 +16,7 @@ enum Func_abi {
 class Variable : public Declaration {
 
     public:
-        Variable(std::string* identifier, Type* type) : Declaration(*identifier), type(type), offset(-1), explicitSize(0) {
-            try 
-            {
-                symbolTable->insertDefinition(this);
-            }
-            catch (SymbolTable::DefinitionAlreadyExistsException &e)
-            {
-                std::cerr << "Error: Variable already declared in current scope: " << *identifier << " " << e.what() << std::endl;
-            }
+        Variable(std::string* identifier, Type* type) : Declaration(*identifier), type(type), offset(-1) {
         }
 
         virtual void dump(int num = 0) {
@@ -32,23 +24,21 @@ class Variable : public Declaration {
             // type->dump(num+1);
         }
 
-        Type* getType() { return type; }
+        Type* getType() {
+            return type;
+        }
 
-        int setStackOffset(int offset) {
+        virtual int setStackOffset(int offset) {
             this->offset = offset -getSize();
             return -getSize();
         }
 
-        inline int getSize() {
-            return explicitSize > 0 ? explicitSize : type->getSize();
-        }
-
-        inline int getMemoryOffset() {
+        virtual int getMemoryOffset() {
             return offset;
         }
 
-        inline void setExplicitSize(int explicitSize) {
-            this->explicitSize = explicitSize;
+        virtual int getSize() {
+            return type->getSize();
         }
 
         virtual void gen(CodeGen* out);
@@ -56,24 +46,59 @@ class Variable : public Declaration {
     protected:
         Type* type;
         int offset;
-        int explicitSize;
 };
 
-/*
-class VariableInStruct : public Variable {
-    int offset;
-
+class GlobalVariable : public Variable {
     public:
-    VariableInStruct(Variable* variable, int offset = -1) : Variable(&variable->getIdentifier(), variable->getType()) {
-        this->offset = offset;
-    }
-
-    void dump(int num = 0) {
-        indent(num); std::cout << "StructVariable '" << identifier  << "' @ " << offset << " : " << std::endl;
-        type->dump(num+1);
-    }
+        GlobalVariable(std::string* identifier, Type* type) : Variable(identifier, type) {
+            try {
+                symbolTable->insertGlobalDefinition(this);
+            } catch (SymbolTable::DefinitionAlreadyExistsException &e) {
+                std::cerr << "Error: Variable already declared in current scope: " << *identifier << " " << e.what() << std::endl;
+            }
+        }
 };
-*/
+
+class LocalVariable : public Variable {
+    public:
+        LocalVariable(std::string* identifier, Type* type) : Variable(identifier, type) {
+            try {
+                symbolTable->insertDefinition(this);
+            } catch (SymbolTable::DefinitionAlreadyExistsException &e) {
+                std::cerr << "Error: Variable already declared in current scope: " << *identifier << " " << e.what() << std::endl;
+            }
+        }
+};
+
+class StructVariable : public Variable {
+    public:
+
+        StructVariable(std::string* identifier, Type* type) : Variable(identifier, type), explicitOffset(-1) {
+            this->offset = offset;
+        }
+
+        inline void setExplicitOffset(int explicitOffset) {
+            this->explicitOffset = explicitOffset;
+        }
+
+        virtual int setStackOffset(int offset) {
+            if(explicitOffset < 0)
+                this->offset = offset -getSize();
+            return -getSize();
+        }
+
+        virtual int getMemoryOffset() {
+            return explicitOffset < 0 ? offset : explicitOffset;
+        }
+
+        void dump(int num = 0) {
+            indent(num); std::cout << "StructVariable '" << identifier  << "' @ " << offset << " : " << std::endl;
+            // type->dump(num+1);
+        }
+
+    private:
+        int explicitOffset;
+};
 
 class Function : public Declaration {
 

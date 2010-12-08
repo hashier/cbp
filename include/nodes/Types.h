@@ -2,6 +2,7 @@
 #include <string>
 
 class Variable;
+class StructVariable;
 
 #pragma once
 
@@ -108,7 +109,7 @@ class TypeVoid : public Type {
 class TypeStruct : public Type
 {
     public:
-        TypeStruct(std::list<Variable *>* members)
+        TypeStruct(std::list<StructVariable*>* members)
             : members(members) { }
 
         std::string getString() const;
@@ -116,7 +117,7 @@ class TypeStruct : public Type
         virtual int getSize();
 
     protected:
-        std::list<Variable *>* members;
+        std::list<StructVariable*>* members;
 };
 
 class TypeArray : public Type

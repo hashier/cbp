@@ -23,8 +23,12 @@ public:
 	void leaveCurrentScope();
 
 	/// Inserts a new Definition into the current scope. 
-	/// Throws a DefinitionAlreadyExistsException if there is already a definition with that identifier
+	/// @throws DefinitionAlreadyExistsException if there is already a definition with that identifier
 	void insertDefinition(Declaration *definition);
+
+	/// Inserts a new Definition into the top level (global) scope. 
+	/// @throws DefinitionAlreadyExistsException if there is already a definition with that identifier
+	void insertGlobalDefinition(Declaration *definition);
 
 	/// Returns the definition with given identifier. Starts the search in the current scope and continues
 	/// the search in the parent scope(s)

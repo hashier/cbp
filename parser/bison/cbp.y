@@ -17,6 +17,9 @@ int yylex(void);
 	Function*               func_val;
 	Statement*              statement;
 	Expression*             expr_val;
+	LocalVariable*          var_val_loc;
+	GlobalVariable*         var_val_glo;
+	StructVariable*         var_val_str;
 	Variable*               var_val;
 	Block*                  block_val;
 	SwitchCase::Case*       case_val;
@@ -29,7 +32,7 @@ int yylex(void);
 	Func_abi                abi_val;
 	float                   float_val;
 	int                     int_val;
-	std::list<Variable*>*   struct_members_val;
+	std::list<StructVariable*>*   struct_members_val;
 	//TypeStruct*             struct_val;
 	std::string*            string_val;
 }
@@ -75,7 +78,9 @@ int yylex(void);
 %type <typeDecl_val> type_decl
 %type <abi_val>      abi ABI
 %type <var_val>      var
-%type <var_val>      var_decl
+%type <var_val_loc>      var_decl_local
+%type <var_val_glo>      var_decl_global
+%type <var_val_str>      var_decl_struct
 
 %type <var_list>     var_list
 %type <expr_list>    exp_list
@@ -89,23 +94,23 @@ int yylex(void);
 
 input: { $$ = *((File**) parm) = new File(); }
      | input type_decl { $1->add($2); }
-     | input var_decl  { $1->add($2); }
+     | input var_decl_global { $1->add($2); }
      | input func_decl { $1->add($2); }
      ;
 
 func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statement { Node::symbolTable->leaveCurrentScope(); $$ = new Function($3, $2, $5, $8, $9); }
-     | KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type { $$ = new Function($3, $2, $5, $8); }
-           ;
+         | KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type { $$ = new Function($3, $2, $5, $8); }
+         ;
 
 var: IDENTIFIER COLON type { $$ = new Variable($1, $3); }
    ;
 
 var_list:   /* empty */ { $$ = new std::list<Variable*>(); }
-          | var_list var { $$->push_back($2); }
-            ;
+        | var_list var { $$->push_back($2); }
+        ;
 
 type_decl: KEY_TYPE IDENTIFIER COLON type { $$ = new TypeDecl($2, $4); }
-           ;
+         ;
 
 type: TYPE
     | KEY_VOID
@@ -114,12 +119,14 @@ type: TYPE
     | SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT type { $$ = new TypeArray($3); }
     ;
 
-struct_members: /* empty */ { $$ = new std::list<Variable*>(); }
-              | struct_members var_decl { $1->push_back($2); }
-              | struct_members var_decl AT INTEGER_CONSTANT { $2->setExplicitSize($4); $1->push_back($2); }
+struct_members: /* empty */ { $$ = new std::list<StructVariable*>(); }
+              | struct_members var_decl_struct { $1->push_back($2); }
+              | struct_members var_decl_struct AT INTEGER_CONSTANT { $2->setExplicitOffset($4); $1->push_back($2); }
               ;
 
-var_decl: KEY_VAR IDENTIFIER COLON type { /* printf("test\n");*/ $$ = new Variable($2, $4); }
+var_decl_local:  KEY_VAR IDENTIFIER COLON type { $$ = new LocalVariable($2, $4); }
+var_decl_struct: KEY_VAR IDENTIFIER COLON type { $$ = new StructVariable($2, $4); }
+var_decl_global: KEY_VAR IDENTIFIER COLON type { $$ = new GlobalVariable($2, $4); }
 
 case: KEY_CASE INTEGER_CONSTANT statement {  $$ = new SwitchCase::Case(new ConstInt($2), $3); }
 
@@ -132,7 +139,7 @@ statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
          | KEY_IF exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new IfElse($2, $3, NULL); }
          | KEY_IF exp statement KEY_ELSE statement { Node::symbolTable->leaveCurrentScope(); $$ = new IfElse($2, $3, $5); }
          | exp { $$ = $1 }
-         | KEY_LOCAL var_decl { $$ = new Local($2); } // TODO
+         | KEY_LOCAL var_decl_local { $$ = new Local($2); } // TODO
          | KEY_RETURN exp { $$ = new Return($2) }
          | KEY_RETURN KEY_VOID { $$ = new Return(NULL) }
          | KEY_FOR IDENTIFIER ASSIGN exp KEY_DOTDOT exp statement            { Node::symbolTable->leaveCurrentScope(); $$ = new ForLoop($2,$4,$6,$7) }

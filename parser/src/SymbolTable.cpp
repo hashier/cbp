@@ -40,4 +40,9 @@ void SymbolTable::insertDefinition(Declaration *definition)
     scopes.back().InsertNewDefinition(definition->getIdentifier(), definition);
 }
 
+void SymbolTable::insertGlobalDefinition(Declaration *definition)
+{
+    scopes.front().InsertNewDefinition(definition->getIdentifier(), definition);
+}
+
 }
