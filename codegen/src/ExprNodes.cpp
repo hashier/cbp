@@ -311,3 +311,31 @@ void FuncCall::gen(CodeGen *out) {
 void Expr_Ref::gen(CodeGen* out) {
     sub->genLeft(out);
 }
+
+void Expr_Deref::genLeft(CodeGen* out) {
+    // Evaluate substatement (= base address)
+    sub->gen(out);
+    if(index) {
+        // Evaluate offset
+        *out << Command("pushq")("%rbx");
+        index->gen(out);
+        *out << Command("movl")("%eax")("%ebx");
+        // Return value of variable at address
+        *out << Command("leaq")(Reg("rax") + Reg("ebx"))("%rax");
+    } else
+        *out << Command("leaq")(Reg("rax"))("%rax");
+}
+
+void Expr_Deref::gen(CodeGen* out) {
+    // Evaluate substatement (= base address)
+    sub->gen(out);
+    if(index) {
+        // Evaluate offset
+        *out << Command("pushq")("%rbx");
+        index->gen(out);
+        *out << Command("movl")("%eax")("%ebx");
+        // Return value of variable at address
+        *out << Command("movq")(Reg("rax") + Reg("ebx"))("%rax");
+    } else
+        *out << Command("movq")(Reg("rax"))("%rax");
+}

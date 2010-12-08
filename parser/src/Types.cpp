@@ -28,3 +28,5 @@ int TypeStruct::getSize()
 
     return sum;
 }
+
+TypeVoid* TypeVoid::singleton;

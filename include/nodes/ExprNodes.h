@@ -210,16 +210,29 @@ public:
     }
 };
 
-class Expr_Arr : public Unary {
+class Expr_Deref : public Unary {
 private:
-    Expression *index;
+    Expression* index;
 public:
-    Expr_Arr(Expression *sub, Expression *index) : Unary(sub), index(index) { }
+    Expr_Deref(Expression *sub) : Unary(sub), index(0) {
+        if(typeid(*sub->getType()) != typeid(TypePointer))
+            std::cerr << "Warning: Dereferencing non-pointer variable!" << std::endl;
+    }
+    Expr_Deref(Expression *sub, Expression *index) : Unary(sub), index(index) {
+        if(typeid(*sub->getType()) != typeid(TypePointer))
+            std::cerr << "Warning: Dereferencing non-pointer variable!" << std::endl;
+    }
 
     virtual Type* getType() {
-        // TODO implement this
-        return NULL;
+        TypePointer* pointedType = dynamic_cast<TypePointer*>(sub->getType());
+        if(pointedType)
+            return pointedType->getType();
+        else
+            return TypeVoid::getSingleton();
     }
+
+    virtual void genLeft(CodeGen* out);
+    virtual void gen(CodeGen* out);
 };
 
 // Precedence 1

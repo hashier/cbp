@@ -97,6 +97,8 @@ class TypeSimple : public Type
 };
 
 class TypeVoid : public Type {
+    static TypeVoid* singleton;
+
     public:
         TypeVoid() {
         }
@@ -104,6 +106,13 @@ class TypeVoid : public Type {
         virtual int getSize() {
             return 0;
         }
+
+        static TypeVoid* getSingleton() {
+            if(!singleton)
+                singleton = new TypeVoid();
+            return singleton;
+        }
+
 };
 
 class TypeStruct : public Type
