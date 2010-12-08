@@ -296,3 +296,13 @@ void Expr_Assign::gen(CodeGen* out) {
     *out << Command("movl")("%eax")(Reg("rbx"));   // %ebx = %eax
     *out << Command("popq")("%rbx");            // restore %ebx from the stack
 }
+
+void FuncCall::gen(CodeGen *out) {
+    std::list<Expression*>::iterator it;
+    for ( it = arguments->begin() ; it != arguments->end(); it++ ) {
+        (*it)->gen(out);
+        *out << Command("pushq")("%rax");
+    }
+    *out << Command("call")(func->getMark(out));
+}
+

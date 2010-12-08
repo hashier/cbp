@@ -61,7 +61,7 @@ Type* Binary::getType() {
 }
 
 
-FuncCall::FuncCall(std::string* identifier, std::list<Expression*>* exprs) 
+FuncCall::FuncCall(std::string* identifier, std::list<Expression*>* arguments) : arguments(arguments)
 {
     try
     {

@@ -285,10 +285,12 @@ public:
 
 class FuncCall : public Atom {
     Function* func;
-    std::list<Expression*> exprs;
+    std::list<Expression*>* arguments;
 
     public:
-        FuncCall(std::string* identifier, std::list<Expression*>* exprs);
+        FuncCall(std::string* identifier, std::list<Expression*>* arguments);
+
+        virtual void gen(CodeGen *out);
 
         void dump(int num = 0);
 
