@@ -120,11 +120,11 @@ class TypeStruct : public Type
         std::list<StructVariable*>* members;
 };
 
-class TypeArray : public Type
+class TypePointer : public Type
 {
     public:
-        TypeArray(Type *type)
-            : type(type) { }
+        TypePointer(Type* type) : type(type) {
+        }
 
         std::string getString() const
         {
@@ -133,16 +133,20 @@ class TypeArray : public Type
             return result;
         }
 
-        virtual ~TypeArray() {
+        virtual ~TypePointer() {
             if (type) delete type; type = 0;
         }
 
         virtual int getSize() {
-            // TODO: size ist hier unbekannt, nur groesse des pointers? des ersten elements?
-            return 0;
+            // size of a pointer
+            return 8;
+        }
+
+        Type* getType() {
+            return type;
         }
 
     protected:
-        Type *type;
+        Type* type;
 };
 
