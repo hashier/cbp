@@ -200,7 +200,7 @@ public:
      
     explicit Command(std::string const& command_)
         : gotFirstArg(false) {
-#ifdef NOT APPLE
+#ifndef APPLE
         assert(command_[0] != '.');
 #endif
         
