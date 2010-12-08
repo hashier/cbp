@@ -142,10 +142,11 @@ public:
             os << displacement;
         }
         
-        bool brackets = (displacement != 0 || !offset.empty());
-        if(brackets){
+        // We always want the address! Otherwise we wouldn't use the Address class, would we?
+        // bool brackets = (displacement != 0 || !offset.empty());
+        // if(brackets){
             os << '(';
-        }
+        // }
         
         if(!base.empty()){
             os << base;
@@ -159,9 +160,9 @@ public:
             os << ',' << multiplier;
         }
         
-        if(brackets){
+        // if(brackets){
             os << ')';
-        }
+        // }
         
         return os;
     }
