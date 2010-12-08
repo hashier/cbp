@@ -50,15 +50,15 @@ void File::gen(CodeGen* out) {
     }
 
 #ifdef APPLE
-    (*out) << Command(".subsections_via_symbols");
+    (*out) << Directive(".subsections_via_symbols");
 #endif
 
 #ifdef UNIX
-    (*out) << Command("");
+    (*out) << Directive("");
 #endif
 
 #ifdef WIN32
-    (*out) << Command("");
+    (*out) << Directive("");
 #endif
 
 }
