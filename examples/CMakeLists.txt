@@ -17,6 +17,7 @@ foreach(EXAMPLE_CBP ${EXAMPLE_CBPS})
     # generate the assembler code using our cbp compiler
     add_custom_command(OUTPUT "${EXAMPLE_CBP}.s"
         COMMAND cbp.out "${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_CBP}"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_CBP}"
         COMMENT "Compiling example ${EXAMPLE_CBP} to assembler.."
       )
 
