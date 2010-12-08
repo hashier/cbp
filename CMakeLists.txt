@@ -72,8 +72,11 @@ else(WIN32)
   target_link_libraries(cbp.out parser codegen)
 endif(WIN32)
 
-add_subdirectory(cbp_main)
-add_subdirectory(examples)
+# Doesn't work with Win32+MSVC, don't know why
+if (!MSVC)
+  add_subdirectory(cbp_main)
+  add_subdirectory(examples)
+endif (!MSVC)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/examples/working.cbp
