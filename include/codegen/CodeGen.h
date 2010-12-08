@@ -10,7 +10,7 @@ class CodeGen {
     std::ofstream output;
     int mark_counter;
     std::string inputFileName;
-    int withUnderscore;    
+    int withUnderscore;
 
     public:
         CodeGen(const char* fname, const std::string inputFileName, int withUnderscore)
@@ -27,7 +27,7 @@ class CodeGen {
         int isWithUnderscore() {
             return withUnderscore;
         }
-        
+
         std::ostream& outputStream(){
             return output;
         }

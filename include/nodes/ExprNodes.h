@@ -48,8 +48,8 @@ class Binary : public Expression {
 
 // Precedence 11
 class Expr_Assign : public Binary {
-    public: 
-        Expr_Assign(Expression* left, Expression* right) : Binary(left, right) { 
+    public:
+        Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {
         }
 
         virtual void gen(CodeGen* out);
@@ -172,7 +172,7 @@ class Expr_Div : public Binary {
         virtual void gen(CodeGen* out);
 };
 class Expr_Mod : public Binary {
-    public: 
+    public:
         Expr_Mod(Expression* left, Expression* right) : Binary(left, right) { }
         virtual void gen(CodeGen* out);
 };
@@ -196,7 +196,7 @@ class Expr_Ref : public Unary {
 
 // Precedence 2
 class Expr_Struc : public Expression {
-public: 
+public:
     Expr_Struc(Expression* sub, std::string *identifier);
     virtual void dump(int num = 0)
     {
@@ -300,7 +300,7 @@ public:
         return ref->getType();
     }
 
-    void dump(int num = 0); 
+    void dump(int num = 0);
 };
 
 class FuncCall : public Atom {

@@ -65,7 +65,7 @@ void File::gen(CodeGen* out) {
 
 void ForLoop::gen(CodeGen* out) {
 
-    int offset_it     = iterator->getMemoryOffset(); 
+    int offset_it     = iterator->getMemoryOffset();
     Label label_repeat = out->newMark("repeat");
     Label label_exit   = out->newMark("exit");
 
@@ -124,7 +124,7 @@ void ForLoop::gen(CodeGen* out) {
     *out << label_exit;
 }
 void IfElse::gen(CodeGen* out) {
-    Label label_else = out->newMark("else"); 
+    Label label_else = out->newMark("else");
     Label label_exit = out->newMark("exit");
 
     //-----------------------------------------------------------------
@@ -158,32 +158,32 @@ void IfElse::gen(CodeGen* out) {
 
 void SwitchCase::gen(CodeGen* out) {
     Label exitLabel = out->newMark("switchExit");
-    
+
     // execute condition -> result in %eax
     which->gen(out);
-    
+
     std::list<Label> jumpLabels;
     std::stringstream convert;
-    
+
     // generate comparison for each possibility
 	std::list<Case*>::const_iterator caseIterator = cases->begin();
 	std::list<Case*>::const_iterator caseEnd = cases->end();
 	for(; caseIterator != caseEnd; ++caseIterator){
 	    int condition = (*caseIterator)->condition->val();
-	    
+
 	    convert << "case" << condition;
 	    jumpLabels.push_back(out->newMark(convert.str()));
 	    convert.str(""); convert.clear();
-	    
+
 	    *out << Command("cmpl")(condition)("%eax");
 	    *out << Command("je")(jumpLabels.back());
 	}
-	
+
 	// Jump to exit if no comparsion matched.
 	// If the comparison for the first case is moved to the back
 	// this extra jump instruction can be removed.
 	*out << Command("jmp")(exitLabel);
-	
+
 	// generate jump labels and corresponding code
 	// for statements
 	caseIterator = cases->begin();
@@ -192,11 +192,11 @@ void SwitchCase::gen(CodeGen* out) {
 	    // jump label
 	    *out << *labelIterator;
 	    // statement for this case
-	    (*caseIterator)->action->gen(out);	    
+	    (*caseIterator)->action->gen(out);
 	    // jump to exit after execution
 	    *out << Command("jmp")(exitLabel);
 	}
-	
+
 	// exit label
 	*out << exitLabel;
 }

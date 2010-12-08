@@ -158,17 +158,17 @@ class TypeDecl : public Declaration {
 
     public:
         TypeDecl(std::string* identifier, Type* type)
-            : Declaration(*identifier), type(type) 
+            : Declaration(*identifier), type(type)
         {
             try
             {
-                symbolTable->insertDefinition(this); 
+                symbolTable->insertDefinition(this);
             }
             catch (SymbolTable::DefinitionAlreadyExistsException &e)
             {
                 // TODO: the existing definition can also be something else
                 std::cerr << "Error: Definition already exisits: " << " " << e.what() << std::endl;
-                //std::cerr << "'" << *identifier << "' is redefined from '" << 
+                //std::cerr << "'" << *identifier << "' is redefined from '" <<
                 //    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier))->getType()->getString()
                 //    << "' to '" << type->getType()->getString() << "'." << std::endl;
             }
@@ -180,7 +180,7 @@ class TypeDecl : public Declaration {
             // type->dump(num+1);
         }
 
-        Type* getType() { 
+        Type* getType() {
             return type;
         }
 
@@ -391,7 +391,7 @@ class Return : public Statement {
             indent(num); std::cout << "Return" << std::endl;
             if(expr==NULL) return;
             indent(num); std::cout << "expr:" << std::endl;
-            expr->dump(num+1);      
+            expr->dump(num+1);
         }
 
         virtual ~Return() {
@@ -455,36 +455,36 @@ class ForLoop : public Statement {
     public:
         //ForLoop without step expression
         ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Statement* body) :
-                init_value(init_value),final_value(final_value),body(body) 
+                init_value(init_value),final_value(final_value),body(body)
                 {
                     try
                     {
                         iterator = dynamic_cast<Variable *>(symbolTable->getDefinition(*iteratorname));
                         if (iterator == NULL)
                         {
-                            std::cerr << "Error: Iterator '" << *iteratorname << "'in For-Loop is not a variable." << std::endl; 
+                            std::cerr << "Error: Iterator '" << *iteratorname << "'in For-Loop is not a variable." << std::endl;
                         }
                     }
                     catch (SymbolTable::DefinitionNotFoundException &e)
                     {
-                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << " " << e.what() << std::endl; 
+                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << " " << e.what() << std::endl;
                     }
                 }
         //ForLoop with step expression
         ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Expression* step, Statement* body) :
-                init_value(init_value),final_value(final_value),step(step),body(body) 
+                init_value(init_value),final_value(final_value),step(step),body(body)
                 {
                     try
                     {
                         iterator = dynamic_cast<Variable *>(symbolTable->getDefinition(*iteratorname));
                         if (iterator == NULL)
                         {
-                            std::cerr << "Error: Iterator '" << *iteratorname << "'in For-Loop is not a variable." << std::endl; 
+                            std::cerr << "Error: Iterator '" << *iteratorname << "'in For-Loop is not a variable." << std::endl;
                         }
                     }
                     catch (SymbolTable::DefinitionNotFoundException &e)
                     {
-                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << " " << e.what() << std::endl; 
+                        std::cerr << "Error: Iterator '" << *iteratorname << "' is not defined." << " " << e.what() << std::endl;
                     }
                 }
 

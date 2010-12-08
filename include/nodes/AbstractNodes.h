@@ -65,7 +65,7 @@ class Expression : public Statement {
 // Declarations can be stored in the symbol table and then retrieved by identifier
 class Declaration : public Node {
 public:
-    Declaration(std::string &identifier) 
+    Declaration(std::string &identifier)
         : identifier(identifier) { }
     std::string &getIdentifier() { return identifier; }
 

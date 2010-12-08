@@ -16,11 +16,11 @@ class Nothing : public Mnemonic {
 public:
     explicit Nothing(std::string const& nodeId_)
         : nodeId(nodeId_) {}
-        
+
     std::ostream& write(std::ostream& os) const {
         return os << nodeId << ": to be implemented!" << std::endl;
     }
-    
+
     std::ostream& writeUnformatted(std::ostream& os) const {
         return write(os);
     }
@@ -32,14 +32,14 @@ private:
 class Label : public Mnemonic {
 public:
     Label(){}
-    
+
     explicit Label(std::string const& label_)
         : label(label_) {}
-    
+
     std::ostream& write(std::ostream& os) const {
         return os << label << ':' << std::endl;
     }
-    
+
     std::ostream& writeUnformatted(std::ostream& os) const {
         return os << label;
     }
@@ -67,7 +67,7 @@ private:
 class Reg {
 public:
     Reg() {}
-    
+
     explicit Reg(std::string const& regName_) {
         if(regName_[0] == '%'){
             regName = regName_;
@@ -76,11 +76,11 @@ public:
             regName = '%' + regName_;
         }
     }
-    
+
     bool empty() const{
         return regName.empty();
     }
-    
+
     std::ostream& write(std::ostream& os) const {
         return os << regName;
     }
@@ -96,35 +96,35 @@ public:
     Address()
         : displacement(0),
         multiplier(0){}
-        
+
     //  - base
     Address(Reg const& base_)
         : base(base_),
         displacement(0),
         multiplier(0){}
-        
+
     static Address offsetAddress(Reg const& offset, int multiplier){
         Address a;
         a.offset = offset;
         a.multiplier = multiplier;
         return a;
     }
-    
+
     static Address displaced(Address const& base, int displacement){
         assert(base.displacement == 0);
-        
+
         Address a = base;
         a.displacement = displacement; // maybe += to allow calculations?
         return a;
     }
-    
+
     static Address combine(Address const& lhs, Address const& rhs){
         // check, that only one exists
         assert(lhs.base.empty() || rhs.base.empty());
         assert(lhs.displacement == 0 || rhs.displacement == 0);
         assert(lhs.offset.empty() || rhs.offset.empty());
         assert(lhs.multiplier == 0 || rhs.multiplier == 0);
-    
+
         Address a;
         a.base = lhs.base.empty() ? rhs.base : lhs.base;
         a.displacement = (lhs.displacement == 0) ? rhs.displacement : lhs.displacement;
@@ -132,41 +132,41 @@ public:
         a.multiplier = (lhs.multiplier == 0) ? rhs.multiplier : lhs.multiplier;
         return a;
     }
-    
+
     std::ostream& write(std::ostream& os) const {
         // do some checks, should mostly be covered at compile time
         assert((!base.empty() || !offset.empty()) && "One register of address has to be specified");
         assert((!offset.empty() || multiplier == 0) && "To use the multiplier the offset register has to be specified");
-        
+
         if(displacement != 0){
             os << displacement;
         }
-        
+
         // We always want the address! Otherwise we wouldn't use the Address class, would we?
         // bool brackets = (displacement != 0 || !offset.empty());
         // if(brackets){
             os << '(';
         // }
-        
+
         if(!base.empty()){
             os << base;
         }
-        
+
         if(!offset.empty()){
             os << ',' << offset;
         }
-        
+
         if(multiplier != 0){
             os << ',' << multiplier;
         }
-        
+
         // if(brackets){
             os << ')';
         // }
-        
+
         return os;
     }
-    
+
 private:
     Reg base;
     int displacement;
@@ -197,19 +197,19 @@ public:
         :gotFirstArg(other.gotFirstArg){
         command << other.command.str();
     }
-     
+
     explicit Command(std::string const& command_)
         : gotFirstArg(false) {
         assert(command_[0] != '.');
-        
-        command << command_;    
+
+        command << command_;
     }
 
     explicit Command(std::string const& command_, int size)
         : gotFirstArg(false) {
         assert(command_[0] != '.');
-        
-        command << command_;    
+
+        command << command_;
 
         switch(size) {
             case 1: command << "b"; break;
@@ -218,7 +218,7 @@ public:
             default: assert("Invalid size specified!");
         }
     }
-    
+
 private:
     void preformat(){
         if(gotFirstArg){
@@ -229,16 +229,16 @@ private:
             gotFirstArg = true;
         }
     }
-    
+
 public:
-        
+
     /// Semantic:
     /// appends param as it is to the current command,
     /// inserting a space between them (nothing more).
     Command& operator()(std::string const& reg){
         assert(reg[0] == '%');
         assert(reg[reg.size() - 1] != ',');
-        
+
         preformat();
         command << reg;
         return *this;
@@ -270,7 +270,7 @@ public:
         command << '$' << arg;
         return *this;
     }
-    
+
     /// Semantic:
     /// appends addr to the current command.
     Command& operator()(Address const& addr){
@@ -278,7 +278,7 @@ public:
         addr.write(command);
         return *this;
     }
-    
+
     /// Semantic:
     /// appends label as it is to the current command,
     /// inserting a space between them (nothing more).
@@ -287,11 +287,11 @@ public:
         label.writeUnformatted(command);
         return *this;
     }
-    
+
     std::ostream& write(std::ostream& os) const {
         return os << "    " << command.str() << std::endl;
     }
-    
+
     std::ostream& writeUnformatted(std::ostream& os) const {
         return os << command.str();
     }
@@ -309,19 +309,19 @@ public:
     }
 
     explicit Directive(std::string const& directive_){
-        directive << directive_;    
+        directive << directive_;
     }
-            
+
     template<typename T>
     Directive& operator<<(T const& v) {
         directive << v;
         return *this;
     }
-    
+
     std::ostream& write(std::ostream& os) const {
         return os << "    " << directive.str() << std::endl;
     }
-    
+
     std::ostream& writeUnformatted(std::ostream& os) const {
         return os << directive.str();
     }

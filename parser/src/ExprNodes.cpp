@@ -77,7 +77,7 @@ FuncCall::FuncCall(std::string* identifier, std::list<Expression*>* arguments) :
     }
 }
 
-void FuncCall::dump(int num) 
+void FuncCall::dump(int num)
 {
     indent(num); std::cout << "Function Call: " << func->getIdentifier() << std::endl;
 }

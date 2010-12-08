@@ -35,7 +35,7 @@ class TypeSimple : public Type
 
         std::string getString() const
         {
-            switch(baseType) 
+            switch(baseType)
             {
                 case Type_uint8:
                     return "uint8";
