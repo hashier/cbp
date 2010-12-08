@@ -2,6 +2,7 @@ var global_var2 : uint32
 
 func main () : void {
 	local var local_var : uint32
+	local var local_ref : [] uint32
   local_var = 5
-  local_var = local_var + local_var
+  local_ref = local_var$
 }

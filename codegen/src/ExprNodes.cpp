@@ -306,3 +306,6 @@ void FuncCall::gen(CodeGen *out) {
     *out << Command("call")(func->getMark(out));
 }
 
+void Expr_Ref::gen(CodeGen* out) {
+    sub->genLeft(out);
+}

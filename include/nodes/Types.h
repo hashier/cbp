@@ -1,10 +1,10 @@
+#pragma once
+
 #include <list>
 #include <string>
 
 class Variable;
 class StructVariable;
-
-#pragma once
 
 enum BaseType {
     Type_uint8,

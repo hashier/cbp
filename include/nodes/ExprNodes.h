@@ -178,13 +178,20 @@ class Expr_Mod : public Binary {
 };
 
 // Precedence 3
-class Expr_Ptr : public Unary {
-    public: Expr_Ptr(Expression* sub) : Unary(sub) { }
+class Expr_Ref : public Unary {
+    public:
+        Expr_Ref(Expression* sub) : Unary(sub) {
+            type = new TypePointer(sub->getType());
+        }
 
-    virtual Type* getType() {
-        // TODO implement this
-        return NULL;
-    }
+        virtual Type* getType() {
+            return type;
+        }
+
+        virtual void gen(CodeGen* out);
+
+    private:
+        Type* type;
 };
 
 // Precedence 2
