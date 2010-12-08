@@ -204,6 +204,20 @@ public:
         
         command << command_;    
     }
+
+    explicit Command(std::string const& command_, int size)
+        : gotFirstArg(false) {
+        assert(command_[0] != '.');
+        
+        command << command_;    
+
+        switch(size) {
+            case 1: command << "b"; break;
+            case 4: command << "l"; break;
+            case 8: command << "q"; break;
+            default: assert("Invalid size specified!");
+        }
+    }
     
 private:
     void preformat(){
@@ -229,7 +243,26 @@ public:
         command << reg;
         return *this;
     }
-    
+
+    Command& operator()(std::string const& reg, int size){
+        assert(reg[0] == '%');
+        assert(reg[reg.size() - 1] != ',');
+
+        preformat();
+
+        std::string tmp(reg);
+
+        switch(size) {
+            case 1: break;
+            case 4: tmp[0] = 'e'; tmp = '%' + tmp; break;
+            case 8: tmp[0] = 'r'; tmp = '%' + tmp; break;
+            default: assert("Invalid size specified!");
+        }
+
+        command << tmp;
+        return *this;
+    }
+
     /// Semantic:
     /// appends arg declared as numeric constant (with $) to the current command.
     Command& operator()(int arg){
