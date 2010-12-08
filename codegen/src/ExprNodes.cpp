@@ -282,8 +282,17 @@ void Expr_Sub::gen(CodeGen* out) {
 }
 
 void Expr_Identifier::genLeft(CodeGen* out) {
-    *out << Command("leal")(Reg("rbp") + ref->getMemoryOffset())("%eax");
+    *out << Command("leaq")(Reg("rbp") + ref->getMemoryOffset())("%rax");
 }
 void Expr_Identifier::gen(CodeGen* out) {
     *out << Command("movl")(Reg("rbp") + ref->getMemoryOffset())("%eax");
+}
+
+void Expr_Assign::gen(CodeGen* out) {
+    *out << Command("pushq")("%rbx");           // store ebx to the stack
+    left->genLeft(out);
+    *out << Command("movq")("%rax")("%rbx");   // %ebx = %eax
+    right->gen(out);
+    *out << Command("movl")("%eax")(Reg("rbx"));   // %ebx = %eax
+    *out << Command("popq")("%rbx");            // restore %ebx from the stack
 }

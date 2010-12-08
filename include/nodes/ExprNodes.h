@@ -52,7 +52,7 @@ class Expr_Assign : public Binary {
         Expr_Assign(Expression* left, Expression* right) : Binary(left, right) { 
         }
 
-        // virtual void gen(CodeGen* out);
+        virtual void gen(CodeGen* out);
 };
 
 // Precedence 10
