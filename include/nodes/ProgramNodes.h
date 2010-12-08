@@ -144,12 +144,6 @@ class Function : public Declaration {
             if (statement) delete statement; statement = 0;
         }
 
-    protected:
-        /** Calculates the total required stack for all statements and
-         * their recursive sub-statements.
-         */
-        int calcStackOffsets();
-
     private:
         Func_abi abi;
         std::list<Variable*>* arguments;
