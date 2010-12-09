@@ -73,10 +73,10 @@ else(WIN32)
 endif(WIN32)
 
 # Doesn't work with Win32+MSVC, don't know why
-if (!MSVC)
+if(NOT MSVC)
   add_subdirectory(cbp_main)
   add_subdirectory(examples)
-endif (!MSVC)
+endif()
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/examples/working.cbp
