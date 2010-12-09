@@ -329,13 +329,36 @@ void Expr_Deref::genLeft(CodeGen* out) {
 void Expr_Deref::gen(CodeGen* out) {
     // Evaluate substatement (= base address)
     sub->gen(out);
-    if(index) {
-        // Evaluate offset
-        *out << Command("pushq")("%rbx");
-        index->gen(out);
-        *out << Command("movl")("%eax")("%ebx");
-        // Return value of variable at address
-        *out << Command("movq")(Reg("rax") + Reg("ebx"))("%rax");
-    } else
-        *out << Command("movq")(Reg("rax"))("%rax");
+
+    // We need the size of the pointed-at value.
+    TypePointer* ref = dynamic_cast<TypePointer*>(sub->getType());
+    assert(ref && "Cannot dereference a void pointer!");
+    int refsize = ref->getType()->getSize();
+
+    if(!index) {
+        // There is no index. No math needed :)
+        *out << Command("mov", refsize)(Reg("rax"))("%ax", refsize);
+        return;
+    }
+
+    // Save base address in rbx
+    *out << Command("pushq")("%rbx");
+    *out << Command("movq")("%rax")("%rbx");
+
+    // Evaluate offset
+    index->gen(out);
+    // int indsize = index->getType()->getSize();
+
+    // If the pointed-at type is 1, 2, 4 or 8 bytes in size,
+    // we can use the offset multiplier. Otherwise, we have
+    // to use a multiplication operation.
+    if(refsize == 1 || refsize == 2 || refsize == 4 || refsize == 8)
+        *out << Command("mov", refsize)(Reg("rbx") + Reg("rax") * refsize)("%ax", refsize);
+    else {
+        // Multiply by refsize (TODO is this legal? I don't really think so..)
+        *out << Command("imul")(refsize);
+        *out << Command("mov", refsize)(Reg("rbx") + Reg("rax"))("%ax", refsize);
+    }
+
+    *out << Command("popq")("%rbx");
 }

@@ -77,6 +77,22 @@ public:
         }
     }
 
+    explicit Reg(std::string const& regName_, int size) {
+        if(regName_[0] == '%'){
+            regName = regName_;
+        }
+        else{
+            regName = '%' + regName_;
+        }
+
+        switch(size) {
+            case 2: /* default size, leave as-is. */ break;
+            case 4: regName[0] = 'e'; regName = '%' + regName; break;
+            case 8: regName[0] = 'r'; regName = '%' + regName; break;
+            default: assert("Invalid dynamic register size!");
+        }
+    }
+
     bool empty() const{
         return regName.empty();
     }
