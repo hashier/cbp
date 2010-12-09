@@ -102,7 +102,7 @@ func_decl: KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type statem
          | KEY_FUNC abi IDENTIFIER PAR_LEFT var_list PAR_RIGHT COLON type { $$ = new Function($3, $2, $5, $8); }
          ;
 
-var: IDENTIFIER COLON type { $$ = new Variable($1, $3); }
+var: IDENTIFIER COLON type { $$ = new LocalVariable($1, $3); }
    ;
 
 var_list:   /* empty */ { $$ = new std::list<Variable*>(); }
