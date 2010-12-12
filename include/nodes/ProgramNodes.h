@@ -455,7 +455,7 @@ class ForLoop : public Statement {
     public:
         //ForLoop without step expression
         ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Statement* body) :
-                init_value(init_value),final_value(final_value),body(body)
+                init_value(init_value),final_value(final_value),step(0),body(body)
                 {
                     try
                     {

@@ -1,2 +1,7 @@
 Nach Beschluss der Gruppe dürfen keine Binaries mehr ins SVN geladen werden. Das Visual Studio 2010 Project braucht jedoch für einen Präprozess einige zusätzliche Binaries.
 Bei Bedraf bitte eine E-Mail torben.rodermund@gmx.de
+
+benötigte Dateien:
+msvs2010\tools\bin\bison.exe
+msvs2010\tools\bin\flex.exe
+msvs2010\gcc\bin\gcc.exe

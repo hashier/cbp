@@ -3,13 +3,11 @@ cd tools
 cd bin
 REM bison.exe -d -l ..\..\..\parser\bison\cbp.y
 bison.exe -d ..\..\..\parser\bison\cbp.y
-
 echo [Rename] "cbp.tab.c" to "cbp.tab.cpp" 
 del ..\..\..\parser\bison\cbp.cpp
 move cbp.tab.c ..\..\..\parser\bison\cbp.cpp
 del ..\..\..\parser\bison\cbp.tab.h
 move cbp.tab.h ..\..\..\parser\bison\cbp.tab.h
-
 cd..
 cd..
 
@@ -18,7 +16,6 @@ cd tools
 cd bin
 REM flex.exe -L -l ..\..\..\parser\bison\cbp.lex
 flex.exe ..\..\..\parser\bison\cbp.lex
-
 cd..
 cd..
 
@@ -28,7 +25,7 @@ REM ssr 0 "FILE *yyin = (FILE *) 0" "extern FILE *yyin; FILE *yyin = (FILE *) 0"
 echo [Correct To POSIX]
 REM _CRTIMP int __cdecl _isatty(_In_ int _FileHandle)
 ssr 0 "extern int isatty" "_CRTIMP int __cdecl isatty" .\tools\bin\lex.yy.c 
-REM REM ssr 0 "extern int isatty" "extern ''C'' int __cdecl isatty" .\tools\bin\lex.yy.c 
+REM ssr 0 "extern int isatty" "extern ''C'' int __cdecl isatty" .\tools\bin\lex.yy.c 
 ssr 0 "isatty" "_isatty" .\tools\bin\lex.yy.c 
 ssr 0 "fileno" "_fileno" .\tools\bin\lex.yy.c
 

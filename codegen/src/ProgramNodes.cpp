@@ -69,58 +69,58 @@ void ForLoop::gen(CodeGen* out) {
     Label label_repeat = out->newMark("repeat");
     Label label_exit   = out->newMark("exit");
 
-    //-----------------------------------------------------------------
-    //set iterator to init
-    init_value->gen(out);                                        //get inital value to eax
-    *out << Command("mov")("%eax")(Reg("esp") + offset_it);        //mov eax to iterator
+//-----------------------------------------------------------------------------
+//set iterator to init
+    init_value->gen(out);                                       //get inital value to eax
+    *out << Command("mov")("%eax")(Reg("esp") + offset_it);     //mov eax to iterator
 
-    //-----------------------------------------------------------------
-    //set label
+//-----------------------------------------------------------------------------
+//set label
     *out << label_repeat;
 
-    //-----------------------------------------------------------------
-    //compare 1
+//-----------------------------------------------------------------------------
+//compare 1
     final_value->gen(out);                                      //get final value to eax
-    *out << Command("cmp")(Reg("esp") + offset_it)("%eax");        //compare x(%esp), eax [iterator, final value]
+    *out << Command("cmp")(Reg("esp") + offset_it)("%eax");     //compare x(%esp), eax [iterator, final value]
 
-    //-----------------------------------------------------------------
-    //compare 2 (alternative)
+//-----------------------------------------------------------------------------
+//compare 2 (alternative)
     *out << Command("push")("%ebx");                            //save ebx
-    *out << Command("push")(Reg("%eax"));                            //save eax
+    *out << Command("push")(Reg("%eax"));                       //save eax
     final_value->gen(out);                                      //get final value to eax
-    *out << Command("mov")("%eax")("%ebx");                    //mov eax to ebx
-    *out << Command("mov")(Reg("esp") + offset_it)("%eax");        //mov iterator to eax
-    *out << Command("cmp")("%eax")("%ebx");                    //compare eax, ebx [iterator, final value]
+    *out << Command("mov")("%eax")("%ebx");                     //mov eax to ebx
+    *out << Command("mov")(Reg("esp") + offset_it)("%eax");     //mov iterator to eax
+    *out << Command("cmp")("%eax")("%ebx");                     //compare eax, ebx [iterator, final value]
     *out << Command("pop")("%eax");                             //restore eax
     *out << Command("pop")("%ebx");                             //restore ebx
 
-    //-----------------------------------------------------------------
-    //jump if exit
-    *out << Command("je")(label_exit);
+//-----------------------------------------------------------------------------
+//jump if exit
+    *out << Command("je")(label_exit);                          //exit jump
 
-    //-----------------------------------------------------------------
-    //write body
+//-----------------------------------------------------------------------------
+//write body
     body->gen(out);                                             //write body code
 
-    //-----------------------------------------------------------------
-    //increment iterator
+//-----------------------------------------------------------------------------
+//increment iterator
     if(step==NULL)
     {
-         *out << Command("push")("%eax");                      //save eax
+         *out << Command("push")("%eax");                         //save eax
          *out << Command("mov")(Reg("esp") + offset_it)("%eax");  //mov iterator to eax
-         *out << Command("inc")("%eax");                       //eax++
+         *out << Command("inc")("%eax");                          //eax++
          *out << Command("mov")("%eax")(Reg("esp") + offset_it);  //mov eax to iterator
-         *out << Command("pop")("%eax");                       //restore eax
+         *out << Command("pop")("%eax");                          //restore eax
     }else{
          //TODO
     }
 
-    //-----------------------------------------------------------------
-    //repeat
-    *out << Command("jmp")(label_repeat);                      //jump to body begin
+//-----------------------------------------------------------------------------
+//repeat
+    *out << Command("jmp")(label_repeat);                        //jump to body begin
 
-    //-----------------------------------------------------------------
-    //set label
+//-----------------------------------------------------------------------------
+//set label
     *out << label_exit;
 }
 void IfElse::gen(CodeGen* out) {

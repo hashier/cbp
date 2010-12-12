@@ -20,10 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\codegen\CodeGen.h" />
-    <ClInclude Include="..\include\parser\AbstractNodes.h" />
-    <ClInclude Include="..\include\parser\ExprNodes.h" />
+    <ClInclude Include="..\include\exceptions\Exceptions.h" />
+    <ClInclude Include="..\include\exceptions\InvalidAssignmentException.h" />
+    <ClInclude Include="..\include\exceptions\TypeConversionException.h" />
+    <ClInclude Include="..\include\msghandler\MsgHandler.h" />
+    <ClInclude Include="..\include\nodes\AbstractNodes.h" />
+    <ClInclude Include="..\include\nodes\ExprNodes.h" />
+    <ClInclude Include="..\include\nodes\ProgramNodes.h" />
+    <ClInclude Include="..\include\nodes\Types.h" />
     <ClInclude Include="..\include\parser\ProgramNodes.h" />
-    <ClInclude Include="..\include\parser\Types.h" />
     <ClInclude Include="..\include\symboltable\Scope.h" />
     <ClInclude Include="..\include\symboltable\SymbolTable.h" />
     <ClInclude Include="..\main.h" />
@@ -32,17 +37,28 @@
   <ItemGroup>
     <ClCompile Include="..\codegen\src\Block.cpp" />
     <ClCompile Include="..\codegen\src\CodeGen.cpp" />
-    <ClCompile Include="..\codegen\src\ExprNodes.cpp" />
+    <ClCompile Include="..\codegen\src\ExprNodes.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ExprNodes_A</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ExprNodes_A</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\ExprNodes_A</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ExprNodes_A</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\codegen\src\FunctionNodes.cpp" />
+    <ClCompile Include="..\codegen\src\Mnemonics.cpp" />
     <ClCompile Include="..\codegen\src\ProgramNodes.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ProgrammNodes_A</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\ProgrammNodes_A</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ProgrammNodes_A</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ProgrammNodes_A</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\parser\bison\cbp.cpp" />
     <ClCompile Include="..\parser\bison\lex.yy.cpp" />
+    <ClCompile Include="..\parser\src\ExprNodes.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ExprNodes_B</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ExprNodes_B</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\ExprNodes_B</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\parser\src\MsgHandler.cpp" />
     <ClCompile Include="..\parser\src\Node.cpp" />
     <ClCompile Include="..\parser\src\Scope.cpp" />
@@ -50,7 +66,12 @@
     <ClCompile Include="..\parser\src\Types.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\examples\BitOperations.cbp" />
+    <None Include="..\examples\error.cbp" />
+    <None Include="..\examples\function.cbp" />
     <None Include="..\examples\sdl_surface.cbp" />
+    <None Include="..\examples\SwitchCase.cbp" />
+    <None Include="..\examples\variable.cbp" />
     <None Include="..\examples\working.cbp" />
     <None Include="..\parser\bison\cbp.lex" />
     <None Include="..\parser\bison\cbp.y" />
@@ -111,7 +132,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;..\include\msghandler;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\codegen;..\include\exceptions;..\include\msghandler;..\include\nodes;..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -120,12 +141,16 @@
     <PreBuildEvent>
       <Command>prebuild.bat</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;..\include\msghandler;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\codegen;..\include\exceptions;..\include\msghandler;..\include\nodes;..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -134,6 +159,10 @@
     <PreBuildEvent>
       <Command>prebuild.bat</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -141,7 +170,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include\parser;..\include\symboltable;..\include\codegen;..\include\msghandler;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\codegen;..\include\exceptions;..\include\msghandler;..\include\nodes;..\include\parser;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -152,6 +181,10 @@
     <PreBuildEvent>
       <Command>prebuild.bat</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -170,6 +203,10 @@
     <PreBuildEvent>
       <Command>prebuild.bat</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

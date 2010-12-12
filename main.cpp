@@ -2,6 +2,12 @@
 #include "ProgramNodes.h"
 #include "MsgHandler.h"
 
+#ifdef MSVC
+#include <iostream>
+#include <windows.h>
+#include <shellapi.h>
+#endif
+
 // Hauptprogramm für das Compilerbaupraktikum
 // ##########################################
 //
@@ -18,7 +24,7 @@ int main(int argc, char *argv[])
         fname = "in";
     } else {
         fname = argv[1];
-	}
+    }
 
 //-----------------------------------------------------------------------------
 // Open File
@@ -51,6 +57,8 @@ int main(int argc, char *argv[])
 //-----------------------------------------------------------------------------
 // Generate ASM Source
 
+    std::cout << "[Generate ASM-Source]" << std::endl;
+
     //check for underscore
     int withUnderscore = -1;
     if(argc > 2) {
@@ -74,12 +82,16 @@ int main(int argc, char *argv[])
 #endif
     }
 
+    //set filename for asm source file
     std::stringstream ss;
+#ifdef MSVC
+    ss << "out.s";
+#else
     ss << fname.substr(fname.find_last_of("/")+1) << ".s";
-
-    std::cout << "[Generate ASM-Source]" << std::endl;
+#endif
     std::cout << " -outfile: " << ss.str() << std::endl;
 
+    //generate asm source from parse tree
     CodeGen* out = new CodeGen(ss.str().c_str(), fname, withUnderscore);
     tree->gen(out);
     std::cout << " -done" << std::endl << std::endl;
@@ -87,6 +99,7 @@ int main(int argc, char *argv[])
     delete(tree);
 
 #ifdef MSVC
+    ShellExecute(NULL, "open", "compile.bat", NULL, NULL, SW_SHOWNORMAL);
     std::cout << "Press Any Key To Continue" << std::endl;
     getchar();
 #endif

@@ -21,16 +21,7 @@
     <ClInclude Include="..\parser\bison\cbp.tab.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\parser\AbstractNodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\parser\ExprNodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\parser\ProgramNodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\parser\Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\symboltable\Scope.h">
@@ -43,6 +34,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\codegen\CodeGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nodes\AbstractNodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nodes\ExprNodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nodes\ProgramNodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nodes\Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\exceptions\Exceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\exceptions\InvalidAssignmentException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\exceptions\TypeConversionException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\msghandler\MsgHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -86,6 +101,12 @@
     <ClCompile Include="..\codegen\src\FunctionNodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\parser\src\ExprNodes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\codegen\src\Mnemonics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\parser\bison\cbp.lex">
@@ -98,6 +119,21 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\examples\working.cbp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\examples\BitOperations.cbp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\examples\error.cbp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\examples\function.cbp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\examples\SwitchCase.cbp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\examples\variable.cbp">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
