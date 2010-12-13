@@ -12,7 +12,7 @@
 #if defined (MSVC) || defined (WIN32)
 int yylineno = 1; // first line number is 1
 #endif
-int yyerror(char *s);
+int yyerror(char const* s);
 %}
 
 /* Avoid one linker error related to yywrap */

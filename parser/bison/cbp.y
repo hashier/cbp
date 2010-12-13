@@ -6,7 +6,7 @@
 #include "ProgramNodes.h"
 //#include <cstdio>
 
-int yyerror(char *s);
+int yyerror(char const* s);
 int yylex(void);
 
 #define YYPARSE_PARAM parm
@@ -191,7 +191,7 @@ exp: INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
 
 %%
 
-int yyerror(std::string s)
+int yyerror(std::string const& s)
 {
 	extern int yylineno;   // defined and maintained in lex.c
 	extern char* yytext;  // defined and maintained in lex.c
@@ -202,7 +202,7 @@ int yyerror(std::string s)
     return 0;
 }
 
-int yyerror(char *s)
+int yyerror(char const* s)
 {
 	return yyerror(std::string(s));
 }
