@@ -3,6 +3,94 @@
 #include "ExprNodes.h"
 #include "Exceptions.h"
 
+
+
+void Unary::dump(int num) {
+	indent(num); std::cout << "Unary: " << typeid(*this).name() << std::endl;
+	sub->dump(num);
+}
+
+
+void Binary::dump(int num) {
+	indent(num); std::cout << "Binary: " << typeid(*this).name() << std::endl;
+
+	indent(num); std::cout << "Left:" << std::endl;
+	left->dump(num+1);
+
+	indent(num); std::cout << "Right:" << std::endl;
+	right->dump(num+1);
+}
+
+
+Expr_Ref::Expr_Ref(Expression* sub) : Unary(sub) {
+    type = new TypePointer(sub->getType());
+}
+
+
+void Expr_Struc::dump(int num)
+{
+    indent(num); std::cout << "Expr_Struc:";
+    // sub->dump(num);
+}
+
+Expr_Deref::Expr_Deref(Expression *sub) : Unary(sub), index(0) {
+    if(typeid(*sub->getType()) != typeid(TypePointer))
+        std::cerr << "Warning: Dereferencing non-pointer variable!" << std::endl;
+}
+
+Expr_Deref::Expr_Deref(Expression *sub, Expression *index) : Unary(sub), index(index) {
+    if(typeid(*sub->getType()) != typeid(TypePointer))
+        std::cerr << "Warning: Dereferencing non-pointer variable!" << std::endl;
+}
+
+Type* Expr_Deref::getType() {
+    TypePointer* pointedType = dynamic_cast<TypePointer*>(sub->getType());
+    if(pointedType)
+        return pointedType->getType();
+    else
+        return TypeVoid::getSingleton();
+}
+
+ConstInt::ConstInt(int value) : value(value) {
+    // TODO always 32 bit?
+    type = new TypeSimple(Type_int32);
+}
+
+void ConstInt::dump(int num) {
+    indent(num);
+    std::cout << "Const Int: " << value << std::endl;
+}
+
+int ConstInt::val() const {
+    return value;
+}
+
+Type* ConstInt::getType() {
+    return type;
+}
+
+ConstFloat::ConstFloat(float value) : value(value) {
+    // TODO always 32 bit?
+    type = new TypeSimple(Type_float32);
+}
+
+void ConstFloat::dump(int num) {
+    indent(num);
+    std::cout << "Const Float: " << value << std::endl;
+}
+
+Type* ConstFloat::getType() {
+    return type;
+}
+
+
+
+
+
+
+
+
+
 Expr_Struc::Expr_Struc(Expression* exp, std::string* identifier) {
 }
 

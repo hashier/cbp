@@ -1,46 +1,28 @@
 #pragma once
 
-#include"AbstractNodes.h"
-#include"ProgramNodes.h"
+#include "AbstractNodes.h"
+//#include "ProgramNodes.h"
 
-#include<string>
-#include<iostream>
-#include<typeinfo>
+#include <string>
+#include <iostream>
+#include <typeinfo>
 
 class NodeType;
 
 // Basic types of expressions
 class Unary : public Expression {
-
     public:
-        Unary(Expression* sub) : sub(sub) {
-        }
-
-        void dump(int num = 0) {
-            indent(num); std::cout << "Unary: " << typeid(*this).name() << std::endl;
-            sub->dump(num);
-        }
+        Unary(Expression* sub) : sub(sub) {}
+        void dump(int num = 0);
     protected:
         Expression* sub;
 };
 
 class Binary : public Expression {
     public:
-        Binary(Expression* left, Expression* right) : left(left), right(right) {
-        }
-
-        void dump(int num = 0) {
-            indent(num); std::cout << "Binary: " << typeid(*this).name() << std::endl;
-
-            indent(num); std::cout << "Left:" << std::endl;
-            left->dump(num+1);
-
-            indent(num); std::cout << "Right:" << std::endl;
-            right->dump(num+1);
-        }
-
+        Binary(Expression* left, Expression* right) : left(left), right(right) {}
+        void dump(int num = 0);
         virtual Type* getType();
-
     protected:
         Expression* left;
         Expression* right;
@@ -49,9 +31,7 @@ class Binary : public Expression {
 // Precedence 11
 class Expr_Assign : public Binary {
     public:
-        Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {
-        }
-
+        Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {}
         virtual void gen(CodeGen* out);
 };
 
@@ -59,21 +39,10 @@ class Expr_Assign : public Binary {
 class Expr_Cast : public Expression {
     public:
         Expr_Cast(Type *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
-
         virtual void dump(int num = 0);
-
-        virtual void genLeft(CodeGen* out) {
-            expr->genLeft(out);
-        }
-        virtual void gen(CodeGen* out) {
-            expr->gen(out);
-        }
-
-        virtual Type* getType() {
-            // Fun fact: Returning this is pretty much the entire functionality of Expr_Cast!
-            return castType;
-        }
-
+        virtual void genLeft(CodeGen* out);
+        virtual void gen(CodeGen* out);
+        virtual Type* getType() { return castType; }  // Fun fact: Returning this is pretty much the entire functionality of Expr_Cast!
     private:
         Type* castType;
         Expression* expr;
@@ -180,142 +149,81 @@ class Expr_Mod : public Binary {
 // Precedence 3
 class Expr_Ref : public Unary {
     public:
-        Expr_Ref(Expression* sub) : Unary(sub) {
-            type = new TypePointer(sub->getType());
-        }
-
-        virtual Type* getType() {
-            return type;
-        }
-
+        Expr_Ref(Expression* sub);
+        virtual Type* getType() { return type; }
         virtual void gen(CodeGen* out);
-
     private:
         Type* type;
 };
 
 // Precedence 2
 class Expr_Struc : public Expression {
-public:
-    Expr_Struc(Expression* sub, std::string *identifier);
-    virtual void dump(int num = 0)
-    {
-        indent(num); std::cout << "Expr_Ptr:";
-        // sub->dump(num);
-    }
-
-    virtual Type* getType() {
-        // TODO implement this
-        return NULL;
-    }
+    public:
+        Expr_Struc(Expression* sub, std::string *identifier);
+        virtual void dump(int num = 0);
+        virtual Type* getType() {
+            // TODO implement this
+            return NULL;
+        }
 };
 
 class Expr_Deref : public Unary {
-private:
-    Expression* index;
-public:
-    Expr_Deref(Expression *sub) : Unary(sub), index(0) {
-        if(typeid(*sub->getType()) != typeid(TypePointer))
-            std::cerr << "Warning: Dereferencing non-pointer variable!" << std::endl;
-    }
-    Expr_Deref(Expression *sub, Expression *index) : Unary(sub), index(index) {
-        if(typeid(*sub->getType()) != typeid(TypePointer))
-            std::cerr << "Warning: Dereferencing non-pointer variable!" << std::endl;
-    }
-
-    virtual Type* getType() {
-        TypePointer* pointedType = dynamic_cast<TypePointer*>(sub->getType());
-        if(pointedType)
-            return pointedType->getType();
-        else
-            return TypeVoid::getSingleton();
-    }
-
-    virtual void genLeft(CodeGen* out);
-    virtual void gen(CodeGen* out);
+    private:
+        Expression* index;
+    public:
+        Expr_Deref(Expression *sub);
+        Expr_Deref(Expression *sub, Expression *index);
+        virtual Type* getType();
+        virtual void genLeft(CodeGen* out);
+        virtual void gen(CodeGen* out);
 };
 
 // Precedence 1
 class Atom : public Expression {
 };
+
 class Constant : public Atom {
 };
+
 class ConstInt : public Constant {
-    int value;
-    Type* type;
-
+    private:
+        int value;
+        Type* type;
     public:
-        ConstInt(int value) : value(value) {
-            // TODO always 32 bit?
-            type = new TypeSimple(Type_int32);
-        }
-
-        void dump(int num = 0) {
-            indent(num);
-            std::cout << "Const Int: " << value << std::endl;
-        }
-
+        ConstInt(int value);
+        void dump(int num = 0);
         virtual void gen(CodeGen* out);
-
-        int val() const {
-            return value;
-        }
-
-        virtual Type* getType() {
-            return type;
-        }
-
+        int val() const;
+        virtual Type* getType();
 };
+
 class ConstFloat : public Constant {
-    float value;
-    Type* type;
-
+    private:
+        float value;
+        Type* type;
     public:
-        ConstFloat(float value) : value(value) {
-            // TODO always 32 bit?
-            type = new TypeSimple(Type_float32);
-        }
-
-        void dump(int num = 0) {
-            indent(num);
-            std::cout << "Const Float: " << value << std::endl;
-        }
-
-        virtual Type* getType() {
-            return type;
-        }
-
+        ConstFloat(float value);
+        void dump(int num = 0);
+        virtual Type* getType();
 };
 
 class Expr_Identifier : public Atom {
-private:
-    Variable* ref;
-public:
-    Expr_Identifier(std::string *identifier);
-
-    virtual void genLeft(CodeGen* out);
-    virtual void gen(CodeGen* out);
-
-    virtual Type* getType() {
-        return ref->getType();
-    }
-
-    void dump(int num = 0);
+    private:
+        Variable* ref;
+    public:
+        Expr_Identifier(std::string *identifier);
+        virtual void genLeft(CodeGen* out);
+        virtual void gen(CodeGen* out);
+        virtual Type* getType() { return ref->getType(); }
+        void dump(int num = 0);
 };
 
 class FuncCall : public Atom {
     Function* func;
     std::list<Expression*>* arguments;
-
-    public:
-        FuncCall(std::string* identifier, std::list<Expression*>* arguments);
-
-        virtual void gen(CodeGen *out);
-
-        void dump(int num = 0);
-
-        virtual Type* getType() {
-            return func->getType();
-        }
-
+public:
+    FuncCall(std::string* identifier, std::list<Expression*>* arguments);
+    virtual void gen(CodeGen *out);
+    void dump(int num = 0);
+    virtual Type* getType() { return func->getType(); }
 };

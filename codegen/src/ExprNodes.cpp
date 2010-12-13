@@ -1,6 +1,14 @@
 #include"ExprNodes.h"
 #include"ProgramNodes.h"
 
+
+void Expr_Cast::genLeft(CodeGen* out) {
+    expr->genLeft(out);
+}
+void Expr_Cast::gen(CodeGen* out) {
+    expr->gen(out);
+}
+
 void Expr_Mul::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);

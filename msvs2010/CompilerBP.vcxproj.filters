@@ -21,9 +21,6 @@
     <ClInclude Include="..\parser\bison\cbp.tab.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\parser\ProgramNodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\symboltable\Scope.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -4,4 +4,4 @@ Bei Bedraf bitte eine E-Mail torben.rodermund@gmx.de
 benötigte Dateien:
 msvs2010\tools\bin\bison.exe
 msvs2010\tools\bin\flex.exe
-msvs2010\gcc\bin\gcc.exe
+msvs2010\gcc\bin\x86_64-w64-mingw32-gcc.exe

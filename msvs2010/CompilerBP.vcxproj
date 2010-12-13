@@ -28,7 +28,6 @@
     <ClInclude Include="..\include\nodes\ExprNodes.h" />
     <ClInclude Include="..\include\nodes\ProgramNodes.h" />
     <ClInclude Include="..\include\nodes\Types.h" />
-    <ClInclude Include="..\include\parser\ProgramNodes.h" />
     <ClInclude Include="..\include\symboltable\Scope.h" />
     <ClInclude Include="..\include\symboltable\SymbolTable.h" />
     <ClInclude Include="..\main.h" />
