@@ -1,13 +1,14 @@
 #pragma once
 
 #include "AbstractNodes.h"
-//#include "ProgramNodes.h"
 
 #include <string>
 #include <iostream>
 #include <typeinfo>
 
 class NodeType;
+class Function;
+class Variable;
 
 // Basic types of expressions
 class Unary : public Expression {
@@ -214,7 +215,7 @@ class Expr_Identifier : public Atom {
         Expr_Identifier(std::string *identifier);
         virtual void genLeft(CodeGen* out);
         virtual void gen(CodeGen* out);
-        virtual Type* getType() { return ref->getType(); }
+        virtual Type* getType();
         void dump(int num = 0);
 };
 
@@ -225,5 +226,6 @@ public:
     FuncCall(std::string* identifier, std::list<Expression*>* arguments);
     virtual void gen(CodeGen *out);
     void dump(int num = 0);
-    virtual Type* getType() { return func->getType(); }
+    virtual Type* getType();
 };
+

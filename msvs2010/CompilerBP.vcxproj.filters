@@ -68,9 +68,6 @@
     <ClCompile Include="..\parser\bison\lex.yy.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\parser\src\Node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\parser\src\Scope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,6 +99,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\codegen\src\Mnemonics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\parser\src\ProgramNodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

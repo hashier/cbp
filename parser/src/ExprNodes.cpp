@@ -4,10 +4,17 @@
 #include "Exceptions.h"
 
 
+Type* Expr_Identifier::getType() {
+    return ref->getType();
+}
+
+Type* FuncCall::getType() {
+    return func->getType();
+}
 
 void Unary::dump(int num) {
-	indent(num); std::cout << "Unary: " << typeid(*this).name() << std::endl;
-	sub->dump(num);
+    indent(num); std::cout << "Unary: " << typeid(*this).name() << std::endl;
+    sub->dump(num);
 }
 
 

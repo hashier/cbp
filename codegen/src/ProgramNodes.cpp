@@ -3,6 +3,52 @@
 
 #include <sstream>
 
+
+
+
+
+
+int Variable::setStackOffset(int offset) {
+    this->offset = offset -getSize();
+    return -getSize();
+}
+
+int Variable::getMemoryOffset() {
+    return offset;
+}
+
+int Variable::getSize() {
+    return type->getSize();
+}
+
+
+
+int StructVariable::setStackOffset(int offset) {
+    if(explicitOffset < 0)
+        this->offset = offset -getSize();
+    return -getSize();
+}
+
+int StructVariable::getMemoryOffset() {
+    return explicitOffset < 0 ? offset : explicitOffset;
+}
+
+Label Function::getMark(CodeGen* out) {
+    if(!gotMark) {
+        gotMark = true;
+        mark = out->newMark(identifier);
+    }
+    return mark;
+}
+
+
+
+
+
+
+
+
+
 void File::gen(CodeGen* out) {
 
     std::string filename = out->getInputFileName();

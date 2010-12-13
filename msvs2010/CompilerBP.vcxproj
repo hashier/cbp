@@ -59,7 +59,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\ExprNodes_B</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\parser\src\MsgHandler.cpp" />
-    <ClCompile Include="..\parser\src\Node.cpp" />
+    <ClCompile Include="..\parser\src\ProgramNodes.cpp" />
     <ClCompile Include="..\parser\src\Scope.cpp" />
     <ClCompile Include="..\parser\src\SymbolTable.cpp" />
     <ClCompile Include="..\parser\src\Types.cpp" />
