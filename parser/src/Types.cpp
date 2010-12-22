@@ -20,11 +20,11 @@ std::string TypeStruct::getString() const
 TypeStruct::TypeStruct(std::map<std::string, StructVariable*>* members) : members(members) {
     int offset = 0;
     for (std::map<std::string, StructVariable*>::const_iterator it = members->begin(); it != members->end(); it++) {
-        offset += (*it).second->setStackOffset(offset);
+        offset += (*it).second->setStackOffset(offset, false);
     }
 
     // Not sure how this behavs with fixed offset..
-    size = -offset;
+    size = offset;
 }
 
 TypeVoid* TypeVoid::singleton;

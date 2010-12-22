@@ -16,10 +16,10 @@ int Variable::getSize() {
     return type->getSize();
 }
 
-int StructVariable::setStackOffset(int offset, bool offBySize) {
+int StructVariable::setStackOffset(int offset, bool dummy) {
     if(explicitOffset < 0)
-        this->offset = offset +(offBySize ? -getSize() : 0);
-    return -getSize();
+        this->offset = offset;
+    return getSize();
 }
 
 int StructVariable::getMemoryOffset() {
