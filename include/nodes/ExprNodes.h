@@ -9,6 +9,7 @@
 class NodeType;
 class Function;
 class Variable;
+class StructVariable;
 
 // Basic types of expressions
 class Unary : public Expression {
@@ -162,10 +163,10 @@ class Expr_Struc : public Expression {
     public:
         Expr_Struc(Expression* sub, std::string *identifier);
         virtual void dump(int num = 0);
-        virtual Type* getType() {
-            // TODO implement this
-            return NULL;
-        }
+        virtual Type* getType();
+    private:
+        Expression* sub;
+        StructVariable* var;
 };
 
 class Expr_Deref : public Unary {

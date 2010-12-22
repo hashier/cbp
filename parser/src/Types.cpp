@@ -17,16 +17,14 @@ std::string TypeStruct::getString() const
     return result;
 }
 
-int TypeStruct::getSize()
-{
-    // TODO: structs mit festen offsets beachten(sowas wie hoehster offset + size)
-    int sum = 0;
-    for (std::map<std::string, StructVariable*>::const_iterator it = members->begin(); it != members->end(); it++)
-    {
-        sum += (*it).second->getSize();
+TypeStruct::TypeStruct(std::map<std::string, StructVariable*>* members) : members(members) {
+    int offset = 0;
+    for (std::map<std::string, StructVariable*>::const_iterator it = members->begin(); it != members->end(); it++) {
+        offset += (*it).second->setStackOffset(offset);
     }
 
-    return sum;
+    // Not sure how this behavs with fixed offset..
+    size = -offset;
 }
 
 TypeVoid* TypeVoid::singleton;

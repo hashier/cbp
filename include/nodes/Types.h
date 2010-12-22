@@ -119,16 +119,16 @@ class TypeVoid : public Type {
 class TypeStruct : public Type
 {
     public:
-        TypeStruct(std::map<std::string, StructVariable*>* members)
-            : members(members) { }
+        TypeStruct(std::map<std::string, StructVariable*>* members);
 
         std::string getString() const;
         inline StructVariable* getVariable(std::string identifier) { return (*members)[identifier]; }
 
-        virtual int getSize();
+        inline int getSize() { return size; }
 
     protected:
         std::map<std::string, StructVariable*>* members;
+        int size;
 };
 
 class TypePointer : public Type

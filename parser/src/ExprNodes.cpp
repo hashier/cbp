@@ -90,15 +90,25 @@ Type* ConstFloat::getType() {
     return type;
 }
 
+Expr_Struc::Expr_Struc(Expression* sub, std::string* identifier) {
+    // Typecheck at this point
+    if(typeid(*sub->getType()) != typeid(TypeStruct)) {
+        std::cerr << "Warning: Accessing struct members of non-struct variable!" << std::endl;
+        sub = NULL;
+        return;
+    }
 
+    // Save the sub-expression
+    this->sub = sub;
 
+    // Now get its type
+    TypeStruct* type = dynamic_cast<TypeStruct*>(sub->getType());
+    // This is the variable in the struct, referenced on the right side of the dot.
+    var = type->getVariable(*identifier);
+}
 
-
-
-
-
-
-Expr_Struc::Expr_Struc(Expression* exp, std::string* identifier) {
+Type* Expr_Struc::getType() {
+    return var->getType();
 }
 
 Expr_Identifier::Expr_Identifier(std::string *identifier)
