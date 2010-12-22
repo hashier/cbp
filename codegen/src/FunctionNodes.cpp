@@ -12,6 +12,18 @@ void Function::gen(CodeGen* out) {
 
     *out << mark;
 
+    if(arguments->size() > 0) {
+        std::list<Variable*>::iterator it;
+        int offset = 8;
+        for ( it = arguments->begin(); it != arguments->end(); it++ ) {
+              // Since we push all our variables using pushq,
+              // the offsets have to be of fixed size 8 (quadword)
+              offset += 8;
+              // And we need to negate the builtin size-offset
+              (*it)->setStackOffset(offset, false);
+        }
+    }
+
     if(statement) {
 
         // Only do this once: Calculate offsets for variables, and total required stack space

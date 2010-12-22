@@ -1,9 +1,9 @@
-func test (asdf : uint32) : void {
-  local var local_var : uint32
-  local_var = asdf
+func test (a : uint32 b : uint32) : uint32 {
+    local var local_var : uint32
+    local_var = a+b
+    return local_var
 }
 
 func main () : void {
-  local var local_var : uint32
-  call test(5)
+  return call test(5 6)
 }
