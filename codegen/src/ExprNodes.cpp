@@ -370,3 +370,16 @@ void Expr_Deref::gen(CodeGen* out) {
 
     *out << Command("popq")("%rbx");
 }
+
+void Expr_Struc::gen(CodeGen* out) {
+    sub->genLeft(out);
+    int offset = var->getMemoryOffset();
+    int size = var->getSize();
+    *out << Command("mov", size)(Reg("%rax") + offset)("%ax", size);
+}
+
+void Expr_Struc::genLeft(CodeGen* out) {
+    sub->genLeft(out);
+    int offset = var->getMemoryOffset();
+    *out << Command("addq")(offset)("%rax");
+}

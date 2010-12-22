@@ -163,6 +163,8 @@ class Expr_Struc : public Expression {
     public:
         Expr_Struc(Expression* sub, std::string *identifier);
         virtual void dump(int num = 0);
+        virtual void gen(CodeGen* out);
+        virtual void genLeft(CodeGen* out);
         virtual Type* getType();
     private:
         Expression* sub;
@@ -176,8 +178,8 @@ class Expr_Deref : public Unary {
         Expr_Deref(Expression *sub);
         Expr_Deref(Expression *sub, Expression *index);
         virtual Type* getType();
-        virtual void genLeft(CodeGen* out);
         virtual void gen(CodeGen* out);
+        virtual void genLeft(CodeGen* out);
 };
 
 // Precedence 1
