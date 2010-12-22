@@ -1,0 +1,11 @@
+type point: struct {
+  var x : uint32
+  var y : uint32
+}
+
+func main () : void {
+  local var p : point
+  p.x = 5
+  p.y = 7
+  return p.x + p.y
+}
