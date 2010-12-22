@@ -1,15 +1,10 @@
 #include"ExprNodes.h"
 #include"ProgramNodes.h"
-
 #include <sstream>
 
 
-
-
-
-
-int Variable::setStackOffset(int offset) {
-    this->offset = offset -getSize();
+int Variable::setStackOffset(int offset, bool offBySize) {
+    this->offset = offset +(offBySize ? -getSize() : 0);
     return -getSize();
 }
 
@@ -21,11 +16,9 @@ int Variable::getSize() {
     return type->getSize();
 }
 
-
-
-int StructVariable::setStackOffset(int offset) {
+int StructVariable::setStackOffset(int offset, bool offBySize) {
     if(explicitOffset < 0)
-        this->offset = offset -getSize();
+        this->offset = offset +(offBySize ? -getSize() : 0);
     return -getSize();
 }
 

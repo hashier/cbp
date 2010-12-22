@@ -19,7 +19,7 @@ class Variable : public Declaration {
         Variable(std::string* identifier, Type* type);
         virtual void dump(int num = 0);
         Type* getType() { return type; }
-        virtual int setStackOffset(int offset);
+        virtual int setStackOffset(int offset, bool offBySize = true);
         virtual int getMemoryOffset();
         virtual int getSize();
         virtual void gen(CodeGen* out);
@@ -44,7 +44,7 @@ class StructVariable : public Variable {
         inline void setExplicitOffset(int explicitOffset) {
             this->explicitOffset = explicitOffset;
         }
-        virtual int setStackOffset(int offset);
+        virtual int setStackOffset(int offset, bool offBySize = true);
         virtual int getMemoryOffset();
         void dump(int num = 0);
     private:
