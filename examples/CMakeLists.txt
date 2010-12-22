@@ -7,6 +7,12 @@ file(GLOB EXAMPLE_CBPS
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cbp"
   )
 
+message(STATUS "Copying gdb files:" )
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/function.gdb
+  ${CMAKE_CURRENT_BINARY_DIR}/function.gdb
+  COPYONLY)
+
 message(STATUS "Generating examples:" )
 
 # for each example file
