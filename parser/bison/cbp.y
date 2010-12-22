@@ -32,7 +32,7 @@ int yylex(void);
 	Func_abi                abi_val;
 	float                   float_val;
 	int                     int_val;
-	std::list<StructVariable*>*   struct_members_val;
+	std::map<std::string, StructVariable*>*   struct_members_val;
 	//TypeStruct*             struct_val;
 	std::string*            string_val;
 }
@@ -119,9 +119,9 @@ type: TYPE
     | SQUARE_BRACKET_LEFT SQUARE_BRACKET_RIGHT type { $$ = new TypePointer($3); }
     ;
 
-struct_members: /* empty */ { $$ = new std::list<StructVariable*>(); }
-              | struct_members var_decl_struct { $1->push_back($2); }
-              | struct_members var_decl_struct AT INTEGER_CONSTANT { $2->setExplicitOffset($4); $1->push_back($2); }
+struct_members: /* empty */ { $$ = new std::map<std::string, StructVariable*>(); }
+              | struct_members var_decl_struct { (*$1)[$2->getIdentifier()] = $2; }
+              | struct_members var_decl_struct AT INTEGER_CONSTANT { $2->setExplicitOffset($4); (*$1)[$2->getIdentifier()] = $2; }
               ;
 
 var_decl_local:  KEY_VAR IDENTIFIER COLON type { $$ = new LocalVariable($2, $4); }

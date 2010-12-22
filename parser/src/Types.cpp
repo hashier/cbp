@@ -4,13 +4,13 @@
 std::string TypeStruct::getString() const
 {
     std::string result = "Struct of (";
-    for (std::list<StructVariable*>::const_iterator it = members->begin(); it != members->end(); it++)
+    for (std::map<std::string, StructVariable*>::const_iterator it = members->begin(); it != members->end(); it++)
     {
         if (it != members->begin())
         {
             result.append(", ");
         }
-        result.append((*it)->getType()->getString());
+        result.append((*it).second->getType()->getString());
 
     }
     result.append(")");
@@ -21,9 +21,9 @@ int TypeStruct::getSize()
 {
     // TODO: structs mit festen offsets beachten(sowas wie hoehster offset + size)
     int sum = 0;
-    for (std::list<StructVariable*>::const_iterator it = members->begin(); it != members->end(); it++)
+    for (std::map<std::string, StructVariable*>::const_iterator it = members->begin(); it != members->end(); it++)
     {
-        sum += (*it)->getSize();
+        sum += (*it).second->getSize();
     }
 
     return sum;
