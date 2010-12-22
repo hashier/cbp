@@ -36,18 +36,10 @@ int StructVariable::getMemoryOffset() {
 Label Function::getMark(CodeGen* out) {
     if(!gotMark) {
         gotMark = true;
-        mark = out->newMark(identifier);
+        mark = out->newMark(identifier, true);
     }
     return mark;
 }
-
-
-
-
-
-
-
-
 
 void File::gen(CodeGen* out) {
 

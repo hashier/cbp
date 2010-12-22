@@ -18,7 +18,7 @@ class CodeGen {
             inputFileName(inputFileName), withUnderscore(withUnderscore) {
         }
 
-        Label newMark(std::string name);
+        Label newMark(std::string name, bool func = false);
 
         std::string getInputFileName() {
             return inputFileName;
