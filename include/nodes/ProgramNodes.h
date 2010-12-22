@@ -103,7 +103,10 @@ class Block : public Statement {
         Block() {};
         void add(Statement* st);
         void dump(int num = 0);
-        virtual void gen(CodeGen* out);
+        inline void gen(CodeGen* out) {
+            this->gen(out, false);
+        }
+        void gen(CodeGen* out, bool outermost);
         virtual int calcStackOffset(int offset);
         virtual ~Block();
     private:
@@ -163,7 +166,10 @@ class Return : public Statement {
         Return(Expression* expr);
         void dump(int num = 0);
         virtual ~Return();
-        virtual void gen(CodeGen* out);
+        inline virtual void gen(CodeGen* out) {
+            this->gen(out, false);
+        }
+        void gen(CodeGen* out, bool outermost);
     private:
         Expression* expr;
 };

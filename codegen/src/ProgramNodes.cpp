@@ -271,7 +271,7 @@ void Local::gen(CodeGen* out) {
     // Seems nothing is needed for local var declaration. It lives on the stack.
 }
 
-void Return::gen(CodeGen* out) {
+void Return::gen(CodeGen* out, bool outermost) {
     //*out << "push ebp" << std::endl;
     //*out << "mov esp, ebp" << std::endl;
     //*out << "sub esp, 16" << std::endl;
@@ -281,9 +281,10 @@ void Return::gen(CodeGen* out) {
     else
         *out << Command("mov")("$0xdeadbeef")("%eax");                 // mov 0xdeadbeef to eax
 
-    *out << Command("mov")("%ebp")("%esp");                            // set pointers of the stack back
-    *out << Command("pop")("%ebp");
-    *out << Command("ret");                                             // return
+    if(!outermost) {
+        *out << Command("leave");                                           // set pointers of the stack back
+        *out << Command("ret");                                             // return
+    }
 }
 
 int IfElse::calcStackOffset(int offset) {

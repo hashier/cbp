@@ -39,17 +39,15 @@ void Function::gen(CodeGen* out) {
             if(offset % 4 != 0)
                 offset += offset % 4;
             *out << Command("subq")(offset)("%rsp");
-
-            statement->gen(out);
-
-        } else {
-            statement->gen(out);
         }
 
-        // TODO use this?
-        // *out << Command("leave");
-        *out << Command("movq")("%rbp")("%rsp");
-        *out << Command("popq")("%rbp");
+        Block* tmp = dynamic_cast<Block*>(statement);
+        if(tmp)
+            tmp->gen(out, true);
+        else
+            statement->gen(out);
+
+        *out << Command("leave");
 
         // Return from this function
         *out << Command("ret");
