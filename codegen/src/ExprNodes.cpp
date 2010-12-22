@@ -372,14 +372,21 @@ void Expr_Deref::gen(CodeGen* out) {
 }
 
 void Expr_Struc::gen(CodeGen* out) {
+    // Get a pointer to top of the struct
     sub->genLeft(out);
+    // Get offset and size of the variable within the struct
     int offset = var->getMemoryOffset();
     int size = var->getSize();
+    // Return the var (with appropiate mov command) in %rax
     *out << Command("mov", size)(Reg("%rax") + offset)("%ax", size);
 }
 
 void Expr_Struc::genLeft(CodeGen* out) {
+    // Get a pointer to top of the struct
     sub->genLeft(out);
+    // And an offset from the base of the struct
     int offset = var->getMemoryOffset();
-    *out << Command("addq")(offset)("%rax");
+    // If there is an offset, add it to the pointer value
+    if(offset)
+        *out << Command("addq")(offset)("%rax");
 }
