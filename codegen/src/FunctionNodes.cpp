@@ -18,25 +18,26 @@ void Function::gen(CodeGen* out) {
         int offset = statement->calcStackOffset(0);
         offset = offset > 0 ? offset : -offset;
 
+        *out << Command("pushq")("%rbp");
+        *out << Command("movq")("%rsp")("%rbp");
+
         // Do we even have local variables?
         if(offset > 0) {
             // Align to something divisible by 4.
             if(offset % 4 != 0)
                 offset += offset % 4;
-            *out << Command("pushq")("%rbp");
-            *out << Command("movq")("%rsp")("%rbp");
             *out << Command("subq")(offset)("%rsp");
 
             statement->gen(out);
 
-            // TODO use this?
-            // *out << Command("leave");
-            *out << Command("movq")("%rbp")("%rsp");
-            *out << Command("popq")("%rbp");
-
         } else {
             statement->gen(out);
         }
+
+        // TODO use this?
+        // *out << Command("leave");
+        *out << Command("movq")("%rbp")("%rsp");
+        *out << Command("popq")("%rbp");
 
         // Return from this function
         *out << Command("ret");
