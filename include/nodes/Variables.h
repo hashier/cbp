@@ -36,9 +36,10 @@ class StructVariable : public Variable {
             this->explicitOffset = explicitOffset;
         }
         virtual int setStackOffset(int offset, bool offBySize = true);
-        virtual int getMemoryOffset();
+        virtual Address getAddress();
         void dump(int num = 0);
-    private:
+    protected:
         int explicitOffset;
+        virtual int getMemoryOffset();
 };
 

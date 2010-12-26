@@ -14,6 +14,10 @@ int Variable::getSize() {
     return type->getSize();
 }
 
+Address Variable::getAddress() {
+    return Reg("rbp") + getMemoryOffset();
+}
+
 int StructVariable::setStackOffset(int offset, bool dummy) {
     if(explicitOffset < 0)
         this->offset = offset;
@@ -24,6 +28,6 @@ int StructVariable::getMemoryOffset() {
     return explicitOffset < 0 ? offset : explicitOffset;
 }
 
-Address Variable::getAddress() {
-    return Reg("rbp") + getMemoryOffset();
+Address StructVariable::getAddress() {
+    return Reg("rax") + getMemoryOffset();
 }
