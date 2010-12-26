@@ -387,6 +387,6 @@ void Expr_Struc::genLeft(CodeGen* out) {
     // And an offset from the base of the struct
     Address reg = var->getAddress();
     // If there is an offset, add it to the pointer value
-    // if(offset)
+    if(reg.isDisplaced())
         *out << Command("leaq")(reg)("%rax");
 }

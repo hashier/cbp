@@ -149,6 +149,10 @@ public:
         return a;
     }
 
+    bool isDisplaced() const{
+        return displacement == 0;
+    }
+
     std::ostream& write(std::ostream& os) const {
         // do some checks, should mostly be covered at compile time
         assert((!base.empty() || !offset.empty()) && "One register of address has to be specified");
