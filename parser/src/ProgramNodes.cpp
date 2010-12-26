@@ -1,5 +1,6 @@
 #include "ProgramNodes.h"
 #include "ExprNodes.h"
+#include "Variables.h"
 #include "AbstractNodes.h"
 
 SymbolTable::SymbolTable *Node::symbolTable = new SymbolTable::SymbolTable(); // wtf

@@ -1,30 +1,8 @@
 #include"ExprNodes.h"
+#include"Variables.h"
 #include"ProgramNodes.h"
+
 #include <sstream>
-
-
-int Variable::setStackOffset(int offset, bool offBySize) {
-    this->offset = offset +(offBySize ? -getSize() : 0);
-    return -getSize();
-}
-
-int Variable::getMemoryOffset() {
-    return offset;
-}
-
-int Variable::getSize() {
-    return type->getSize();
-}
-
-int StructVariable::setStackOffset(int offset, bool dummy) {
-    if(explicitOffset < 0)
-        this->offset = offset;
-    return getSize();
-}
-
-int StructVariable::getMemoryOffset() {
-    return explicitOffset < 0 ? offset : explicitOffset;
-}
 
 Label Function::getMark(CodeGen* out) {
     if(!gotMark) {
@@ -285,6 +263,10 @@ void Return::gen(CodeGen* out, bool outermost) {
         *out << Command("leave");                                           // set pointers of the stack back
         *out << Command("ret");                                             // return
     }
+}
+
+int Local::calcStackOffset(int offset) {
+    return var->setStackOffset(offset);
 }
 
 int IfElse::calcStackOffset(int offset) {

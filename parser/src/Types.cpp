@@ -1,4 +1,6 @@
 #include "Types.h"
+
+#include "Variables.h"
 #include "ProgramNodes.h"
 
 std::string TypeStruct::getString() const

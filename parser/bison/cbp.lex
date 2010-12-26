@@ -3,6 +3,7 @@
 
 %{
 #include "ExprNodes.h"
+#include "Variables.h"
 #include "ProgramNodes.h"
 #include "Types.h"
 

@@ -8,47 +8,11 @@
 #include <memory>
 
 class ConstInt;
+class Variable;
 
 enum Func_abi {
     Abi_c,
     Abi_default
-};
-
-class Variable : public Declaration {
-    public:
-        Variable(std::string* identifier, Type* type);
-        virtual void dump(int num = 0);
-        Type* getType() { return type; }
-        virtual int setStackOffset(int offset, bool offBySize = true);
-        virtual int getMemoryOffset();
-        virtual int getSize();
-        virtual void gen(CodeGen* out);
-    protected:
-        Type* type;
-        int offset;
-};
-
-class GlobalVariable : public Variable {
-    public:
-        GlobalVariable(std::string* identifier, Type* type);
-};
-
-class LocalVariable : public Variable {
-    public:
-        LocalVariable(std::string* identifier, Type* type);
-};
-
-class StructVariable : public Variable {
-    public:
-        StructVariable(std::string* identifier, Type* type);
-        inline void setExplicitOffset(int explicitOffset) {
-            this->explicitOffset = explicitOffset;
-        }
-        virtual int setStackOffset(int offset, bool offBySize = true);
-        virtual int getMemoryOffset();
-        void dump(int num = 0);
-    private:
-        int explicitOffset;
 };
 
 class Function : public Declaration {
@@ -179,9 +143,7 @@ class Local : public Statement {
         Local(Variable* var);
         void dump(int num = 0);
         /** Sets the memory offset of the wrapped Variable and returns its size. */
-        inline int calcStackOffset(int offset) {
-            return var->setStackOffset(offset);
-        }
+        int calcStackOffset(int offset);
         virtual void gen(CodeGen* out);
         virtual ~Local();
     private:
