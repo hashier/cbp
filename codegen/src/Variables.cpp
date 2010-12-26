@@ -24,3 +24,6 @@ int StructVariable::getMemoryOffset() {
     return explicitOffset < 0 ? offset : explicitOffset;
 }
 
+Address Variable::getAddress() {
+    return Reg("rbp") + getMemoryOffset();
+}

@@ -290,11 +290,11 @@ void Expr_Sub::gen(CodeGen* out) {
 }
 
 void Expr_Identifier::genLeft(CodeGen* out) {
-    *out << Command("leaq")(Reg("rbp") + ref->getMemoryOffset())("%rax");
+    *out << Command("leaq")(ref->getAddress())("%rax");
 }
 void Expr_Identifier::gen(CodeGen* out) {
     int size = ref->getSize();
-    *out << Command("mov", size)(Reg("rbp") + ref->getMemoryOffset())("%ax", size);
+    *out << Command("mov", size)(ref->getAddress())("%ax", size);
 }
 
 void Expr_Assign::gen(CodeGen* out) {

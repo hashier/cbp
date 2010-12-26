@@ -10,10 +10,11 @@ class Variable : public Declaration {
         virtual void dump(int num = 0);
         Type* getType() { return type; }
         virtual int setStackOffset(int offset, bool offBySize = true);
-        virtual int getMemoryOffset();
         virtual int getSize();
         virtual void gen(CodeGen* out);
+        virtual Address getAddress();
     protected:
+        virtual int getMemoryOffset();
         Type* type;
         int offset;
 };
