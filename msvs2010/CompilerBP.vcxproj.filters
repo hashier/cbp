@@ -104,6 +104,9 @@
     <ClCompile Include="..\parser\src\ProgramNodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\codegen\src\Variables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\parser\bison\cbp.lex">
