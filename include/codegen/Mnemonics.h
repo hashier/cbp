@@ -135,17 +135,39 @@ public:
     }
 
     static Address combine(Address const& lhs, Address const& rhs){
-        // check, that only one exists
-        assert(lhs.base.empty() || rhs.base.empty());
-        assert(lhs.displacement == 0 || rhs.displacement == 0);
-        assert(lhs.offset.empty() || rhs.offset.empty());
-        assert(lhs.multiplier == 0 || rhs.multiplier == 0);
-
         Address a;
-        a.base = lhs.base.empty() ? rhs.base : lhs.base;
+        
+        assert(lhs.displacement == 0 || rhs.displacement == 0);
         a.displacement = (lhs.displacement == 0) ? rhs.displacement : lhs.displacement;
-        a.offset = lhs.offset.empty() ? rhs.offset : lhs.offset;
-        a.multiplier = (lhs.multiplier == 0) ? rhs.multiplier : lhs.multiplier;
+
+        int slots = 2;
+        if(!rhs.offset.empty() && rhs.multiplier) {
+            a.offset = rhs.offset;
+            a.multiplier = rhs.multiplier;
+            --slots;
+        }
+        if(!lhs.offset.empty() && lhs.multiplier) {
+            a.offset = lhs.offset;
+            a.multiplier = lhs.multiplier;
+            --slots;
+        }
+
+        if(!rhs.offset.empty() && !rhs.multiplier) {
+            (slots-- == 2? a.offset: a.base) = rhs.offset;
+        }
+        if(!lhs.offset.empty() && !lhs.multiplier) {
+            (slots-- == 2? a.offset: a.base) = lhs.offset;
+        }
+
+        if(!rhs.base.empty()) {
+            (slots-- == 2? a.offset: a.base) = rhs.base;
+        }
+        if(!lhs.base.empty()) {
+            (slots-- == 2? a.offset: a.base) = lhs.base;
+        }
+
+        assert(slots >= 0);
+
         return a;
     }
 

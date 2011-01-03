@@ -22,7 +22,7 @@ int yyerror(char const* s);
 
 letter      [a-zA-Z]
 digit       [0-9]
-word        [a-zA-Z][a-zA-Z0-9_]*
+word        [a-zA-Z0-9_]*
 identifier  {letter}{word}*
 int_const   -?{digit}+
 float_const -?{digit}+\.{digit}+
