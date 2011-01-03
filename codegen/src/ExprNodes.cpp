@@ -226,67 +226,67 @@ void Expr_BoolXOR::gen(CodeGen* out) {
 // Shift operators use the 8-bit %cl register, which is equal to the lowest 8 bits of %ecx.
 // arithmetic left shift
 void Expr_BitLeft::gen(CodeGen* out) {
-    right->gen(out);                            // right hand operand into %eax
-    *out << Command("pushq")("%rcx");           // store %ecx including %cl to the stack
-    *out << Command("mov")("%eax")("%ecx");    // %ecx = %eax including %cl = %eax & 0x1F
-    left->gen(out);                             // left hand operand into %eax
-    *out << Command("sal")("%cl")("%eax");     // %eax = %eax << %cl
-    *out << Command("popq")("%rcx");            // restore %ecx from the stack
+    right->gen(out);                         // right hand operand into %rax
+    *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
+    *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
+    left->gen(out);                          // left hand operand into %rax
+    *out << Command("shl")("%cl")("%rax");   // %rax = %rax << %cl
+    *out << Command("popq")("%rcx");         // restore %rcx from the stack
 }
 
 // arithmetic right shift
 void Expr_BitRight::gen(CodeGen* out) {
-    right->gen(out);                            // right hand operand into %eax
-    *out << Command("pushq")("%rcx");           // store %ecx including %cl to the stack
-    *out << Command("mov")("%eax")("%ecx");    // %ecx = %eax including %cl = %eax & 0x1F
-    left->gen(out);                             // left hand operand into %eax
-    *out << Command("sar")("%cl")("%eax");     // %eax = %eax >> %cl
-    *out << Command("popq")("%rcx");            // restore %ecx from the stack
+    right->gen(out);                         // right hand operand into %eax
+    *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
+    *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
+    left->gen(out);                          // left hand operand into %rax
+    *out << Command("shr")("%cl")("%rax");   // %rax = %rax >> %cl
+    *out << Command("popq")("%rcx");            // restore %rcx from the stack
 }
 
 void Expr_BitOR::gen(CodeGen* out) {
-    right->gen(out);                            // right hand operand into %eax
-    *out << Command("pushq")("%rbx");           // store %ebx to the stack
-    *out << Command("movl")("%eax")("%ebx");   // %ebx = %eax
-    left->gen(out);                             // left hand operand into %eax
-    *out << Command("orl")("%ebx")("%eax");    // %eax = %eax or %ebx
-    *out << Command("popq")("%rbx");            // restore %ebx from the stack
+    right->gen(out);                         // right hand operand into %rax
+    *out << Command("pushq")("%rbx");        // store %rbx to the stack
+    *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
+    left->gen(out);                          // left hand operand into %rax
+    *out << Command("or")("%rbx")("%rax");   // %rax = %rax or %rbx
+    *out << Command("popq")("%rbx");         // restore %rbx from the stack
 }
 
 void Expr_BitAND::gen(CodeGen* out) {
-    right->gen(out);                            // right hand operand into %eax
-    *out << Command("pushq")("%rbx");           // store ebx to the stack
-    *out << Command("movl")("%eax")("%ebx");   // %ebx = %eax
-    left->gen(out);                             // left hand operand into %eax
-    *out << Command("andl")("%ebx")("%eax");   // %eax = %eax and %ebx
-    *out << Command("popq")("%rbx");            // restore %ebx from the stack
+    right->gen(out);                         // right hand operand into %rax
+    *out << Command("pushq")("%rbx");        // store %rbx to the stack
+    *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
+    left->gen(out);                          // left hand operand into %rax
+    *out << Command("and")("%rbx")("%rax");  // %rax = %rax and %rbx
+    *out << Command("popq")("%rbx");         // restore %rbx from the stack
 }
 
 void Expr_BitXOR::gen(CodeGen* out) {
-    right->gen(out);                            // right hand operand into %eax
-    *out << Command("pushq")("%rbx");           // store ebx to the stack
-    *out << Command("movl")("%eax")("%ebx");   // %ebx = %eax
-    left->gen(out);                             // left hand operand into %eax
-    *out << Command("xorl")("%ebx")("%eax");   // %eax = %eax xor %ebx
-    *out << Command("popq")("%rbx");            // restore %ebx from the stack
+    right->gen(out);                         // right hand operand into %rax
+    *out << Command("pushq")("%rbx");        // store %rbx to the stack
+    *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
+    left->gen(out);                          // left hand operand into %rax
+    *out << Command("xor")("%rbx")("%rax");  // %rax = %rax xor %rbx
+    *out << Command("popq")("%rbx");         // restore %rbx from the stack
 }
 
 void Expr_Add::gen(CodeGen* out) {
-    right->gen(out);                            // right hand operand into %eax
-    *out << Command("pushq")("%rbx");           // store ebx to the stack
-    *out << Command("movl")("%eax")("%ebx");   // %ebx = %eax
-    left->gen(out);                             // left hand operand into %eax
-    *out << Command("addl")("%ebx")("%eax");   // %eax = %eax + %ebx
-    *out << Command("popq")("%rbx");            // restore %ebx from the stack
+    right->gen(out);                         // right hand operand into %rax
+    *out << Command("pushq")("%rbx");        // store %rbx to the stack
+    *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
+    left->gen(out);                          // left hand operand into %rax
+    *out << Command("add")("%rbx")("%rax");  // %rax = %rax + %rbx
+    *out << Command("popq")("%rbx");         // restore %rbx from the stack
 }
 
 void Expr_Sub::gen(CodeGen* out) {
-    right->gen(out);                            // right hand operand into %eax
-    *out << Command("pushq")("%rbx");           // store ebx to the stack
-    *out << Command("movl")("%eax")("%ebx");   // %ebx = %eax
-    left->gen(out);                             // left hand operand into %eax
-    *out << Command("subl")("%ebx")("%eax");   // %eax = %eax - %ebx
-    *out << Command("popq")("%rbx");            // restore %ebx from the stack
+    right->gen(out);                         // right hand operand into %eax
+    *out << Command("pushq")("%rbx");        // store %rbx to the stack
+    *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
+    left->gen(out);                          // left hand operand into %rax
+    *out << Command("sub")("%rbx")("%rax");  // %rax = %rax - %rbx
+    *out << Command("popq")("%rbx");         // restore %rbx from the stack
 }
 
 void Expr_Identifier::genLeft(CodeGen* out) {
