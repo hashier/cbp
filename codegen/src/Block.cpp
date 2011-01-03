@@ -4,11 +4,9 @@ using namespace std;
 
 void Block::gen(CodeGen* out, bool outermost) {
     // Ok, now just output all the substatements one after another
-    std::list<Statement*>::iterator it, it2;
-    // Not really content with this double-iterator solution for second-last element..
-    for ( it = subs.begin(), it2 = ++subs.begin() ; it != subs.end(); it++, it2++ ) {
-
+    for (std::list<Statement*>::iterator it = subs.begin(); it != subs.end(); it++) {
         // Is this the last statement of an outermost block in a function?
+        std::list<Statement*>::iterator it2 = it; it2++;
         if(outermost && it2 == subs.end()) {
             // Neat. Is this a return statement?
             Return* tmp = dynamic_cast<Return*>(*it);
