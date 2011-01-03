@@ -2,7 +2,7 @@ Hauptprogramm:                       Alexander
 Parser:                              Chris
 Symboltabelle:                       Jan
 Constant Propagation:                Johannes
-Inlining:                            Thorben
+Inlining:                            Torben
 Abhängigkeitsanalyse:                Martin
 Codeerzeugungs-Hilfsklassen:         Vincent
 Assembler-Rahmenprogramm:            Hendrik
