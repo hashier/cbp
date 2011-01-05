@@ -25,6 +25,14 @@ class Type
 
         virtual int getSize() = 0;
 
+        virtual bool isInteger() const {
+            return false;
+        }
+
+        virtual bool hasSignedBit() const {
+            return false;
+        }
+
         virtual ~Type() { }
 };
 
@@ -82,6 +90,16 @@ class TypeSimple : public Type
             }
             //fix warning: not all control paths return a value
             return 0;
+        }
+
+        /** Returns False, if this type is 'uint8' or 'uint16' or 'uint32', otherwise True. */
+        virtual bool hasSignedBit() const {
+            return baseType != Type_uint8 && baseType != Type_uint16 && baseType != Type_uint32;
+        }
+
+        /** Returns whether or not this is a integer type. */
+        virtual bool isInteger() const {
+            return baseType <= Type_int32;
         }
 
         /** Returns whether or not this is a floating type. */

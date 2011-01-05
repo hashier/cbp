@@ -77,6 +77,10 @@ public:
         }
     }
 
+    /**
+     * @param regName_ Element of {ax,bx,cx,dx}
+     * @param size     size of the register to use in bytes
+     */
     explicit Reg(std::string const& regName_, int size) {
         if(regName_[0] == '%'){
             regName = regName_;
@@ -86,6 +90,7 @@ public:
         }
 
         switch(size) {
+            case 1: regName[2] ='l'; break; // rename last letter from x to l
             case 2: /* default size, leave as-is. */ break;
             case 4: regName[0] = 'e'; regName = '%' + regName; break;
             case 8: regName[0] = 'r'; regName = '%' + regName; break;
@@ -286,16 +291,21 @@ public:
         return *this;
     }
 
-    Command& operator()(std::string const& reg, int size){
-        assert(reg[0] == '%');
-        assert(reg[reg.size() - 1] != ',');
+    /**
+     * @param regName_ Element of {ax,bx,cx,dx}
+     * @param size     size of the register to use in bytes
+     */
+    Command& operator()(std::string const& regName_, int size){
+        assert(regName_[0] == '%');
+        assert(regName_[regName_.size() - 1] != ',');
 
         preformat();
 
-        std::string tmp(reg);
+        std::string tmp(regName_);
 
         switch(size) {
-            case 1: break;
+            case 1: tmp[2] = 'l'; break; // rename last letter from x to l
+            case 2: /* default size, leave as-is. */ break;
             case 4: tmp[0] = 'e'; tmp = '%' + tmp; break;
             case 8: tmp[0] = 'r'; tmp = '%' + tmp; break;
             default: assert("Invalid size specified!");

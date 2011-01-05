@@ -272,11 +272,39 @@ void Expr_BitXOR::gen(CodeGen* out) {
 }
 
 void Expr_Add::gen(CodeGen* out) {
-    right->gen(out);                         // right hand operand into %rax
+    // only integer arguments are allowed yet (floats are optional)
+    assert(right->getType()->isInteger());
+    assert(left->getType()->isInteger());
+    // both arguments must have a signed bit or both arguments must have not a signed bit
+    assert(left->getType()->hasSignedBit()==right->getType()->hasSignedBit());
+
+    Expression* bigExp;   // the argument with the bigger size of type
+    Expression* smallExp; // the argument with the lower size of type
+    if (left->getType()->getSize() <= right->getType()->getSize()) {
+        smallExp = left;
+        bigExp   = right;
+    } else {
+        smallExp = right;
+        bigExp   = left;
+    }
+
+    int smallSizeInBytes = smallExp->getType()->getSize();
+    int bigSizeInBytes   = bigExp->getType()->getSize();
+
+    std::string movSmall2Big("movsx");
+    if (!smallExp->getType()->hasSignedBit()) {
+        movSmall2Big[3] = 'z'; // "movzx"
+    }
+    smallExp->gen(out);                      // right hand operand into %rax
+    *out << Command(movSmall2Big)            // expanding bits:
+            ("%ax", smallSizeInBytes)        //  argument with smaller size expanding to
+            ("%ax", bigSizeInBytes);         //  to size of argument with bigger size
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
-    left->gen(out);                          // left hand operand into %rax
-    *out << Command("add")("%rbx")("%rax");  // %rax = %rax + %rbx
+    bigExp->gen(out);                        // left hand operand into %rax
+    *out << Command("add")                   // %ax = %ax + %bx:
+            ("%bx", bigSizeInBytes)          //  argument with smaller size adding to
+            ("%ax", bigSizeInBytes);         //  argument with bigger size
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
 }
 
