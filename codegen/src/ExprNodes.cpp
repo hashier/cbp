@@ -276,7 +276,7 @@ void Expr_Add::gen(CodeGen* out) {
     assert(right->getType()->isInteger());
     assert(left->getType()->isInteger());
     // both arguments must have a signed bit or both arguments must have not a signed bit
-    assert(left->getType()->hasSignedBit()==right->getType()->hasSignedBit());
+    assert(left->getType()->hasSignedBit() == right->getType()->hasSignedBit());
 
     Expression* bigExp;   // the argument with the bigger size of type
     Expression* smallExp; // the argument with the lower size of type
@@ -287,21 +287,22 @@ void Expr_Add::gen(CodeGen* out) {
         smallExp = right;
         bigExp   = left;
     }
-
     int smallSizeInBytes = smallExp->getType()->getSize();
     int bigSizeInBytes   = bigExp->getType()->getSize();
 
-    std::string movSmall2Big("movsx");
-    if (!smallExp->getType()->hasSignedBit()) {
-        movSmall2Big[3] = 'z'; // "movzx"
+    smallExp->gen(out);                      // argument with small size into %rax
+    if (smallSizeInBytes!=bigSizeInBytes) {
+        std::string movSmall2Big("movsx");
+        if (!smallExp->getType()->hasSignedBit()) {
+            movSmall2Big[3] = 'z'; // "movzx"
+        }
+        *out << Command(movSmall2Big)        // expanding size:
+                ("%ax", smallSizeInBytes)    //  argument with smaller size expanding to
+                ("%ax", bigSizeInBytes);     //  to size of argument with bigger size
     }
-    smallExp->gen(out);                      // right hand operand into %rax
-    *out << Command(movSmall2Big)            // expanding bits:
-            ("%ax", smallSizeInBytes)        //  argument with smaller size expanding to
-            ("%ax", bigSizeInBytes);         //  to size of argument with bigger size
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
-    bigExp->gen(out);                        // left hand operand into %rax
+    bigExp->gen(out);                        // argument with big size into %rax
     *out << Command("add")                   // %ax = %ax + %bx:
             ("%bx", bigSizeInBytes)          //  argument with smaller size adding to
             ("%ax", bigSizeInBytes);         //  argument with bigger size
