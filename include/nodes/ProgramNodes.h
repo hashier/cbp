@@ -22,6 +22,7 @@ class Function : public Declaration {
         virtual void gen(CodeGen* out);
         Type* getType() { return type; }
         Label getMark(CodeGen* out);
+        const Func_abi &getAbi() const { return abi; }
         virtual ~Function();
     private:
         Func_abi abi;

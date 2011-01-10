@@ -4,28 +4,28 @@
 using namespace std;
 
 void Function::gen(CodeGen* out) {
-    Label mark = getMark(out);
-
-    if (identifier == "main") {
-        *out << (Directive(".globl") << ' ' << (out->isWithUnderscore() ? "_" : "") << "_cbp_main");
-        *out << Label((out->isWithUnderscore() ? "_" : "") + string("_cbp_main"));
-    }
-
-    *out << mark;
-
-    if(arguments->size() > 0) {
-        std::list<Variable*>::iterator it;
-        int offset = 8;
-        for ( it = arguments->begin(); it != arguments->end(); it++ ) {
-              // Since we push all our variables using pushq,
-              // the offsets have to be of fixed size 8 (quadword)
-              offset += 8;
-              // And we need to negate the builtin size-offset
-              (*it)->setStackOffset(offset, false);
-        }
-    }
-
+    // ignore forward declarations
     if(statement) {
+        Label mark = getMark(out);
+
+        if (identifier == "main") {
+            *out << (Directive(".globl") << ' ' << (out->isWithUnderscore() ? "_" : "") << "_cbp_main");
+            *out << Label((out->isWithUnderscore() ? "_" : "") + string("_cbp_main"));
+        }
+
+        *out << mark;
+
+        if(arguments->size() > 0) {
+            std::list<Variable*>::iterator it;
+            int offset = 8;
+            for ( it = arguments->begin(); it != arguments->end(); it++ ) {
+                  // Since we push all our variables using pushq,
+                  // the offsets have to be of fixed size 8 (quadword)
+                  offset += 8;
+                  // And we need to negate the builtin size-offset
+                  (*it)->setStackOffset(offset, false);
+            }
+        }
 
         // Only do this once: Calculate offsets for variables, and total required stack space
         int offset = statement->calcStackOffset(0);
@@ -53,7 +53,5 @@ void Function::gen(CodeGen* out) {
         // Return from this function
         *out << Command("ret");
 
-    } else
-        *out << Command("NULL function!");
-
+    }
 }

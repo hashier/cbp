@@ -5,11 +5,17 @@
 #include <sstream>
 
 Label Function::getMark(CodeGen* out) {
-    if(!gotMark) {
-        gotMark = true;
-        mark = out->newMark(identifier, true);
+    switch(abi) {
+        case Abi_c:
+            gotMark = true;
+            return Label(identifier);
+        case Abi_default:
+            if(!gotMark) {
+                gotMark = true;
+                mark = out->newMark(identifier, true);
+            }
+            return mark;
     }
-    return mark;
 }
 
 void File::gen(CodeGen* out) {
@@ -94,14 +100,14 @@ void ForLoop::gen(CodeGen* out) {
 
 //-----------------------------------------------------------------------------
 //compare 2 (alternative)
-    *out << Command("push")("%ebx");                            //save ebx
-    *out << Command("push")(Reg("%eax"));                       //save eax
+    *out << Command("pushq")("%rbx");                            //save ebx
+    *out << Command("pushq")("%rax");                       //save eax
     final_value->gen(out);                                      //get final value to eax
     *out << Command("mov")("%eax")("%ebx");                     //mov eax to ebx
     *out << Command("mov")(it_address)("%eax");     //mov iterator to eax
     *out << Command("cmp")("%eax")("%ebx");                     //compare eax, ebx [iterator, final value]
-    *out << Command("pop")("%eax");                             //restore eax
-    *out << Command("pop")("%ebx");                             //restore ebx
+    *out << Command("popq")("%rax");                             //restore eax
+    *out << Command("popq")("%rbx");                             //restore ebx
 
 //-----------------------------------------------------------------------------
 //jump if exit
@@ -115,11 +121,11 @@ void ForLoop::gen(CodeGen* out) {
 //increment iterator
     if(step==NULL)
     {
-         *out << Command("push")("%eax");                         //save eax
+         *out << Command("pushq")("%rax");                         //save eax
          *out << Command("mov")(it_address)("%eax");  //mov iterator to eax
          *out << Command("inc")("%eax");                          //eax++
          *out << Command("mov")("%eax")(it_address);  //mov eax to iterator
-         *out << Command("pop")("%eax");                          //restore eax
+         *out << Command("popq")("%rax");                          //restore eax
     }else{
          //TODO
     }

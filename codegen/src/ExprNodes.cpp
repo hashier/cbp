@@ -2,6 +2,8 @@
 #include"Variables.h"
 #include"ProgramNodes.h"
 
+#include <vector>
+
 void Expr_Cast::genLeft(CodeGen* out) {
     expr->genLeft(out);
 }
@@ -337,12 +339,76 @@ void Expr_Assign::gen(CodeGen* out) {
 }
 
 void FuncCall::gen(CodeGen *out) {
-    std::list<Expression*>::iterator it;
-    for ( it = arguments->begin() ; it != arguments->end(); it++ ) {
-        (*it)->gen(out);
-        *out << Command("pushq")("%rax");
+    static std::vector<std::string> *classInteger;
+    if(!classInteger) {
+        classInteger = new std::vector<std::string>();
+        classInteger->push_back("%rdi");
+        classInteger->push_back("%rsi");
+        classInteger->push_back("%rdx");
+        classInteger->push_back("%rcx");
+        classInteger->push_back("%r8");
+        classInteger->push_back("%r9");
     }
-    *out << Command("call")(func->getMark(out));
+
+    switch(func->getAbi()) {
+        case Abi_c:
+            {
+            *out << Command("pushq")("%rcx");
+            *out << Command("pushq")("%rdx");
+            *out << Command("pushq")("%rsi");
+            *out << Command("pushq")("%rdi");
+            *out << Command("pushq")("%r8");
+            *out << Command("pushq")("%r9");
+            *out << Command("pushq")("%r10");
+            *out << Command("pushq")("%r11");
+            *out << Command("cld");
+            // TODO: align rsp towards 16 byte
+            std::vector<std::string>::const_iterator reg = classInteger->begin();
+            std::vector<Expression *> stackArgs;
+            for (std::list<Expression *>::const_iterator it = arguments->begin();
+                    it != arguments->end(); ++it) {
+                if((*it)->getType()->isInteger() || dynamic_cast<TypePointer *>((*it)->getType())) {
+                    if(reg != classInteger->end()) {
+                        (*it)->gen(out);
+                        *out << Command("movq")("%rax")(*reg++);
+                    } else {
+                        stackArgs.push_back(*it);
+                    }
+                } else {
+                    // TODO
+                    *out << Command("type not supported as argument type");
+                }
+            }
+            for (std::vector<Expression *>::const_reverse_iterator it = stackArgs.rbegin();
+                    it != stackArgs.rend(); ++it) {
+                if((*it)->getType()->isInteger() || dynamic_cast<TypePointer *>((*it)->getType())) {
+                    (*it)->gen(out);
+                    *out << Command("pushq")("%rax");
+                } else {
+                    // TODO
+                    *out << Command("type not supported as argument type");
+                }
+            }
+            *out << Command("call")(func->getMark(out));
+            *out << Command("popq")("%r11");
+            *out << Command("popq")("%r10");
+            *out << Command("popq")("%r9");
+            *out << Command("popq")("%r8");
+            *out << Command("popq")("%rdi");
+            *out << Command("popq")("%rsi");
+            *out << Command("popq")("%rdx");
+            *out << Command("popq")("%rcx");
+            break;
+            }
+        case Abi_default:
+            std::list<Expression*>::iterator it;
+            for ( it = arguments->begin() ; it != arguments->end(); it++ ) {
+                (*it)->gen(out);
+                *out << Command("pushq")("%rax");
+            }
+            *out << Command("call")(func->getMark(out));
+            break;
+    }
 }
 
 void Expr_Ref::gen(CodeGen* out) {
@@ -358,7 +424,7 @@ void Expr_Deref::genLeft(CodeGen* out) {
         index->gen(out);
         *out << Command("movl")("%eax")("%ebx");
         // Return value of variable at address
-        *out << Command("leaq")(Reg("rax") + Reg("ebx"))("%rax");
+        *out << Command("leaq")(Reg("rax") + Reg("rbx"))("%rax");
     } else
         *out << Command("leaq")(Reg("rax"))("%rax");
 }
