@@ -278,7 +278,8 @@ void Expr_Add::gen(CodeGen* out) {
     assert(right->getType()->isInteger());
     assert(left->getType()->isInteger());
     // both arguments must have a signed bit or both arguments must have not a signed bit
-    assert(left->getType()->hasSignedBit() == right->getType()->hasSignedBit());
+    // TODO
+    // assert(left->getType()->hasSignedBit() == right->getType()->hasSignedBit());
 
     Expression* bigExp;   // the argument with the bigger size of type
     Expression* smallExp; // the argument with the lower size of type
@@ -417,16 +418,19 @@ void Expr_Ref::gen(CodeGen* out) {
 
 void Expr_Deref::genLeft(CodeGen* out) {
     // Evaluate substatement (= base address)
-    sub->gen(out);
     if(index) {
         // Evaluate offset
         *out << Command("pushq")("%rbx");
         index->gen(out);
-        *out << Command("movl")("%eax")("%ebx");
+        *out << Command("movq")("%rax")("%rbx");
+        sub->gen(out);
         // Return value of variable at address
         *out << Command("leaq")(Reg("rax") + Reg("rbx"))("%rax");
-    } else
+        *out << Command("popq")("%rbx");
+    } else {
+        sub->gen(out);
         *out << Command("leaq")(Reg("rax"))("%rax");
+    }
 }
 
 void Expr_Deref::gen(CodeGen* out) {
