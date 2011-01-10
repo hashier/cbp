@@ -13,6 +13,8 @@ message(STATUS "")
 message(STATUS "Generating CBP build files..")
 message(STATUS "")
 
+find_package(SDL)
+
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D_SCL_SECURE_NO_WARNINGS")
   add_definitions(-DWIN32)

@@ -30,5 +30,6 @@ foreach(EXAMPLE_CBP ${EXAMPLE_CBPS})
 
     # create executable using the kinda-dummy main.c
     add_executable("${EXAMPLE_CBP}.out" EXCLUDE_FROM_ALL ${CBP_MAIN_C} "${CMAKE_CURRENT_BINARY_DIR}/${EXAMPLE_CBP}.s")
+    target_link_libraries("${EXAMPLE_CBP}.out" ${SDL_LIBRARY})
 
 endforeach()
