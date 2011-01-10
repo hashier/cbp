@@ -16,6 +16,8 @@ Label Function::getMark(CodeGen* out) {
             }
             return mark;
     }
+    //bugfix: not all control paths return value
+    return mark;
 }
 
 void File::gen(CodeGen* out) {
@@ -84,55 +86,55 @@ void ForLoop::gen(CodeGen* out) {
     Label label_repeat = out->newMark("repeat");
     Label label_exit   = out->newMark("exit");
 
+    *out << Command("nop");
+    *out << Command("nop");
+    *out << Command("nop");
+    *out << Command("nop");
+
 //-----------------------------------------------------------------------------
 //set iterator to init
-    init_value->gen(out);                                       //get inital value to eax
-    *out << Command("mov")("%eax")(it_address);     //mov eax to iterator
+    init_value->gen(out);                                     //get init-value-expression to eax
+    *out << Command("mov")("%rax")(it_address);               //copy init-value-expression to iterator
 
 //-----------------------------------------------------------------------------
 //set label
     *out << label_repeat;
 
 //-----------------------------------------------------------------------------
-//compare 1
-    final_value->gen(out);                                      //get final value to eax
-    *out << Command("cmp")(it_address)("%eax");     //compare x(%esp), eax [iterator, final value]
-
-//-----------------------------------------------------------------------------
-//compare 2 (alternative)
-    *out << Command("pushq")("%rbx");                            //save ebx
-    *out << Command("pushq")("%rax");                       //save eax
-    final_value->gen(out);                                      //get final value to eax
-    *out << Command("mov")("%eax")("%ebx");                     //mov eax to ebx
-    *out << Command("mov")(it_address)("%eax");     //mov iterator to eax
-    *out << Command("cmp")("%eax")("%ebx");                     //compare eax, ebx [iterator, final value]
-    *out << Command("popq")("%rax");                             //restore eax
-    *out << Command("popq")("%rbx");                             //restore ebx
+//compare
+    *out << Command("pushq")("%rbx");                         //save ebx
+    *out << Command("pushq")("%rax");                         //save eax
+    final_value->gen(out);                                    ///get final-value-expression to eax
+    *out << Command("mov")("%rax")("%rbx");                   //mov eax to ebx
+    *out << Command("mov")(it_address)("%rax");               //mov iterator to eax
+    *out << Command("cmp")("%rax")("%rbx");                   //compare eax, ebx [iterator, final value]
+    *out << Command("popq")("%rax");                          //restore eax
+    *out << Command("popq")("%rbx");                          //restore ebx
 
 //-----------------------------------------------------------------------------
 //jump if exit
-    *out << Command("je")(label_exit);                          //exit jump
+    *out << Command("je")(label_exit);                        //exit jump
 
 //-----------------------------------------------------------------------------
 //write body
-    body->gen(out);                                             //write body code
+    body->gen(out);                                           //write body code
 
 //-----------------------------------------------------------------------------
 //increment iterator
-    if(step==NULL)
-    {
-         *out << Command("pushq")("%rax");                         //save eax
-         *out << Command("mov")(it_address)("%eax");  //mov iterator to eax
-         *out << Command("inc")("%eax");                          //eax++
-         *out << Command("mov")("%eax")(it_address);  //mov eax to iterator
-         *out << Command("popq")("%rax");                          //restore eax
+    *out << Command("pushq")("%rbx");
+    *out << Command("mov")(it_address)("%rbx");
+    if(step==NULL){
+         *out << Command("inc")("%rax");
     }else{
-         //TODO
+         final_value->gen(out);
+         *out << Command("add")("%rbx")("%rax");
     }
+    *out << Command("mov")("%rbx")(it_address);
+    *out << Command("popq")("%rbx");
 
 //-----------------------------------------------------------------------------
 //repeat
-    *out << Command("jmp")(label_repeat);                        //jump to body begin
+    *out << Command("jmp")(label_repeat);                      //jump to body begin
 
 //-----------------------------------------------------------------------------
 //set label
