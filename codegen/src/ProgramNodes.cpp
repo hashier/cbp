@@ -93,8 +93,10 @@ void ForLoop::gen(CodeGen* out) {
 
 //-----------------------------------------------------------------------------
 //set iterator to init
+    *out << Command("pushq")("%rax");                         //save rax
     init_value->gen(out);                                     //get init-value-expression to eax
     *out << Command("mov")("%rax")(it_address);               //copy init-value-expression to iterator
+    *out << Command("popq")("%rax");                          //restore rax
 
 //-----------------------------------------------------------------------------
 //set label
@@ -124,7 +126,7 @@ void ForLoop::gen(CodeGen* out) {
     *out << Command("pushq")("%rbx");
     *out << Command("mov")(it_address)("%rbx");
     if(step==NULL){
-         *out << Command("inc")("%rax");
+         *out << Command("inc")("%rbx");
     }else{
          final_value->gen(out);
          *out << Command("add")("%rbx")("%rax");
