@@ -9,6 +9,12 @@ SymbolTable::SymbolTable()
     scopes.push_back(Scope());
 }
 
+SymbolTable::~SymbolTable()
+{
+    // Ensure balanced scope enters/leaves
+    assert(scopes.size() == 1);
+}
+
 void SymbolTable::enterNewScope()
 {
     scopes.push_back(Scope());

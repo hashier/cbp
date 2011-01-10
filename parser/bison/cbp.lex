@@ -10,7 +10,7 @@
 // bison generates .hh files in cpp mode
 #include "cbp.tab.h"
 
-#if defined (MSVC) || (WIN32)
+#if defined (MSVC)
 int yylineno = 1; // first line number is 1
 #endif
 int yyerror(char const* s);
@@ -33,7 +33,7 @@ eol			[\r]?[\n]
 {int_const}     { yylval.int_val = atoi(yytext); return INTEGER_CONSTANT; }
 {float_const}   { yylval.float_val = (float)atof(yytext); return FLOAT_CONSTANT; }
 
-"func"          { Node::symbolTable->enterNewScope(); return KEY_FUNC; }
+"func"          { return KEY_FUNC; }
 "call"          { return KEY_CALL; }
 "type"          { return KEY_TYPE; }
 "if"            { Node::symbolTable->enterNewScope(); return KEY_IF; }
