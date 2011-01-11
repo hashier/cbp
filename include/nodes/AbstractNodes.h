@@ -25,6 +25,11 @@ class Node {
                 std::cout << "\t";
         }
 
+        // TODO: return the correct line number here
+        virtual int getLineNumber() const {
+            return 0;
+        }
+
         virtual ~Node() { };
 
         static SymbolTable::SymbolTable *symbolTable;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include<string>
 #include<list>
 #include<iostream>
@@ -12,13 +14,16 @@ enum Verbosity
     ALL
 };
 
-class MsgHandler 
-{ 
+class MsgHandler
+{
 private: 
     struct Message
     {
         std::string msg;
         Verbosity verbLvl;
+        std::string filename;
+        int lineNumber;
+        int linePosition;
     };
 
     MsgHandler() {}
@@ -28,7 +33,8 @@ private:
 
 public: 
     static MsgHandler& getInstance(); 
-    void addMessage(std::string msg, Verbosity verb);
-    void addMessageAndPrint(std::string msg, Verbosity verb);
+    void addMessage(std::string msg, Verbosity verb, int lineNumber = 0, std::string filename = std::string("DummyFilename.cbp"), int linePosition = 1);
+    void addMessageAndPrint(std::string msg, Verbosity verb, int lineNumber = 0, std::string filename = std::string("DummyFilename.cbp"), int linePosition = 1);
     void printMessage(std::string msg);
+    void writeLastMessage(std::ostream& os = std::cerr);
 };

@@ -6,6 +6,8 @@
 #include <sstream>
 #include <cassert>
 
+#include "MsgHandler.h"
+
 class Mnemonic {
 public:
     virtual std::ostream& write(std::ostream& os) const = 0;
@@ -382,3 +384,45 @@ private:
     std::stringstream directive;
 };
 
+
+// use this to write messages (error, warning, info) to assembler file and console
+// (debug is only written to assembler file)
+class Message : public Mnemonic {
+public:
+    Message() {}
+    explicit Message(const Verbosity& verbosity, std::string const& message)
+        : verbosity(verbosity)
+        , message(message)
+        , lineNumber(0)   // TODO: no line number yet
+        , linePosition(1) // TODO: no line position yet
+    {
+    }
+
+    std::ostream& write(std::ostream& os) const {
+        MsgHandler::getInstance().addMessage(
+            message,
+            verbosity,
+            lineNumber
+            // TODO: add filename and linePosition
+        );
+        // write to console
+        if (verbosity!=DEBUG) { // write DEBUG information not to console
+            MsgHandler::getInstance().writeLastMessage(); // to std::cerr
+        }
+        // write to assembler file
+        os << "// ";
+        MsgHandler::getInstance().writeLastMessage(os);
+        return os;
+    }
+    std::ostream& writeUnformatted(std::ostream& os) const {
+        return write(os);
+    }
+
+private:
+    Verbosity verbosity;
+    std::string message;
+    int lineNumber;
+    int linePosition;
+};
+
+std::ostream& operator<<(std::ostream& os, Message const& r);

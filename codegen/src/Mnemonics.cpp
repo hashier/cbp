@@ -28,3 +28,7 @@ Address operator+(int displacement, Address const& base){
 Address operator*(Reg const& lhs, int rhs){
     return Address::offsetAddress(lhs, rhs);
 }
+
+std::ostream& operator<<(std::ostream& os, Message const& message){
+    return message.write(os);
+}

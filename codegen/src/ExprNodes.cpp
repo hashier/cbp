@@ -12,6 +12,7 @@ void Expr_Cast::gen(CodeGen* out) {
 }
 
 void Expr_Mul::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Mul::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -25,6 +26,7 @@ void Expr_Mul::gen(CodeGen* out) {
 
 }
 void Expr_Div::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Div::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -37,6 +39,7 @@ void Expr_Div::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
 }
 void Expr_Mod::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Mod::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -55,6 +58,7 @@ void ConstInt::gen(CodeGen* out) {
 }
 
 void Expr_EQ::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_EQ::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -72,6 +76,7 @@ void Expr_EQ::gen(CodeGen* out) {
 }
 
 void Expr_NEQ::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_NEQ::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -89,6 +94,7 @@ void Expr_NEQ::gen(CodeGen* out) {
 }
 
 void Expr_LT::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_LT::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -106,6 +112,7 @@ void Expr_LT::gen(CodeGen* out) {
 }
 
 void Expr_GT::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_GT::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -123,6 +130,7 @@ void Expr_GT::gen(CodeGen* out) {
 }
 
 void Expr_LE::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_LE::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -140,6 +148,7 @@ void Expr_LE::gen(CodeGen* out) {
 }
 
 void Expr_GE::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_GE::gen()");
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -157,6 +166,7 @@ void Expr_GE::gen(CodeGen* out) {
 }
 
 void Expr_BoolOR::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BoolOR::gen()");
     Label labelTrue = out->newMark("true");
     Label labelFalse = out->newMark("false");
     Label labelEnd = out->newMark("end");
@@ -181,6 +191,7 @@ void Expr_BoolOR::gen(CodeGen* out) {
 }
 
 void Expr_BoolAND::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BoolAND::gen()");
     Label labelFalse = out->newMark("false");
     Label labelEnd = out->newMark("end");
     // left hand operand into %eax
@@ -205,6 +216,7 @@ void Expr_BoolAND::gen(CodeGen* out) {
 }
 
 void Expr_BoolXOR::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BoolXOR::gen()");
     *out << Command("pushq")("%rbx");
     // left hand operand into %eax
     left->gen(out);
@@ -228,6 +240,7 @@ void Expr_BoolXOR::gen(CodeGen* out) {
 // Shift operators use the 8-bit %cl register, which is equal to the lowest 8 bits of %ecx.
 // arithmetic left shift
 void Expr_BitLeft::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BitLeft::gen()");
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
     *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
@@ -238,6 +251,7 @@ void Expr_BitLeft::gen(CodeGen* out) {
 
 // arithmetic right shift
 void Expr_BitRight::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BitRight::gen()");
     right->gen(out);                         // right hand operand into %eax
     *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
     *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
@@ -247,6 +261,7 @@ void Expr_BitRight::gen(CodeGen* out) {
 }
 
 void Expr_BitOR::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BitOR::gen()");
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
@@ -256,6 +271,7 @@ void Expr_BitOR::gen(CodeGen* out) {
 }
 
 void Expr_BitAND::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BitAND::gen()");
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
@@ -265,6 +281,7 @@ void Expr_BitAND::gen(CodeGen* out) {
 }
 
 void Expr_BitXOR::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_BitXOR::gen()");
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
@@ -274,12 +291,18 @@ void Expr_BitXOR::gen(CodeGen* out) {
 }
 
 void Expr_Add::gen(CodeGen* out) {
-    // only integer arguments are allowed yet (floats are optional)
-    assert(right->getType()->isInteger());
-    assert(left->getType()->isInteger());
-    // both arguments must have a signed bit or both arguments must have not a signed bit
-    // TODO
-    // assert(left->getType()->hasSignedBit() == right->getType()->hasSignedBit());
+    *out << Message(DEBUG, "Expr_Add:gen()");
+    // error: if floats are given (floats are optional)
+    if (!left->getType()->isInteger() || !right->getType()->isInteger()) {
+        *out << Message(ERROR,
+                "ignore not implemented expression: adding float numbers (floats are optional)");
+        return;
+    }
+    // warning: if signed + unsigned integer
+    if (left->getType()->hasSignedBit() != right->getType()->hasSignedBit()) {
+        *out << Message(WARNING,
+                "possible loss of precision: adding signed and unsigned numbers");
+    }
 
     Expression* bigExp;   // the argument with the bigger size of type
     Expression* smallExp; // the argument with the lower size of type
@@ -294,13 +317,13 @@ void Expr_Add::gen(CodeGen* out) {
     int bigSizeInBytes   = bigExp->getType()->getSize();
 
     smallExp->gen(out);                      // argument with small size into %rax
-    if (smallSizeInBytes!=bigSizeInBytes) {
+    if (smallSizeInBytes!=bigSizeInBytes) {  // integer with different precision
         std::string movSmall2Big("movsx");
         if (!smallExp->getType()->hasSignedBit()) {
             movSmall2Big[3] = 'z'; // "movzx"
         }
         *out << Command(movSmall2Big)        // expanding size:
-                ("%ax", smallSizeInBytes)    //  argument with smaller size expanding to
+                ("%ax", smallSizeInBytes)    //  argument with smaller size expanding
                 ("%ax", bigSizeInBytes);     //  to size of argument with bigger size
     }
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
@@ -313,6 +336,13 @@ void Expr_Add::gen(CodeGen* out) {
 }
 
 void Expr_Sub::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Sub:gen()");
+    // error: if floats are given (floats are optional)
+    if (!left->getType()->isInteger() || !right->getType()->isInteger()) {
+        *out << Message(ERROR,
+                "ignore not implemented expression: subtracting float numbers (floats are optional)");
+        return;
+    }
     right->gen(out);                         // right hand operand into %eax
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
@@ -330,6 +360,7 @@ void Expr_Identifier::gen(CodeGen* out) {
 }
 
 void Expr_Assign::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Assign:gen()");
     *out << Command("pushq")("%rbx");           // store ebx to the stack
     left->genLeft(out);
     *out << Command("movq")("%rax")("%rbx");   // %ebx = %eax
@@ -340,6 +371,7 @@ void Expr_Assign::gen(CodeGen* out) {
 }
 
 void FuncCall::gen(CodeGen *out) {
+    *out << Message(DEBUG, "FuncCall:gen()");
     static std::vector<std::string> *classInteger;
     if(!classInteger) {
         classInteger = new std::vector<std::string>();
@@ -417,6 +449,7 @@ void Expr_Ref::gen(CodeGen* out) {
 }
 
 void Expr_Deref::genLeft(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Deref::genLeft()");
     // Evaluate substatement (= base address)
     if(index) {
         // Evaluate offset
@@ -434,6 +467,7 @@ void Expr_Deref::genLeft(CodeGen* out) {
 }
 
 void Expr_Deref::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Deref::gen()");
     // Evaluate substatement (= base address)
     sub->gen(out);
 
@@ -471,6 +505,7 @@ void Expr_Deref::gen(CodeGen* out) {
 }
 
 void Expr_Struc::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Struc::gen()");
     // Get a pointer to top of the struct
     sub->genLeft(out);
     // Get offset and size of the variable within the struct
@@ -481,6 +516,7 @@ void Expr_Struc::gen(CodeGen* out) {
 }
 
 void Expr_Struc::genLeft(CodeGen* out) {
+    *out << Message(DEBUG, "Expr_Struc::genLeft()");
     // Get a pointer to top of the struct
     sub->genLeft(out);
     // And an offset from the base of the struct
