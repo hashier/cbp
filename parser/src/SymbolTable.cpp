@@ -30,7 +30,7 @@ Declaration *SymbolTable::getDefinition(const std::string &identifier)
     Declaration *result = NULL;
     for (std::list<Scope>::iterator it = scopes.begin(); it != scopes.end(); it++)
     {
-        result = (*it).GetDefinition(identifier);
+        result = (*it).getDefinition(identifier);
         if (result != NULL)
         {
             return result;
@@ -43,12 +43,12 @@ Declaration *SymbolTable::getDefinition(const std::string &identifier)
 
 void SymbolTable::insertDefinition(Declaration *definition)
 {
-    scopes.back().InsertNewDefinition(definition->getIdentifier(), definition);
+    scopes.back().insertNewDefinition(definition->getIdentifier(), definition);
 }
 
 void SymbolTable::insertGlobalDefinition(Declaration *definition)
 {
-    scopes.front().InsertNewDefinition(definition->getIdentifier(), definition);
+    scopes.front().insertNewDefinition(definition->getIdentifier(), definition);
 }
 
 }

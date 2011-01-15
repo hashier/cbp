@@ -14,8 +14,8 @@ class Scope
 public:
     Scope() { }
 
-    Declaration *GetDefinition(const std::string &identifier);
-    void InsertNewDefinition(const std::string &identifier, Declaration *definition);
+    Declaration *getDefinition(const std::string &identifier);
+    void insertNewDefinition(const std::string &identifier, Declaration *definition);
 
 private:
     std::map<std::string, Declaration *> definitions;

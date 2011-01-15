@@ -46,7 +46,7 @@ TypeDecl::TypeDecl(std::string* identifier, Type* type)
         // TODO: the existing definition can also be something else
         std::cerr << "Error: Definition already exisits: " << " " << e.what() << std::endl;
         //std::cerr << "'" << *identifier << "' is redefined from '" <<
-        //    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->GetDefinition(*identifier))->getType()->getString()
+        //    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->getDefinition(*identifier))->getType()->getString()
         //    << "' to '" << type->getType()->getString() << "'." << std::endl;
     }
 }
