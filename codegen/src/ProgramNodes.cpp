@@ -8,11 +8,11 @@ Label Function::getMark(CodeGen* out) {
     switch(abi) {
         case Abi_c:
             gotMark = true;
-            return Label(identifier);
+            return Label((out->isWithUnderscore()?"_":"")+identifier);
         case Abi_default:
             if(!gotMark) {
                 gotMark = true;
-                mark = out->newMark(identifier, true);
+                mark = out->newMark((out->isWithUnderscore()?"_":"")+identifier, true);
             }
             return mark;
     }
