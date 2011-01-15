@@ -1,11 +1,17 @@
 #include<list>
 #include "ExprNodes.h"
 
+#pragma once
+
 namespace DAG {
 
 
     enum Operator {
-        DUMMY
+        PLUS,
+        MINUS,
+        MULT,
+        DIV,
+        TODO
     };
 
     class InnerNode;
@@ -41,11 +47,24 @@ namespace DAG {
 
     };
 
-    /*
     class LeafNode : public Node {
-    private:
-        ConstInt value; // TODO: allgemeine konstante einbauen
+    public:
+        LeafNode() : Node(NULL, NULL) { }
     };
-    */
+    
+    class ConstLeafNode : public LeafNode {
+    public:
+        ConstLeafNode(int value) : value(value) { }
+    private:
+        int value; 
+    };
+
+    class IdentifierLeafNode : public LeafNode {
+    public:
+        IdentifierLeafNode(std::string &name) : name(name) { }
+    private:
+        std::string name;
+    };
+    
 
 }

@@ -1,6 +1,7 @@
 #include"ExprNodes.h"
 #include"Variables.h"
 #include"ProgramNodes.h"
+#include"DirectedAcyclicGraph.h"
 
 #include <vector>
 
@@ -55,6 +56,11 @@ void Expr_Mod::gen(CodeGen* out) {
 
 void ConstInt::gen(CodeGen* out) {
     *out << Command("movl")(value)("%eax");
+}
+
+DAG::Node *ConstInt::addToDAG(DAG::DirectedAcyclicGraph *graph)
+{
+    return graph->addToDAG(this->val());
 }
 
 void Expr_EQ::gen(CodeGen* out) {
@@ -288,6 +294,10 @@ void Expr_BitXOR::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("xor")("%rbx")("%rax");  // %rax = %rax xor %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
+}
+
+DAG::Node *Expr_Add::addToDAG(DAG::DirectedAcyclicGraph *graph) {
+    return graph->addToDAG(left->addToDAG(graph), right->addToDAG(graph), DAG::PLUS);
 }
 
 void Expr_Add::gen(CodeGen* out) {

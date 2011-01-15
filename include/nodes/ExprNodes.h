@@ -123,6 +123,7 @@ public:
 class Expr_Add : public Binary {
 public:
     Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
+    DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
     virtual void gen(CodeGen* out);
 };
 class Expr_Sub : public Binary {
@@ -199,6 +200,7 @@ class ConstInt : public Constant {
         virtual void gen(CodeGen* out);
         int val() const;
         virtual Type* getType();
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
 };
 
 class ConstFloat : public Constant {

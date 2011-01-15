@@ -106,6 +106,7 @@ File::~File() {
 
 void Block::add(Statement* st) {
     subs.push_back(st);
+    //st->addToDAG(dag); // TODO: call DAG here (when its done)
 }
 
 void Block::dump(int num) {

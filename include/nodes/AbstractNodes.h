@@ -35,6 +35,8 @@ class Node {
         static SymbolTable::SymbolTable *symbolTable;
 };
 
+namespace DAG { class DirectedAcyclicGraph; class Node; }
+
 class Statement : public Node {
     public:
         /** Recursively calculates stack offsets.
@@ -44,6 +46,8 @@ class Statement : public Node {
         virtual int calcStackOffset(int offset) {
             return 0;
         }
+
+        virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) { return 0; }
 };
 
 class Type;

@@ -1,6 +1,12 @@
 #include"ProgramNodes.h"
+#include"DirectedAcyclicGraph.h"
 
 using namespace std;
+
+Block::Block()
+{
+    dag = new DAG::DirectedAcyclicGraph();
+}
 
 void Block::gen(CodeGen* out, bool outermost) {
     *out << Message(DEBUG, "Block::gen()");
@@ -30,4 +36,13 @@ int Block::calcStackOffset(int offset) {
     }
     // Return the offset
     return offset;
+}
+
+DAG::Node *Block::addToDAG(DAG::DirectedAcyclicGraph *graph)
+{
+     for (std::list<Statement*>::iterator it = subs.begin(); it != subs.end(); it++) {
+         (*it)->addToDAG(graph);
+     }
+     // TODO return?
+     return NULL;
 }

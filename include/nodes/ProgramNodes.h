@@ -65,7 +65,7 @@ class File : public Node {
 /** Groups a number of statements. */
 class Block : public Statement {
     public:
-        Block() {};
+        Block();
         void add(Statement* st);
         void dump(int num = 0);
         inline void gen(CodeGen* out) {
@@ -73,9 +73,11 @@ class Block : public Statement {
         }
         void gen(CodeGen* out, bool outermost);
         virtual int calcStackOffset(int offset);
+        virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
         virtual ~Block();
     private:
         std::list<Statement*> subs;
+        DAG::DirectedAcyclicGraph *dag;
 };
 
 /** Classic IfElse block. */
