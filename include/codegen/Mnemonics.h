@@ -390,7 +390,7 @@ private:
 class Message : public Mnemonic {
 public:
     Message() {}
-    explicit Message(const Verbosity& verbosity, std::string const& message)
+    explicit Message(const Verbosity& verbosity, std::string const& message = "")
         : verbosity(verbosity)
         , message(message)
         , lineNumber(0)   // TODO: no line number yet
@@ -406,12 +406,47 @@ public:
             // TODO: add filename and linePosition
         );
         // write to console
-        if (verbosity!=DEBUG) { // write DEBUG information not to console
+        if (verbosity!=DEBUG && verbosity!=DEBUG_EAX) { // write DEBUG information not to console
             MsgHandler::getInstance().writeLastMessage(); // to std::cerr
         }
         // write to assembler file
         os << "// ";
         MsgHandler::getInstance().writeLastMessage(os);
+        if (verbosity==DEBUG_EAX) {
+//            os << Command("pushq")("%rax");
+//            os << Command("pushq")("%rcx");
+//            os << Command("movl")("%eax")("%ecx");
+//            os << Command("call")("print_eax");
+//            os << Command("popq")("%rcx");
+//            os << Command("popq")("%rax");
+
+//            os << "pushq %rax" << std::endl;
+//            os << "pushq %rcx" << std::endl;
+//            os << "movl %eax,%ecx" << std::endl;
+//            os << "call print_eax" << std::endl;
+//            os << "popq %rcx" << std::endl;
+//            os << "popq %rax" << std::endl;
+
+            static int labelTextCount = 0;
+            os << "// begin DEBUG_EAX" << std::endl;
+            os << "	.section .rdata,\"dr\"" << std::endl;
+            os << ".LDEBUGEAX_" << labelTextCount << ":" << std::endl;
+            os << "	.ascii \"" << message.c_str() << "\\0\"" << std::endl;
+            os << "	.text" << std::endl;
+            os << "	pushq	%rax" << std::endl;
+            os << "	pushq	%rcx" << std::endl;
+            os << "	pushq	%rdx" << std::endl;
+            os << "	pushq	%r8" << std::endl;
+            os << "	leaq	.LDEBUGEAX_" << labelTextCount << "(%rip), %rdx" << std::endl;
+            os << "	movl	%eax, %ecx" << std::endl;
+            os << "	call	print_eax" << std::endl;
+            os << "	popq	%r8" << std::endl;
+            os << "	popq	%rdx" << std::endl;
+            os << "	popq	%rcx" << std::endl;
+            os << "	popq	%rax" << std::endl;
+            os << "// end DEBUG_EAX" << std::endl;
+            labelTextCount++;
+        }
         return os;
     }
     std::ostream& writeUnformatted(std::ostream& os) const {

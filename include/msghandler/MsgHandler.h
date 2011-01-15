@@ -11,7 +11,8 @@ enum Verbosity
     WARNING,
     INFO,
     DEBUG,
-    ALL
+    ALL,
+    DEBUG_EAX
 };
 
 class MsgHandler

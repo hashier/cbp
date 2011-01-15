@@ -1,18 +1,16 @@
 func main () : void {
     local var x : int16 1
     local var y : int32 2
-#    local var z : uint32 3
-#    1 | 2   # = 3
-#    5 & 6   # = 4
-#    3 ^ 1   # = 2
-#    3 << 2  # = 12
-#    17 >> 3 # = 2
-#    10 + 1  # = 11
-     x + y
-#    5 - 7   # = -2
-#    5 - -7
-#    x = 2
-#    x = 1
+    local var z : uint32 3
+2 | 3 # = 3
+2 & 3 # = 2
+2 ^ 3 # = 1
+1 << 2 # = 4
+4 >> 1 # = 2
+1 + 2  # = 3
+9 - 2  # = 7
+
+    x = 1 # Absturz
 #    y = 2
 #    z = x | y
 #    x = 1
@@ -27,6 +25,10 @@ func main () : void {
 #    x = 1
 #    y = 2
 #    z = x >> y
-#    x = 5 - 7
-#    y = 5 - -7
+#    x = 1
+#    y = 2
+#    x = x + y
+#    x = 1
+#    y = 2
+#    y = x - y
 }
