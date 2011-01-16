@@ -3,11 +3,12 @@
 #include "Variables.h"
 #include "AbstractNodes.h"
 
-SymbolTable::SymbolTable *Node::symbolTable = new SymbolTable::SymbolTable(); // wtf
+SymbolTable::SymbolTable *Node::symbolTable = new SymbolTable::SymbolTable();
+extern int yylineno; // from lex/bison
 
 
 Function::Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Type* type, Statement* statement)
-    : Declaration(*identifier), abi(abi), arguments(arguments), statement(statement), type(type), gotMark(false)
+    : Declaration(*identifier, yylineno), abi(abi), arguments(arguments), statement(statement), type(type), gotMark(false)
 {
     try
     {
@@ -15,7 +16,7 @@ Function::Function(std::string* identifier, Func_abi abi, std::list<Variable*>* 
     }
     catch (SymbolTable::DefinitionAlreadyExistsException &e)
     {
-        std::cerr << "Error: Function already declared in current Scope: " << *identifier << " " << e.what() << std::endl;
+        std::cerr << "Error in line " << yylineno << ": " << e.what() << std::endl;
     }
 }
 
@@ -35,7 +36,7 @@ Function::~Function() {
 
 
 TypeDecl::TypeDecl(std::string* identifier, Type* type)
-    : Declaration(*identifier), type(type)
+    : Declaration(*identifier, yylineno), type(type)
 {
     try
     {
@@ -43,11 +44,7 @@ TypeDecl::TypeDecl(std::string* identifier, Type* type)
     }
     catch (SymbolTable::DefinitionAlreadyExistsException &e)
     {
-        // TODO: the existing definition can also be something else
-        std::cerr << "Error: Definition already exisits: " << " " << e.what() << std::endl;
-        //std::cerr << "'" << *identifier << "' is redefined from '" <<
-        //    dynamic_cast<SymbolTable::TypeDef *>(symbolTable->getDefinition(*identifier))->getType()->getString()
-        //    << "' to '" << type->getType()->getString() << "'." << std::endl;
+        std::cerr << "Error in line " << yylineno << ": " << e.what() << std::endl;
     }
 }
 
@@ -275,12 +272,11 @@ void StructVariable::dump(int num) {
     // type->dump(num+1);
 }
 
-
 GlobalVariable::GlobalVariable(std::string* identifier, Type* type) : Variable(identifier, type) {
     try {
         symbolTable->insertGlobalDefinition(this);
     } catch (SymbolTable::DefinitionAlreadyExistsException &e) {
-        std::cerr << "Error: Variable already declared in current scope: " << *identifier << " " << e.what() << std::endl;
+        std::cerr << "Error in line " << yylineno << ": " << e.what() << std::endl;
     }
 }
 
@@ -288,13 +284,13 @@ LocalVariable::LocalVariable(std::string* identifier, Type* type) : Variable(ide
     try {
         symbolTable->insertDefinition(this);
     } catch (SymbolTable::DefinitionAlreadyExistsException &e) {
-        std::cerr << "Error: Variable already declared in current scope: " << *identifier << " " << e.what() << std::endl;
+        std::cerr << "Error in line " << yylineno << ": " << e.what() << std::endl;
     }
 }
 
 
 
-Variable::Variable(std::string* identifier, Type* type) : Declaration(*identifier), type(type), offset(-1) {
+Variable::Variable(std::string* identifier, Type* type) : Declaration(*identifier, yylineno), type(type), offset(-1) {
 }
 
 void Variable::dump(int num) {

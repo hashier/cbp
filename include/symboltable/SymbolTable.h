@@ -2,6 +2,7 @@
 #define SYMBOLTABLE_H_INCLUDED
 
 #include<list>
+#include<sstream>
 #include "Scope.h"
 
 class Declaration;
@@ -46,17 +47,28 @@ class DefinitionNotFoundException : public std::exception
 public:
     virtual const char* what() const throw()
     {
-    return "Definition not found TODO";
+        return "Definition not found";
     }
 };
 
 class DefinitionAlreadyExistsException : public std::exception
 {
 public:
+    DefinitionAlreadyExistsException(const std::string &identifier, int lineDefined)
+    {
+        std::ostringstream ss;
+        ss << "The identifier '" << identifier << "' was already defined in line " << lineDefined << ".";
+        err = ss.str();
+    }
+
     virtual const char* what() const throw()
     {
-        return "Definition already exists TODO";
+        return err.c_str();
     }
+    
+    ~DefinitionAlreadyExistsException() throw() { };
+private:
+    std::string err;
 };
 
 }

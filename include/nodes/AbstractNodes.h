@@ -74,13 +74,15 @@ class Expression : public Statement {
 // Declarations can be stored in the symbol table and then retrieved by identifier
 class Declaration : public Node {
 public:
-    Declaration(std::string &identifier)
-        : identifier(identifier) { }
+    Declaration(std::string &identifier, int lineDefined)
+        : identifier(identifier), lineDefined(lineDefined) { }
     std::string &getIdentifier() { return identifier; }
+    int getLineDefined() { return lineDefined; }
 
     virtual ~Declaration() { }
 
 protected:
     std::string identifier;
+    int lineDefined;
 };
 
