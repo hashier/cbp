@@ -1,6 +1,7 @@
 #include "main.h"
 #include "ProgramNodes.h"
 #include "MsgHandler.h"
+#include "Optimizer.h"
 
 #ifdef MSVC
 #include <iostream>
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
 {
     MsgHandler::getInstance().printMessage("CompilerBauPraktikum");
     MsgHandler::getInstance().printMessage("--------------------");
+    MsgHandler::getInstance().printMessage("");
 
     std::string fname;
     if(argc<2)
@@ -46,12 +48,19 @@ int main(int argc, char *argv[])
     yyin = file;
 
 //-----------------------------------------------------------------------------
-// Parse File
+// Create Parse Tree
 
     //yydebug = 1;
     std::cout << "[Parse File]" << std::endl;
     File* tree;
     yyparse((void*) &tree);
+    std::cout << " -done" << std::endl << std::endl;
+
+//-----------------------------------------------------------------------------
+// Optimize Parse Tree
+
+    std::cout << "[Optimize Parse Tree]" << std::endl;
+    optimizeTree(tree);
     std::cout << " -done" << std::endl << std::endl;
 
 //-----------------------------------------------------------------------------
@@ -99,8 +108,14 @@ int main(int argc, char *argv[])
     delete(tree);
 
 #ifdef MSVC
+//-----------------------------------------------------------------------------
+// Generate ASM Source
+
+    std::cout << "[Compile ASM-Source]" << std::endl;
     ShellExecute(NULL, "open", "compile.bat", NULL, NULL, SW_SHOWNORMAL);
-    std::cout << "Press Any Key To Continue" << std::endl;
+    std::cout << " -done" << std::endl << std::endl;
+  
+    std::cout << "\nPress Any Key To Continue" << std::endl;
     getchar();
 #endif
 

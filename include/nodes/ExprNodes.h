@@ -232,5 +232,6 @@ public:
     virtual void gen(CodeGen *out);
     void dump(int num = 0);
     virtual Type* getType();
+    Function* getFunction();
 };
 

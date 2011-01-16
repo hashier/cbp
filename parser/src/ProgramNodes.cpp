@@ -66,6 +66,11 @@ void File::add(Function* func) {
     functions.push_back(func);
 }
 
+std::list<Function*>& File::getFunctions()
+{
+    return functions;
+}
+
 void File::dump(int num) {
     indent(num); std::cout << "Type declarations:" << std::endl; {
         std::list<TypeDecl*>::iterator it;

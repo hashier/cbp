@@ -57,6 +57,21 @@
     <ClInclude Include="..\include\msghandler\MsgHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\codegen\DAGIdentifierMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\codegen\DAGNodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\codegen\DirectedAcyclicGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\codegen\Mnemonics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optimizer\Optimizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">
@@ -105,6 +120,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\codegen\src\Variables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\codegen\src\DAGIdentifierMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\codegen\src\DAGNodes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\codegen\src\DirectedAcyclicGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optimizer\src\Optimizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

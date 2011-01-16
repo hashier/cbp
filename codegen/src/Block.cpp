@@ -8,6 +8,11 @@ Block::Block()
     dag = new DAG::DirectedAcyclicGraph();
 }
 
+std::list<Statement*> Block::getSubStatements()
+{
+    return subs;
+}
+
 void Block::gen(CodeGen* out, bool outermost) {
     *out << Message(DEBUG, "Block::gen()");
     // Ok, now just output all the substatements one after another

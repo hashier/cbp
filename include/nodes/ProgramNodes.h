@@ -22,6 +22,7 @@ class Function : public Declaration {
         virtual void gen(CodeGen* out);
         Type* getType() { return type; }
         Label getMark(CodeGen* out);
+        Statement* getStatement();
         const Func_abi &getAbi() const { return abi; }
         virtual ~Function();
     private:
@@ -53,6 +54,7 @@ class File : public Node {
         void add(TypeDecl* type);
         void add(Variable* var);
         void add(Function* func);
+        std::list<Function*>& getFunctions();
         void dump(int num = 0);
         void gen(CodeGen* gen);
         virtual ~File();
@@ -72,6 +74,7 @@ class Block : public Statement {
             this->gen(out, false);
         }
         void gen(CodeGen* out, bool outermost);
+        std::list<Statement*> getSubStatements();
         virtual int calcStackOffset(int offset);
         virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
         virtual ~Block();

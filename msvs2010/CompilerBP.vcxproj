@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\codegen\CodeGen.h" />
+    <ClInclude Include="..\include\codegen\DAGIdentifierMap.h" />
+    <ClInclude Include="..\include\codegen\DAGNodes.h" />
+    <ClInclude Include="..\include\codegen\DirectedAcyclicGraph.h" />
+    <ClInclude Include="..\include\codegen\Mnemonics.h" />
     <ClInclude Include="..\include\exceptions\Exceptions.h" />
     <ClInclude Include="..\include\exceptions\InvalidAssignmentException.h" />
     <ClInclude Include="..\include\exceptions\TypeConversionException.h" />
@@ -28,6 +32,7 @@
     <ClInclude Include="..\include\nodes\ExprNodes.h" />
     <ClInclude Include="..\include\nodes\ProgramNodes.h" />
     <ClInclude Include="..\include\nodes\Types.h" />
+    <ClInclude Include="..\include\optimizer\Optimizer.h" />
     <ClInclude Include="..\include\symboltable\Scope.h" />
     <ClInclude Include="..\include\symboltable\SymbolTable.h" />
     <ClInclude Include="..\main.h" />
@@ -36,6 +41,9 @@
   <ItemGroup>
     <ClCompile Include="..\codegen\src\Block.cpp" />
     <ClCompile Include="..\codegen\src\CodeGen.cpp" />
+    <ClCompile Include="..\codegen\src\DAGIdentifierMap.cpp" />
+    <ClCompile Include="..\codegen\src\DAGNodes.cpp" />
+    <ClCompile Include="..\codegen\src\DirectedAcyclicGraph.cpp" />
     <ClCompile Include="..\codegen\src\ExprNodes.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ExprNodes_B</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ExprNodes_B</ObjectFileName>
@@ -52,6 +60,7 @@
     </ClCompile>
     <ClCompile Include="..\codegen\src\Variables.cpp" />
     <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\optimizer\src\Optimizer.cpp" />
     <ClCompile Include="..\parser\bison\cbp.cpp" />
     <ClCompile Include="..\parser\bison\lex.yy.cpp" />
     <ClCompile Include="..\parser\src\ExprNodes.cpp">
@@ -138,7 +147,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\codegen;..\include\exceptions;..\include\msghandler;..\include\nodes;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\codegen;..\include\exceptions;..\include\msghandler;..\include\nodes;..\include\symboltable;..\include\optimizer;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -176,7 +185,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include\codegen;..\include\exceptions;..\include\msghandler;..\include\nodes;..\include\symboltable;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include\codegen;..\include\exceptions;..\include\msghandler;..\include\nodes;..\include\symboltable;..\include\optimizer;tools\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSVC;_MSVC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

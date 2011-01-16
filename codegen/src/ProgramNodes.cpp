@@ -20,6 +20,11 @@ Label Function::getMark(CodeGen* out) {
     return mark;
 }
 
+Statement* Function::getStatement()
+{
+    return statement;
+}
+
 void File::gen(CodeGen* out) {
 
     std::string filename = out->getInputFileName();

@@ -186,3 +186,8 @@ void FuncCall::dump(int num)
 {
     indent(num); std::cout << "Function Call: " << func->getIdentifier() << std::endl;
 }
+
+Function* FuncCall::getFunction()
+{
+    return func;
+}
