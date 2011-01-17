@@ -52,6 +52,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/symboltable
     ${CMAKE_CURRENT_SOURCE_DIR}/include/msghandler
     ${CMAKE_CURRENT_SOURCE_DIR}/include/exceptions
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/optimizer
   )
 
 if(PARSERS_FOUND)
@@ -65,13 +66,14 @@ else(PARSERS_FOUND)
 endif(PARSERS_FOUND)
 
 add_subdirectory(codegen)
+add_subdirectory(optimizer)
 
 if(WIN32)
   add_executable(cbp main.cpp)
-  target_link_libraries(cbp parser codegen)
+  target_link_libraries(cbp parser codegen optimizer)
 else(WIN32)
   add_executable(cbp.out main.cpp)
-  target_link_libraries(cbp.out parser codegen)
+  target_link_libraries(cbp.out parser codegen optimizer)
 endif(WIN32)
 
 # Doesn't work with Win32+MSVC, don't know why
