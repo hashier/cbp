@@ -26,14 +26,14 @@ func main () : void {
   while 1 {
     for y = 0 .. 600
       for x = 0 .. 800
-        screen[0].pixels[254] = 255
+        screen[0].pixels[x + 800 * y] = 255
           # ((x | y + i) + 4 * i) +
           # 256 * ((x + 3 * i & y) + 5 * i) +
           # 65536 * ((x - 4 * i ^ y - 2 * i) + 6 *i)
     call SDL_UnlockSurface(screen)
     call SDL_UpdateRect(screen 0 0 0 0)
+    call SDL_Flip(screen)
     i = i +1
   }
-  call SDL_Flip(screen)
   while 1 0
 }
