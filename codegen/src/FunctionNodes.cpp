@@ -1,9 +1,11 @@
 #include"Variables.h"
 #include"ProgramNodes.h"
+#include"Message.h"
 
 using namespace std;
 
 void Function::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Function::gen()", this);
     // ignore forward declarations
     if(statement) {
         Label mark = getMark(out);

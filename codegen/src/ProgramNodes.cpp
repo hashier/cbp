@@ -1,6 +1,7 @@
 #include"ExprNodes.h"
 #include"Variables.h"
 #include"ProgramNodes.h"
+#include"Message.h"
 
 #include <sstream>
 
@@ -86,6 +87,7 @@ void File::gen(CodeGen* out) {
 }
 
 void ForLoop::gen(CodeGen* out) {
+    *out << Message(DEBUG, "ForLoop::gen()", this);
 
     Address it_address = iterator->getAddress();
     Label label_repeat = out->newMark("repeat");
@@ -160,6 +162,8 @@ void ForLoop::gen(CodeGen* out) {
     *out << label_exit;
 }
 void IfElse::gen(CodeGen* out) {
+    *out << Message(DEBUG, "IfElse::gen()", this);
+
     Label label_else = out->newMark("else");
     Label label_exit = out->newMark("exit");
 
@@ -193,6 +197,8 @@ void IfElse::gen(CodeGen* out) {
 }
 
 void SwitchCase::gen(CodeGen* out) {
+    *out << Message(DEBUG, "SwitchCase::gen()", this);
+
     Label exitLabel = out->newMark("switchExit");
 
     // execute condition -> result in %eax
@@ -238,6 +244,7 @@ void SwitchCase::gen(CodeGen* out) {
 }
 
 void WhileLoop::gen(CodeGen* out) {
+    *out << Message(DEBUG, "WhileLoop::gen()", this);
 
     Label label_repeat = out->newMark("repeat");
     Label label_exit   = out->newMark("exit");
@@ -267,16 +274,19 @@ void WhileLoop::gen(CodeGen* out) {
 }
 
 void Variable::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Variable::gen()", this);
     // Declare global variable
     *out << (Directive(".comm") << ' ' << identifier << "," << type->getSize() << ",8");
 }
 
 void Local::gen(CodeGen* out) {
+    *out << Message(DEBUG, "Variable::gen()", this);
     // Declare local variable
     // Seems nothing is needed for local var declaration. It lives on the stack.
 }
 
 void Return::gen(CodeGen* out, bool outermost) {
+    *out << Message(DEBUG, "Return::gen()", this);
     //*out << "push ebp" << std::endl;
     //*out << "mov esp, ebp" << std::endl;
     //*out << "sub esp, 16" << std::endl;
