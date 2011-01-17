@@ -4,6 +4,7 @@ func abi_c assert_equals_uint32 (expected:uint32 actual:uint32) : void
 func main () : void {
 #  local var x : uint32 # Segmentation fault
 
+  call assert_equals_uint32(1 1) # error !!! (perhaps arguments are not given correctly???)
   call assert_equals_uint32(48 12 << 2)
   call assert_equals_uint32(3 12 >> 2)
   call assert_equals_uint32(42 40 | 10)
