@@ -18,11 +18,17 @@
 	#include <time.h>
 #endif
 
+#ifdef __APPLE__
+#define __cdecl 
+#endif
+
+#ifndef __APPLE__
 void __cdecl sleep(unsigned int mseconds)
 {
     clock_t goal = mseconds + clock();
     while (goal > clock());
 }
+#endif
 
 void __cdecl writeInt(unsigned int i)
 {
@@ -56,7 +62,9 @@ unsigned int __cdecl getTimeInMS()
 void __cdecl writeTime()
 {
 	char text [9];
+#ifndef __APPLE__
 	_strtime(text);
+#endif
 	printf("%s ", text);
 }
 
