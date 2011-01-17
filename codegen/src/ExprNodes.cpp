@@ -478,8 +478,8 @@ void Expr_Deref::genLeft(CodeGen* out) {
     // Evaluate substatement (= base address)
     if(index) {
 
-        *out << Command("movq")("%rax")("%rbx");
         sub->gen(out);
+        *out << Command("movq")("%rax")("%rbx");
 
         // We need the size of the pointed-at value.
         TypePointer* ref = dynamic_cast<TypePointer*>(sub->getType());
@@ -493,8 +493,6 @@ void Expr_Deref::genLeft(CodeGen* out) {
         *out << Command("pushq")("%rdx");
         *out << Command("imul")(refsize)("%eax");
         *out << Command("popq")("%rdx");
-        *out << Command("mov", refsize)(Reg("rbx") + Reg("rax"))("%ax", refsize);
-
         
         // Return value of variable at address
         *out << Command("leaq")(Reg("rax") + Reg("rbx"))("%rax");
