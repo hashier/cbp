@@ -24,6 +24,7 @@
     <ClInclude Include="..\include\codegen\DAGIdentifierMap.h" />
     <ClInclude Include="..\include\codegen\DAGNodes.h" />
     <ClInclude Include="..\include\codegen\DirectedAcyclicGraph.h" />
+    <ClInclude Include="..\include\codegen\Message.h" />
     <ClInclude Include="..\include\codegen\Mnemonics.h" />
     <ClInclude Include="..\include\exceptions\Exceptions.h" />
     <ClInclude Include="..\include\exceptions\InvalidAssignmentException.h" />
@@ -33,6 +34,8 @@
     <ClInclude Include="..\include\nodes\ExprNodes.h" />
     <ClInclude Include="..\include\nodes\ProgramNodes.h" />
     <ClInclude Include="..\include\nodes\Types.h" />
+    <ClInclude Include="..\include\optimizer\ConstantPropergation.h" />
+    <ClInclude Include="..\include\optimizer\Inlining.h" />
     <ClInclude Include="..\include\optimizer\Optimizer.h" />
     <ClInclude Include="..\include\symboltable\Scope.h" />
     <ClInclude Include="..\include\symboltable\SymbolTable.h" />
@@ -53,6 +56,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ExprNodes_B</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\codegen\src\FunctionNodes.cpp" />
+    <ClCompile Include="..\codegen\src\Message.cpp" />
     <ClCompile Include="..\codegen\src\Mnemonics.cpp" />
     <ClCompile Include="..\codegen\src\ProgramNodes.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ProgramNodes_A</ObjectFileName>
@@ -62,7 +66,17 @@
     </ClCompile>
     <ClCompile Include="..\codegen\src\Variables.cpp" />
     <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\optimizer\src\ConstantPropergation.cpp" />
+    <ClCompile Include="..\optimizer\src\ExprNodes.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ExprNodes_C</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ExprNodes_C</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\optimizer\src\Inlining.cpp" />
     <ClCompile Include="..\optimizer\src\Optimizer.cpp" />
+    <ClCompile Include="..\optimizer\src\ProgramNodes.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ProgramNodes_C</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ProgramNodes_C</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\parser\bison\cbp.cpp" />
     <ClCompile Include="..\parser\bison\lex.yy.cpp" />
     <ClCompile Include="..\parser\src\ExprNodes.cpp">
@@ -73,7 +87,7 @@
     </ClCompile>
     <ClCompile Include="..\parser\src\MsgHandler.cpp" />
     <ClCompile Include="..\parser\src\ProgramNodes.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ProgrammNodes_B</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ProgramNodes_B</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ProgramNodes_B</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\ProgramNodes_B</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ProgramNodes_B</ObjectFileName>

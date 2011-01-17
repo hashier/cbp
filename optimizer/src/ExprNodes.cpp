@@ -104,11 +104,11 @@ constant* Expr_Mod::getConstant() {
 	if(typeLeft->isInteger() && typeRight->isInteger())
 		mulConst->integer = conLeft->integer % conRight->integer;
 	else if(typeLeft->isFloating() && typeRight->isFloating())
-		mulConst->floating = (int) conLeft->floating % (int) conRight->floating;
+		mulConst->floating = (float)( (int) conLeft->floating % (int) conRight->floating );
 	else if(typeLeft->isFloating() && typeRight->isInteger())
-		mulConst->floating = (int) conLeft->floating % (int) conRight->floating;
+		mulConst->floating = (float)( (int) conLeft->floating % (int) conRight->floating );
 	else
-		mulConst->floating = (int) conLeft->integer % (int) conRight->floating;
+		mulConst->floating = (float)( (int) conLeft->integer % (int) conRight->floating );
 	return mulConst;
 }
 

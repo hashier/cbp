@@ -1,6 +1,9 @@
 #include "ConstantPropergation.h"
 
+#include <iostream>
+
 void optimizeTree_ConstantPropergation(File* file) {
+    std::cout << " -Constant Propergation" << std::endl;
     file->constProp();
 }
 
