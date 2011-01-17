@@ -9,7 +9,7 @@ Benchmark::Benchmark(std::string filename)
 void Benchmark::writeBenchmarkFiles(int k)
 {
     //open file
-    std::ofstream output(filename);
+    std::ofstream output(filename.c_str());
 
     //write file
     output << "#include \"BenchmarkUtils.h\"" << std::endl;
