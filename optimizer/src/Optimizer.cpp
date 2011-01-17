@@ -60,7 +60,7 @@ unsigned int getStatementCount(Function* func)
     return block->getSubStatements().size();
 }
 
-void optimizeTree_Inlining(File* file)
+void optimizeTree_Inlining(File* file, unsigned int depth)
 {
     std::cout << " -Inlining" << std::endl;
 
@@ -74,53 +74,58 @@ void optimizeTree_Inlining(File* file)
         statementCounts.push_back(getStatementCount(*it));
     }
 
-    //for each function
-    for(std::list<Function*>::iterator it=functions.begin(); it!=functions.end(); ++it)
+    //do inlining as long as there are no 
+    for(unsigned int depth_i=0; depth_i<depth; depth_i++)
     {
-        //current function
-        Function* func = *it;
-
-        //get list of all function calls
-        std::vector<FuncCall*> subFunctions = getSubFunctions(func);
-
-        //for each function call
-        for(unsigned int i=0; i<subFunctions.size(); i++)
+        //for each function
+        for(std::list<Function*>::iterator it=functions.begin(); it!=functions.end(); ++it)
         {
-            //get sub function
-            FuncCall* subFuncCall = subFunctions[i];
-            Function* subFunc = subFuncCall->getFunction();
+            //current function
+            Function* func = *it;
 
-            //skip external function calls
-            if(subFunc->getAbi()!=Abi_default)
-                continue;
+            //get list of all function calls
+            std::vector<FuncCall*> subFunctions = getSubFunctions(func);
 
-            //skip yourself - recursion
-            if(subFunc==func)
-                continue;
-
-            //get numbers of statements inside sub function
-            //TODO: might crash if file structure is incorrect !!!
-            unsigned int index = 0;
-            for(std::list<Function*>::iterator it2=functions.begin(); it2!=functions.end(); ++it2)
+            //for each function call
+            for(unsigned int i=0; i<subFunctions.size(); i++)
             {
-                if(*it2==subFunc) break;
-                index++;
-            }
-            unsigned int statementCount = statementCounts[index];
+                //get sub function
+                FuncCall* subFuncCall = subFunctions[i];
+                Function* subFunc = subFuncCall->getFunction();
 
-            //if sub function is not heavy do inlining
-            if(statementCount<10)
-            {
-                doInlining(func, subFunc);
+                //skip external function calls
+                if(subFunc->getAbi()!=Abi_default)
+                    continue;
+
+                //skip yourself - recursion
+                if(subFunc==func)
+                    continue;
+
+                //get numbers of statements inside sub function
+                //TODO: might crash if file structure is incorrect !!!
+                unsigned int index = 0;
+                for(std::list<Function*>::iterator it2=functions.begin(); it2!=functions.end(); ++it2)
+                {
+                    if(*it2==subFunc) break;
+                    index++;
+                }
+                unsigned int statementCount = statementCounts[index];
+
+                //if sub function is not heavy do inlining
+                if(statementCount<10)
+                {
+                    doInlining(func, subFunc);
+                }
             }
         }
     }
+
 }
 
 void optimizeTree(File* file)
 {
     //do inlining
-    optimizeTree_Inlining(file);
+    optimizeTree_Inlining(file, 100);
 
     //do xxx
     //optimizeTree_xxx(file);
