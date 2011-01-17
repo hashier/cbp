@@ -469,11 +469,20 @@ void Expr_Deref::genLeft(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Deref::genLeft()");
     // Evaluate substatement (= base address)
     if(index) {
+
+        *out << Command("movq")("%rax")("%rbx");
+        sub->gen(out);
+
+        int refsize = sub->getType()->getSize();
+
         // Evaluate offset
         *out << Command("pushq")("%rbx");
         index->gen(out);
-        *out << Command("movq")("%rax")("%rbx");
-        sub->gen(out);
+
+        *out << Command("imul")(refsize);
+        *out << Command("mov", refsize)(Reg("rbx") + Reg("rax"))("%ax", refsize);
+
+        
         // Return value of variable at address
         *out << Command("leaq")(Reg("rax") + Reg("rbx"))("%rax");
         *out << Command("popq")("%rbx");
