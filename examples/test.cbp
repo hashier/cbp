@@ -1,0 +1,19 @@
+func abi_c assert_equals_int32 (expected:int32 actual:int32) : void
+func abi_c assert_equals_uint32 (expected:uint32 actual:uint32) : void
+
+func main () : void {
+#  local var x : uint32 # Segmentation fault
+
+  call assert_equals_uint32(48 12 << 2)
+  call assert_equals_uint32(3 12 >> 2)
+  call assert_equals_uint32(42 40 | 10)
+  call assert_equals_uint32(42 43 & 58)
+  call assert_equals_uint32(42 51 ^ 25)
+  call assert_equals_uint32(10 3 + 7)
+  call assert_equals_uint32(3 7 - 4)
+  call assert_equals_uint32(22 2 * 11)
+#  call assert_equals_uint32(3 11 / 3) # SCANNER ERROR
+#  call assert_equals_uint32(2 11 % 3) # SCANNER ERROR
+  call assert_equals_uint32(12 3 + 3 * 3)
+  call assert_equals_uint32(18 (3 + 3) * 3)
+}

@@ -426,7 +426,7 @@ public:
 //            os << "call print_eax" << std::endl;
 //            os << "popq %rcx" << std::endl;
 //            os << "popq %rax" << std::endl;
-
+/*
             static int labelTextCount = 0;
             os << "// begin DEBUG_EAX" << std::endl;
             os << "	.section .rdata,\"dr\"" << std::endl;
@@ -451,6 +451,7 @@ public:
             os << "	popq	%rax" << std::endl;
             os << "// end DEBUG_EAX" << std::endl;
             labelTextCount++;
+*/
         }
         return os;
     }
