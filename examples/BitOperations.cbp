@@ -1,16 +1,26 @@
-func main () : void {
-    local var x : int16 1
+#func abi_c writeInt(value: uint32): void
+#func abi_c writeLineEnd(): void
+
+func main (): void {
+    2 | 3 # = 3
+    2 & 3 # = 2
+    2 ^ 3 # = 1
+    1 << 2 # = 4
+    4 >> 1 # = 2
+    1 + 2  # = 3
+    9 - 2  # = 7
+
+#call writeInt(0)
+#call writeLineEnd()
+
+    local var x : int16 1 # bug: output is only "movl $1,%eax"
     local var y : int32 2
     local var z : uint32 3
-2 | 3 # = 3
-2 & 3 # = 2
-2 ^ 3 # = 1
-1 << 2 # = 4
-4 >> 1 # = 2
-1 + 2  # = 3
-9 - 2  # = 7
 
-    x = 1 # Absturz
+#    x = 2 # Absturz
+#    y = 3 # Absturz
+#    x | y # Absturz
+
 #    y = 2
 #    z = x | y
 #    x = 1
