@@ -473,13 +473,18 @@ void Expr_Deref::genLeft(CodeGen* out) {
         *out << Command("movq")("%rax")("%rbx");
         sub->gen(out);
 
-        int refsize = sub->getType()->getSize();
+        // We need the size of the pointed-at value.
+        TypePointer* ref = dynamic_cast<TypePointer*>(sub->getType());
+        assert(ref && "Cannot dereference a void pointer!");
+        int refsize = ref->getType()->getSize();
 
         // Evaluate offset
         *out << Command("pushq")("%rbx");
         index->gen(out);
-
-        *out << Command("imul")(refsize);
+        
+        *out << Command("pushq")("%rdx");
+        *out << Command("imul")(refsize)("%eax");
+        *out << Command("popq")("%rdx");
         *out << Command("mov", refsize)(Reg("rbx") + Reg("rax"))("%ax", refsize);
 
         
@@ -523,7 +528,9 @@ void Expr_Deref::gen(CodeGen* out) {
         *out << Command("mov", refsize)(Reg("rbx") + Reg("rax") * refsize)("%ax", refsize);
     else {
         // Multiply by refsize (TODO is this legal? I don't really think so..)
-        *out << Command("imul")(refsize);
+        *out << Command("pushq")("%rdx");
+        *out << Command("imul")(refsize)("%eax");
+        *out << Command("popq")("%rdx");
         *out << Command("mov", refsize)(Reg("rbx") + Reg("rax"))("%ax", refsize);
     }
 
