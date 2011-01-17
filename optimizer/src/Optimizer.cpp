@@ -124,6 +124,9 @@ void optimizeTree_Inlining(File* file, unsigned int depth)
 
 void optimizeTree(File* file)
 {
+    //do constant propergation
+    optimizeTree_ConstantPropergation(file);
+
     //do inlining
     optimizeTree_Inlining(file, 100);
 

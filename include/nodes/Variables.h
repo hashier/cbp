@@ -8,6 +8,9 @@ class Variable : public Declaration {
     public:
         Variable(std::string* identifier, Type* type);
         virtual void dump(int num = 0);
+
+		virtual void constProp() { };
+
         Type* getType() { return type; }
         virtual int setStackOffset(int offset, bool offBySize = true);
         virtual int getSize();

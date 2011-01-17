@@ -11,11 +11,19 @@
 
 #include"CodeGen.h"
 
+// needed for constant propergation
+struct constant {
+   int integer;
+   float floating;
+};
+
 // Abstract superclasses a
 
 class Node {
     public:
         virtual void dump(int num = 0) = 0;
+		
+		virtual void constProp() = 0;
 
         virtual void gen(CodeGen* out) {
             (*out) << Nothing(typeid(this).name());
@@ -47,6 +55,9 @@ namespace DAG { class DirectedAcyclicGraph; class Node; }
 
 class Statement : public Node {
     public:
+        virtual bool isConst() = 0;
+		virtual constant* getConstant() = 0;
+
         /** Recursively calculates stack offsets.
          * @param offset Current position on stack.
          * @return Total size required in entire subtree.
