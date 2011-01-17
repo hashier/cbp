@@ -1,4 +1,4 @@
-#include "benchmark.h"
+#include "Benchmark.h"
 #include<sstream>
 
 Benchmark::Benchmark(std::string filename)
