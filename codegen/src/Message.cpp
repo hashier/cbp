@@ -38,9 +38,15 @@ std::ostream& Message::write(std::ostream& os, const CodeGen& cg) const {
         os << "	.ascii \"" << message.c_str() << " in line " << lineNumber << "\\0\"" << std::endl;
         os << "	.text" << std::endl;
         os << "	pushq	%rax" << std::endl;
+        os << "	pushq	%rbx" << std::endl;
         os << "	pushq	%rcx" << std::endl;
         os << "	pushq	%rdx" << std::endl;
+        os << "	pushq	%rsi" << std::endl;
+        os << "	pushq	%rdi" << std::endl;
         os << "	pushq	%r8" << std::endl;
+        os << "	pushq	%r9" << std::endl;
+        os << "	pushq	%r10" << std::endl;
+        os << "	pushq	%r11" << std::endl;
         os << "	leaq	.LDEBUGEAX_" << labelTextCount << "(%rip), %rdx" << std::endl;
         os << "	movl	%eax, %ecx" << std::endl;
         if (cg.isWithUnderscore()) {
@@ -48,9 +54,15 @@ std::ostream& Message::write(std::ostream& os, const CodeGen& cg) const {
         } else {
             os << "	call	print_eax" << std::endl;
         }
+        os << "	popq	%r11" << std::endl;
+        os << "	popq	%r10" << std::endl;
+        os << "	popq	%r9" << std::endl;
         os << "	popq	%r8" << std::endl;
+        os << "	popq	%rdi" << std::endl;
+        os << "	popq	%rsi" << std::endl;
         os << "	popq	%rdx" << std::endl;
         os << "	popq	%rcx" << std::endl;
+        os << "	popq	%rbx" << std::endl;
         os << "	popq	%rax" << std::endl;
         os << "// end DEBUG_EAX" << std::endl;
         labelTextCount++;
