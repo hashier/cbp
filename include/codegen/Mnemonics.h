@@ -439,7 +439,12 @@ public:
             os << "	pushq	%r8" << std::endl;
             os << "	leaq	.LDEBUGEAX_" << labelTextCount << "(%rip), %rdx" << std::endl;
             os << "	movl	%eax, %ecx" << std::endl;
+//TODO Kann man das mit dem Unterstrich nicht auch über out->isWithUnderscore() loesen?
+#ifndef APPLE
             os << "	call	print_eax" << std::endl;
+#else
+            os << "	call	_print_eax" << std::endl;
+#endif
             os << "	popq	%r8" << std::endl;
             os << "	popq	%rdx" << std::endl;
             os << "	popq	%rcx" << std::endl;
