@@ -57,6 +57,9 @@
     <ClInclude Include="..\include\msghandler\MsgHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\benchmark\Benchmark.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\codegen\DAGIdentifierMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -120,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\codegen\src\Variables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\benchmark\src\Benchmark.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\codegen\src\DAGIdentifierMap.cpp">

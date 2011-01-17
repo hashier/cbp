@@ -2,6 +2,7 @@
 #include "ProgramNodes.h"
 #include "MsgHandler.h"
 #include "Optimizer.h"
+#include "Benchmark.h"
 
 #ifdef MSVC
 #include <iostream>
@@ -118,6 +119,16 @@ int main(int argc, char *argv[])
     std::cout << "\nPress Any Key To Continue" << std::endl;
     getchar();
 #endif
-
+//-----------------------------------------------------------------------------
+// Benchmark
+    std::cout << " -benchmark: " << std::endl;
+    Benchmark bench("benchmark.cpp");
+    bench.writeBenchmarkFiles(20);
+	std::cout << " -done" << std::endl << std::endl;
+#ifdef MSVC
+    ShellExecute(NULL, "open", "benchmark.bat", NULL, NULL, SW_SHOWNORMAL);
+	std::cout << "Press Any Key To Continue" << std::endl;
+    getchar();
+#endif
     return 0;
 }
