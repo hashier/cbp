@@ -14,26 +14,80 @@ func abi_c SDL_LockSurface (screen:[]SDL_Surface) : uint32
 func abi_c SDL_UnlockSurface (screen:[]SDL_Surface x:uint32 y:uint32 w:uint32 h:uint32) : uint32
 func abi_c SDL_UpdateRect (screen:[]SDL_Surface) : uint32
 
-func main () : void {
-  local var screen : []SDL_Surface
+func abi_c sleep(seconds:uint32):void
+func abi_c writeInt(i:uint32):void
+func abi_c writeLineEnd():void
+func abi_c getTimeInMS():uint32
+func abi_c writeTime():void
+func abi_c waitAnyKey():void
+func abi_c processMessages():void
+func abi_c malloc(size:uint32):[]uint32
+func abi_c free(pointer:[]uint32):void
+
+func main () : void
+{
+  local var i : uint32
+
+  if(1) {
+    call writeTime()
+    call writeInt( call getTimeInMS() )
+    call writeLineEnd()
+    call waitAnyKey()
+  
+    #get memory
+    local var buffer : []uint8
+    buffer = call malloc(4)
+  
+    #fill memory
+    for i = 0 .. 4 {
+      buffer[i] = i+1
+    }
+  
+    #display memory
+    for i = 0 .. 4 {
+      call writeInt( buffer[i] )
+      call sleep(500)
+    }
+    call writeLineEnd()
+  
+    #free memory
+    call free(buffer)
+  
+    call waitAnyKey()
+  }
 
   call SDL_Init(0)
+  
+  local var screen : []SDL_Surface
+  
   screen = call SDL_SetVideoMode(800 600 32 0)
   call SDL_LockSurface(screen)
-  local var i : uint32
+  
   local var x : uint32
   local var y : uint32
-  while 1 {
-    for y = 0 .. 600
-      for x = 0 .. 800
-        screen[0].pixels[x + 800 * y] =
-          ((x | y + i) + 4 * i) +
-          256 * ((x + 3 * i & y) + 5 * i) +
+  
+  while(1) {
+    
+    for y = 0 .. 599 {
+      for x = 0 .. 799 {
+         
+         #call writeInt(x)
+         #call writeInt(y)
+         #call writeLineEnd()
+    
+         screen[0].pixels[x + 800 * y] =
+                  ((x | y + i) + 4 * i) +
+            256 * ((x + 3 * i & y) + 5 * i) +
           65536 * ((x - 4 * i ^ y - 2 * i) + 6 *i)
+      }
+    }
+    
     call SDL_UnlockSurface(screen)
     call SDL_UpdateRect(screen 0 0 0 0)
     call SDL_Flip(screen)
-    i = i +1
+    i = i + 1
+    
+    call processMessages()
   }
   while 1 0
 }

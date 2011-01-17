@@ -129,16 +129,27 @@ void ForLoop::gen(CodeGen* out) {
 
 //-----------------------------------------------------------------------------
 //increment iterator
-    *out << Command("pushq")("%rbx");
-    *out << Command("mov")(it_address)("%ebx");
     if(step==NULL){
-         *out << Command("inc")("%ebx");
+         *out << Command("pushq")("%rax");
+
+         *out << Command("mov")(it_address)("%eax");
+         *out << Command("inc")("%eax");
+         *out << Command("mov")("%eax")(it_address);
+
+         *out << Command("popq")("%rax");
     }else{
-         final_value->gen(out);
-         *out << Command("add")("%ebx")("%eax");
+         *out << Command("pushq")("%rax");
+         *out << Command("pushq")("%rbx");
+
+         step->gen(out);
+         *out << Command("mov")(it_address)("%ebx");
+         *out << Command("add")("%eax")("%ebx");
+         *out << Command("mov")("%eax")(it_address);
+
+         *out << Command("popq")("%rbx");
+         *out << Command("popq")("%rax");
     }
-    *out << Command("mov")("%ebx")(it_address);
-    *out << Command("popq")("%rbx");
+
 
 //-----------------------------------------------------------------------------
 //repeat
