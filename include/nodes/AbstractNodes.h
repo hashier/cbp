@@ -8,6 +8,7 @@
 
 #include"Exceptions.h"
 #include"SymbolTable.h"
+
 #include"CodeGen.h"
 
 // Abstract superclasses a
@@ -27,12 +28,19 @@ class Node {
 
         // TODO: return the correct line number here
         virtual int getLineNumber() const {
-            return 0;
+            return lineNumber;
         }
 
-        virtual ~Node() { };
+        Node() {
+            extern int yylineno;   // defined and maintained in lex.c
+            lineNumber = yylineno-1;
+        }
+        virtual ~Node() {
+        }
 
         static SymbolTable::SymbolTable *symbolTable;
+private:
+        int lineNumber;
 };
 
 namespace DAG { class DirectedAcyclicGraph; class Node; }

@@ -1,18 +1,50 @@
+#pragma once
+
 /// This file provides an abstraction (not very high, just strings) for mnemonics.
-/// The purpose for now is to have the same indention everywhere.
+/// The purpose for now is to have the same intention everywhere.
 
 #include <ostream>
 #include <string>
 #include <sstream>
 #include <cassert>
 
+#include "CodeGen.h"
 #include "MsgHandler.h"
+
+class CodeGen;
 
 class Mnemonic {
 public:
     virtual std::ostream& write(std::ostream& os) const = 0;
     virtual std::ostream& writeUnformatted(std::ostream& os) const = 0;
+    virtual bool needsDebugInfo() const{
+    	return false;
+    }
 };
+
+CodeGen& operator<<(CodeGen& cg, Mnemonic const& mnemonic);
+
+//class CodeGen;
+
+class DebuggableMnemonic : public Mnemonic {
+public:
+    virtual std::ostream& write(std::ostream& os) const {
+    	assert(false);
+    	return os;
+    }
+    virtual std::ostream& writeUnformatted(std::ostream& os) const {
+    	assert(false);
+    	return os;
+    }
+
+    virtual std::ostream& write(std::ostream& os, CodeGen const& cg) const = 0;
+    virtual std::ostream& writeUnformatted(std::ostream& os, CodeGen const& cg) const = 0;
+
+	bool needsDebugInfo() const{
+		return true;
+	}
+};
+
 
 class Nothing : public Mnemonic {
 public:
@@ -383,87 +415,3 @@ public:
 private:
     std::stringstream directive;
 };
-
-
-// use this to write messages (error, warning, info) to assembler file and console
-// (debug is only written to assembler file)
-class Message : public Mnemonic {
-public:
-    Message() {}
-    explicit Message(const Verbosity& verbosity, std::string const& message = "")
-        : verbosity(verbosity)
-        , message(message)
-        , lineNumber(0)   // TODO: no line number yet
-        , linePosition(1) // TODO: no line position yet
-    {
-    }
-
-    std::ostream& write(std::ostream& os) const {
-        MsgHandler::getInstance().addMessage(
-            message,
-            verbosity,
-            lineNumber
-            // TODO: add filename and linePosition
-        );
-        // write to console
-        if (verbosity!=DEBUG && verbosity!=DEBUG_EAX) { // write DEBUG information not to console
-            MsgHandler::getInstance().writeLastMessage(); // to std::cerr
-        }
-        // write to assembler file
-        os << "// ";
-        MsgHandler::getInstance().writeLastMessage(os);
-        if (verbosity==DEBUG_EAX) {
-//            os << Command("pushq")("%rax");
-//            os << Command("pushq")("%rcx");
-//            os << Command("movl")("%eax")("%ecx");
-//            os << Command("call")("print_eax");
-//            os << Command("popq")("%rcx");
-//            os << Command("popq")("%rax");
-
-//            os << "pushq %rax" << std::endl;
-//            os << "pushq %rcx" << std::endl;
-//            os << "movl %eax,%ecx" << std::endl;
-//            os << "call print_eax" << std::endl;
-//            os << "popq %rcx" << std::endl;
-//            os << "popq %rax" << std::endl;
-/*
-            static int labelTextCount = 0;
-            os << "// begin DEBUG_EAX" << std::endl;
-            os << "	.section .rdata,\"dr\"" << std::endl;
-            os << ".LDEBUGEAX_" << labelTextCount << ":" << std::endl;
-            os << "	.ascii \"" << message.c_str() << "\\0\"" << std::endl;
-            os << "	.text" << std::endl;
-            os << "	pushq	%rax" << std::endl;
-            os << "	pushq	%rcx" << std::endl;
-            os << "	pushq	%rdx" << std::endl;
-            os << "	pushq	%r8" << std::endl;
-            os << "	leaq	.LDEBUGEAX_" << labelTextCount << "(%rip), %rdx" << std::endl;
-            os << "	movl	%eax, %ecx" << std::endl;
-//TODO Kann man das mit dem Unterstrich nicht auch über out->isWithUnderscore() loesen?
-#ifndef APPLE
-            os << "	call	print_eax" << std::endl;
-#else
-            os << "	call	_print_eax" << std::endl;
-#endif
-            os << "	popq	%r8" << std::endl;
-            os << "	popq	%rdx" << std::endl;
-            os << "	popq	%rcx" << std::endl;
-            os << "	popq	%rax" << std::endl;
-            os << "// end DEBUG_EAX" << std::endl;
-            labelTextCount++;
-*/
-        }
-        return os;
-    }
-    std::ostream& writeUnformatted(std::ostream& os) const {
-        return write(os);
-    }
-
-private:
-    Verbosity verbosity;
-    std::string message;
-    int lineNumber;
-    int linePosition;
-};
-
-std::ostream& operator<<(std::ostream& os, Message const& r);

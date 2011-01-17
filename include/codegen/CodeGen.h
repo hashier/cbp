@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Mnemonics.h"
-
 #include<iostream>
 #include<fstream>
 #include<string>
+
+#include "Mnemonics.h"
+
+class Label;
 
 class CodeGen {
     std::ofstream output;
@@ -20,11 +22,11 @@ class CodeGen {
 
         Label newMark(std::string name, bool func = false);
 
-        std::string getInputFileName() {
+        std::string getInputFileName() const {
             return inputFileName;
         }
 
-        int isWithUnderscore() {
+        int isWithUnderscore() const {
             return withUnderscore;
         }
 
@@ -33,6 +35,4 @@ class CodeGen {
         }
 
 };
-
-CodeGen& operator<<(CodeGen& cg, Mnemonic const& mnemonic);
 

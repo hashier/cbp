@@ -7,9 +7,3 @@ Label CodeGen::newMark(std::string name, bool func) {
     ss << (func ? "" : ".L") << name << (mark_counter++);
     return Label(ss.str());
 }
-
-CodeGen& operator<<(CodeGen& cg, Mnemonic const& mnemonic){
-    mnemonic.write(cg.outputStream());
-    return cg;
-}
-

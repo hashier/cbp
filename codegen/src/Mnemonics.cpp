@@ -1,5 +1,17 @@
 #include "Mnemonics.h"
 
+CodeGen& operator<<(CodeGen& cg, Mnemonic const& mnemonic){
+    // not very pretty, but functional to separate normal mnemonics
+    // and those which need debugging infos
+    if(mnemonic.needsDebugInfo()){
+        dynamic_cast<DebuggableMnemonic const&>(mnemonic).write(cg.outputStream(), cg);
+    }
+    else{
+        mnemonic.write(cg.outputStream());
+    }
+    return cg;
+}
+
 std::ostream& operator<<(std::ostream& os, Reg const& r){
     return r.write(os);
 }
@@ -27,8 +39,4 @@ Address operator+(int displacement, Address const& base){
 //  - offset * multiplier
 Address operator*(Reg const& lhs, int rhs){
     return Address::offsetAddress(lhs, rhs);
-}
-
-std::ostream& operator<<(std::ostream& os, Message const& message){
-    return message.write(os);
 }

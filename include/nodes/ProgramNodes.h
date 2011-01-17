@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Mnemonics.h" // for class Label
 #include "AbstractNodes.h"
 #include "Types.h"
 

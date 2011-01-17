@@ -2,6 +2,7 @@
 #include"Variables.h"
 #include"ProgramNodes.h"
 #include"DirectedAcyclicGraph.h"
+#include"Message.h"
 
 #include <vector>
 
@@ -13,7 +14,7 @@ void Expr_Cast::gen(CodeGen* out) {
 }
 
 void Expr_Mul::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Mul::gen()");
+    *out << Message(DEBUG, "Expr_Mul::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -27,7 +28,7 @@ void Expr_Mul::gen(CodeGen* out) {
 
 }
 void Expr_Div::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Div::gen()");
+    *out << Message(DEBUG, "Expr_Div::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -40,7 +41,7 @@ void Expr_Div::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
 }
 void Expr_Mod::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Mod::gen()");
+    *out << Message(DEBUG, "Expr_Mod::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -64,7 +65,7 @@ DAG::Node *ConstInt::addToDAG(DAG::DirectedAcyclicGraph *graph)
 }
 
 void Expr_EQ::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_EQ::gen()");
+    *out << Message(DEBUG, "Expr_EQ::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -82,7 +83,7 @@ void Expr_EQ::gen(CodeGen* out) {
 }
 
 void Expr_NEQ::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_NEQ::gen()");
+    *out << Message(DEBUG, "Expr_NEQ::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -100,7 +101,7 @@ void Expr_NEQ::gen(CodeGen* out) {
 }
 
 void Expr_LT::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_LT::gen()");
+    *out << Message(DEBUG, "Expr_LT::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -118,7 +119,7 @@ void Expr_LT::gen(CodeGen* out) {
 }
 
 void Expr_GT::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_GT::gen()");
+    *out << Message(DEBUG, "Expr_GT::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -136,7 +137,7 @@ void Expr_GT::gen(CodeGen* out) {
 }
 
 void Expr_LE::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_LE::gen()");
+    *out << Message(DEBUG, "Expr_LE::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -154,7 +155,7 @@ void Expr_LE::gen(CodeGen* out) {
 }
 
 void Expr_GE::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_GE::gen()");
+    *out << Message(DEBUG, "Expr_GE::gen()", this);
     // left hand operand into %eax
     left->gen(out);
     // save to local var
@@ -172,7 +173,7 @@ void Expr_GE::gen(CodeGen* out) {
 }
 
 void Expr_BoolOR::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BoolOR::gen()");
+    *out << Message(DEBUG, "Expr_BoolOR::gen()", this);
     Label labelTrue = out->newMark("true");
     Label labelFalse = out->newMark("false");
     Label labelEnd = out->newMark("end");
@@ -197,7 +198,7 @@ void Expr_BoolOR::gen(CodeGen* out) {
 }
 
 void Expr_BoolAND::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BoolAND::gen()");
+    *out << Message(DEBUG, "Expr_BoolAND::gen()", this);
     Label labelFalse = out->newMark("false");
     Label labelEnd = out->newMark("end");
     // left hand operand into %eax
@@ -222,7 +223,7 @@ void Expr_BoolAND::gen(CodeGen* out) {
 }
 
 void Expr_BoolXOR::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BoolXOR::gen()");
+    *out << Message(DEBUG, "Expr_BoolXOR::gen()", this);
     *out << Command("pushq")("%rbx");
     // left hand operand into %eax
     left->gen(out);
@@ -246,59 +247,59 @@ void Expr_BoolXOR::gen(CodeGen* out) {
 // Shift operators use the 8-bit %cl register, which is equal to the lowest 8 bits of %ecx.
 // arithmetic left shift
 void Expr_BitLeft::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BitLeft::gen()");
+    *out << Message(DEBUG, "Expr_BitLeft::gen()", this);
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
     *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("shl")("%cl")("%rax");   // %rax = %rax << %cl
     *out << Command("popq")("%rcx");         // restore %rcx from the stack
-    *out << Message(DEBUG_EAX, "result of * << *");
+    *out << Message(DEBUG_EAX, "result of * << *", this);
 }
 
 // arithmetic right shift
 void Expr_BitRight::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BitRight::gen()");
+    *out << Message(DEBUG, "Expr_BitRight::gen()", this);
     right->gen(out);                         // right hand operand into %eax
     *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
     *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("shr")("%cl")("%rax");   // %rax = %rax >> %cl
     *out << Command("popq")("%rcx");            // restore %rcx from the stack
-    *out << Message(DEBUG_EAX, "result of * >> *");
+    *out << Message(DEBUG_EAX, "result of * >> *", this);
 }
 
 void Expr_BitOR::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BitOR::gen()");
+    *out << Message(DEBUG, "Expr_BitOR::gen()", this);
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("or")("%rbx")("%rax");   // %rax = %rax or %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * | *");
+    *out << Message(DEBUG_EAX, "result of * | *", this);
 }
 
 void Expr_BitAND::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BitAND::gen()");
+    *out << Message(DEBUG, "Expr_BitAND::gen()", this);
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("and")("%rbx")("%rax");  // %rax = %rax and %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * & *");
+    *out << Message(DEBUG_EAX, "result of * & *", this);
 }
 
 void Expr_BitXOR::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_BitXOR::gen()");
+    *out << Message(DEBUG, "Expr_BitXOR::gen()", this);
     right->gen(out);                         // right hand operand into %rax
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("xor")("%rbx")("%rax");  // %rax = %rax xor %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * ^ *");
+    *out << Message(DEBUG_EAX, "result of * ^ *", this);
 }
 
 DAG::Node *Expr_Add::addToDAG(DAG::DirectedAcyclicGraph *graph) {
@@ -306,17 +307,19 @@ DAG::Node *Expr_Add::addToDAG(DAG::DirectedAcyclicGraph *graph) {
 }
 
 void Expr_Add::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Add:gen()");
+    *out << Message(DEBUG, "Expr_Add:gen()", this);
     // error: if floats are given (floats are optional)
     if (!left->getType()->isInteger() || !right->getType()->isInteger()) {
         *out << Message(ERROR,
-                "ignore not implemented expression: adding float numbers (floats are optional)");
+                "ignore not implemented expression: adding float numbers (floats are optional)",
+                this);
         return;
     }
     // warning: if signed + unsigned integer
     if (left->getType()->hasSignedBit() != right->getType()->hasSignedBit()) {
         *out << Message(WARNING,
-                "possible loss of precision: adding signed and unsigned numbers");
+                "possible loss of precision: adding signed and unsigned numbers",
+                this);
     }
 
     Expression* bigExp;   // the argument with the bigger size of type
@@ -348,15 +351,16 @@ void Expr_Add::gen(CodeGen* out) {
             ("%bx", bigSizeInBytes)          //  argument with smaller size adding to
             ("%ax", bigSizeInBytes);         //  argument with bigger size
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * + *");
+    *out << Message(DEBUG_EAX, "result of * + *", this);
 }
 
 void Expr_Sub::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Sub:gen()");
+    *out << Message(DEBUG, "Expr_Sub:gen()", this);
     // error: if floats are given (floats are optional)
     if (!left->getType()->isInteger() || !right->getType()->isInteger()) {
         *out << Message(ERROR,
-                "ignore not implemented expression: subtracting float numbers (floats are optional)");
+                "ignore not implemented expression: subtracting float numbers (floats are optional)",
+                this);
         return;
     }
     right->gen(out);                         // right hand operand into %eax
@@ -365,7 +369,7 @@ void Expr_Sub::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("sub")("%rbx")("%rax");  // %rax = %rax - %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * - *");
+    *out << Message(DEBUG_EAX, "result of * - *", this);
 }
 
 void Expr_Identifier::genLeft(CodeGen* out) {
@@ -377,7 +381,7 @@ void Expr_Identifier::gen(CodeGen* out) {
 }
 
 void Expr_Assign::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Assign:gen()");
+    *out << Message(DEBUG, "Expr_Assign:gen()", this);
     *out << Command("pushq")("%rbx");           // store ebx to the stack
     left->genLeft(out);
     *out << Command("movq")("%rax")("%rbx");   // %ebx = %eax
@@ -388,7 +392,7 @@ void Expr_Assign::gen(CodeGen* out) {
 }
 
 void FuncCall::gen(CodeGen *out) {
-    *out << Message(DEBUG, "FuncCall:gen()");
+    *out << Message(DEBUG, "FuncCall:gen()", this);
     static std::vector<std::string> *classInteger;
     if(!classInteger) {
         classInteger = new std::vector<std::string>();
@@ -474,7 +478,7 @@ void Expr_Ref::gen(CodeGen* out) {
 }
 
 void Expr_Deref::genLeft(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Deref::genLeft()");
+    *out << Message(DEBUG, "Expr_Deref::genLeft()", this);
     // Evaluate substatement (= base address)
     if(index) {
 
@@ -504,7 +508,7 @@ void Expr_Deref::genLeft(CodeGen* out) {
 }
 
 void Expr_Deref::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Deref::gen()");
+    *out << Message(DEBUG, "Expr_Deref::gen()", this);
     // Evaluate substatement (= base address)
     sub->gen(out);
 
@@ -544,7 +548,7 @@ void Expr_Deref::gen(CodeGen* out) {
 }
 
 void Expr_Struc::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Struc::gen()");
+    *out << Message(DEBUG, "Expr_Struc::gen()", this);
     // Get a pointer to top of the struct
     sub->genLeft(out);
     // Get offset and size of the variable within the struct
@@ -555,7 +559,7 @@ void Expr_Struc::gen(CodeGen* out) {
 }
 
 void Expr_Struc::genLeft(CodeGen* out) {
-    *out << Message(DEBUG, "Expr_Struc::genLeft()");
+    *out << Message(DEBUG, "Expr_Struc::genLeft()", this);
     // Get a pointer to top of the struct
     sub->genLeft(out);
     // And an offset from the base of the struct

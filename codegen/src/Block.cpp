@@ -1,5 +1,6 @@
 #include"ProgramNodes.h"
 #include"DirectedAcyclicGraph.h"
+#include"Message.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ std::list<Statement*> Block::getSubStatements()
 }
 
 void Block::gen(CodeGen* out, bool outermost) {
-    *out << Message(DEBUG, "Block::gen()");
+    *out << Message(DEBUG, "Block::gen()", this);
     // Ok, now just output all the substatements one after another
     for (std::list<Statement*>::iterator it = subs.begin(); it != subs.end(); it++) {
         // Is this the last statement of an outermost block in a function?
