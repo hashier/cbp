@@ -169,5 +169,8 @@
     <None Include="..\examples\variable.cbp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\examples\working2.cbp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

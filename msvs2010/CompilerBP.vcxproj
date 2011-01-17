@@ -90,6 +90,7 @@
     <None Include="..\examples\SwitchCase.cbp" />
     <None Include="..\examples\variable.cbp" />
     <None Include="..\examples\working.cbp" />
+    <None Include="..\examples\working2.cbp" />
     <None Include="..\parser\bison\cbp.lex" />
     <None Include="..\parser\bison\cbp.y" />
   </ItemGroup>

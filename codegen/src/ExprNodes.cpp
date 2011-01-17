@@ -392,12 +392,20 @@ void FuncCall::gen(CodeGen *out) {
     static std::vector<std::string> *classInteger;
     if(!classInteger) {
         classInteger = new std::vector<std::string>();
+#ifdef MSVC
+        //windows calling convention: AMD x64
+        classInteger->push_back("%rcx");
+        classInteger->push_back("%rdx");
+        classInteger->push_back("%r8");
+        classInteger->push_back("%r9");
+#else
         classInteger->push_back("%rdi");
         classInteger->push_back("%rsi");
         classInteger->push_back("%rdx");
         classInteger->push_back("%rcx");
         classInteger->push_back("%r8");
         classInteger->push_back("%r9");
+#endif
     }
 
     switch(func->getAbi()) {
