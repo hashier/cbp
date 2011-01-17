@@ -57,7 +57,7 @@ int yylex(void);
 %left OR AND XOR
 %left BIT_LEFT BIT_RIGHT BIT_OR BIT_AND BIT_XOR
 %left PLUS SUBT
-%left MULT
+%left MULT DIV MOD
 %left DOT
 %left DOLLAR
 
@@ -170,6 +170,8 @@ exp: INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
    | exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
    | exp SUBT exp { $$ = new Expr_Sub($1, $3); }
    | exp MULT exp	{ $$ = new Expr_Mul($1, $3); }
+   | exp DIV exp	{ $$ = new Expr_Div($1, $3); }
+   | exp MOD exp	{ $$ = new Expr_Mod($1, $3); }
    | exp EQ exp       { $$ = new Expr_EQ($1, $3); }
    | exp NEQ exp      { $$ = new Expr_NEQ($1, $3); }
    | exp LE exp       { $$ = new Expr_LE($1, $3); }

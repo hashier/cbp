@@ -76,6 +76,8 @@ eol			[\r]?[\n]
 "+"             { yylval.string_val = new std::string(yytext); return PLUS; }
 "-"             { yylval.string_val = new std::string(yytext); return SUBT; }
 "*"             { yylval.string_val = new std::string(yytext); return MULT; }
+"/"             { yylval.string_val = new std::string(yytext); return DIV; }
+"%"             { yylval.string_val = new std::string(yytext); return MOD; }
 "@"             { return AT; }
 "$"             { return DOLLAR; }
 "="             { return ASSIGN; }
