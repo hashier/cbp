@@ -164,6 +164,7 @@ WhileLoop::WhileLoop(Expression* condition, Statement* body) : condition(conditi
 void WhileLoop::dump(int num) {
     indent(num); std::cout << "While Loop" << std::endl;
     indent(num); std::cout << "Condition:" << std::endl;
+    condition->dump(num+1);
     if(body==NULL) return;
     indent(num); std::cout << "Body:" << std::endl;
     body->dump(num+1);
