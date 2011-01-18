@@ -6,5 +6,5 @@
 
 void optimizeTree_ConstantPropergation(File* file);
 
-void calcConstExpr(Expression* expr);
-void calcConstExpr(Statement* stmt);
+void calcConstExpr(Expression** expr);
+void calcConstExpr(Statement** stmt);

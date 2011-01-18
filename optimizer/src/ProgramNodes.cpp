@@ -4,7 +4,7 @@
 
 void Function::constProp() {
 	if(statement)
-        (statement->isConst()) ? calcConstExpr(statement) : statement->constProp();
+        (statement->isConst()) ? calcConstExpr(&statement) : statement->constProp();
 }
 
 void File::constProp() {
@@ -27,7 +27,7 @@ void File::constProp() {
 void Block::constProp() {
     std::list<Statement*>::iterator it;
     for (it = subs.begin(); it != subs.end(); it++) {
-        ((*it)->isConst()) ? calcConstExpr((*it)) : (*it)->constProp();
+        ((*it)->isConst()) ? calcConstExpr(&(*it)) : (*it)->constProp();
     }
 }
 
@@ -40,10 +40,10 @@ constant* Block::getConstant() {
 }
 
 void IfElse::constProp() {
-    (condition->isConst()) ? calcConstExpr(condition) : condition->constProp();
-    (then->isConst()) ? calcConstExpr(then) : then->constProp();
+    (condition->isConst()) ? calcConstExpr(&condition) : condition->constProp();
+    (then->isConst()) ? calcConstExpr(&then) : then->constProp();
     if(otherwise) {
-        (otherwise->isConst()) ? calcConstExpr(otherwise) : otherwise->constProp();
+        (otherwise->isConst()) ? calcConstExpr(&otherwise) : otherwise->constProp();
     }
 }
 
@@ -56,9 +56,9 @@ constant* IfElse::getConstant() {
 }
 
 void WhileLoop::constProp() {
-    (condition->isConst()) ? calcConstExpr(condition) : condition->constProp();
+    (condition->isConst()) ? calcConstExpr(&condition) : condition->constProp();
     if(body==NULL) return;
-    (body->isConst()) ? calcConstExpr(body) : body->constProp();
+    (body->isConst()) ? calcConstExpr(&body) : body->constProp();
 }
 
 bool WhileLoop::isConst() {
@@ -71,7 +71,7 @@ constant* WhileLoop::getConstant() {
 
 void Return::constProp() {
     if(expr==NULL) return;
-    (expr->isConst()) ? calcConstExpr(expr) : expr->constProp();
+    (expr->isConst()) ? calcConstExpr(&expr) : expr->constProp();
 }
 
 bool Return::isConst() {
@@ -95,16 +95,16 @@ constant* Local::getConstant() {
 }
 
 void ForLoop::constProp() {
-    (init_value->isConst()) ? calcConstExpr(init_value) : init_value->constProp();
+    (init_value->isConst()) ? calcConstExpr(&init_value) : init_value->constProp();
 
-    (final_value->isConst()) ? calcConstExpr(final_value) : final_value->constProp();
+    (final_value->isConst()) ? calcConstExpr(&final_value) : final_value->constProp();
 
     if(step!=NULL) {
-        (step->isConst()) ? calcConstExpr(step) : step->constProp();
+        (step->isConst()) ? calcConstExpr(&step) : step->constProp();
     }
 
     if(body==NULL) return;
-    (body->isConst()) ? calcConstExpr(body) : body->constProp();
+    (body->isConst()) ? calcConstExpr(&body) : body->constProp();
 }
 
 bool ForLoop::isConst() {
@@ -116,11 +116,10 @@ constant* ForLoop::getConstant() {
 }
 
 void SwitchCase::constProp() {
-    (which->isConst()) ? calcConstExpr(which) : which->constProp();
+    (which->isConst()) ? calcConstExpr(&which) : which->constProp();
     std::list<Case*>::const_iterator caseIter = cases->begin();
     for(; caseIter != cases->end(); ++caseIter) {
-        ((*caseIter)->condition->isConst()) ? calcConstExpr((*caseIter)->condition) : (*caseIter)->condition->constProp();
-        ((*caseIter)->action->isConst()) ? calcConstExpr((*caseIter)->action) : (*caseIter)->action->constProp();
+        ((*caseIter)->action->isConst()) ? calcConstExpr(&((*caseIter)->action)) : (*caseIter)->action->constProp();
     }
 }
 

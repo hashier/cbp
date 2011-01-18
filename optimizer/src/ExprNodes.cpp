@@ -15,8 +15,8 @@ constant* Unary::getConstant() {
 }
 
 void Binary::constProp() {
-    (right->isConst()) ? calcConstExpr(right) : right->constProp();
-    (left->isConst()) ? calcConstExpr(left) : left->constProp();
+    (right->isConst()) ? calcConstExpr(&right) : right->constProp();
+    (left->isConst()) ? calcConstExpr(&left) : left->constProp();
 }
 
 bool Binary::isConst() {
