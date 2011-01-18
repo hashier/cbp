@@ -29,30 +29,38 @@ void Expr_Mul::gen(CodeGen* out) {
 }
 void Expr_Div::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Div::gen()", this);
-    // left hand operand into %eax
-    left->gen(out);
+    // right hand operand into %eax
+    right->gen(out);
     // save to local var
+    *out << Command("pushq")("%rdx");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
-    // right operand into %eax
-    right->gen(out);
-    // multiply
+    // left operand into %eax
+    left->gen(out);
+    //set rdx to zero
+    *out << Command("xorq")("%rdx")("%rdx");
+    //div (rdx:eax / op) = eax + k*edx
     *out << Command("divl")("%ebx");
     *out << Command("popq")("%rbx");
+    *out << Command("popq")("%rdx");
 }
 void Expr_Mod::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Mod::gen()", this);
-    // left hand operand into %eax
-    left->gen(out);
+    // right hand operand into %eax
+    right->gen(out);
     // save to local var
+    *out << Command("pushq")("%rdx");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
-    // right operand into %eax
-    right->gen(out);
-    // multiply
+    // left operand into %eax
+    left->gen(out);
+    //set rdx to zero
+    *out << Command("xorq")("%rdx")("%rdx");
+    // div (rdx:eax / op) = eax + k*edx
     *out << Command("divl")("%ebx");
     *out << Command("movl")("%edx")("%eax");
     *out << Command("popq")("%rbx");
+    *out << Command("popq")("%rdx");
 }
 
 void ConstInt::gen(CodeGen* out) {

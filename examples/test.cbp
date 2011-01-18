@@ -13,8 +13,8 @@ func main () : void {
   call assert_equals_uint32(10 3 + 7)
   call assert_equals_uint32(3 7 - 4)
   call assert_equals_uint32(22 2 * 11)
-  call assert_equals_uint32(3 11 / 3) # SCANNER ERROR
-  call assert_equals_uint32(2 11 % 3) # SCANNER ERROR
+  call assert_equals_uint32(3 11 / 3)
+  call assert_equals_uint32(2 11 % 3)
   call assert_equals_uint32(12 3 + 3 * 3)
   call assert_equals_uint32(18 (3 + 3) * 3)
 }
