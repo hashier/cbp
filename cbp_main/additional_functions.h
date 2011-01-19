@@ -18,11 +18,11 @@
 	#include <time.h>
 #endif
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__linux__)
 #define __cdecl 
 #endif
 
-#ifndef __APPLE__
+#if defined(WIN32) || defined(WIN64) || defined(WINDOWS)
 void __cdecl sleep(unsigned int mseconds)
 {
     clock_t goal = mseconds + clock();
