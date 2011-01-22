@@ -2,6 +2,7 @@
 #include "ExprNodes.h"
 #include "Variables.h"
 #include "AbstractNodes.h"
+#include "DirectedAcyclicGraph.h"
 
 SymbolTable::SymbolTable *Node::symbolTable = new SymbolTable::SymbolTable();
 extern int yylineno; // from lex/bison
@@ -108,6 +109,7 @@ File::~File() {
 
 void Block::add(Statement* st) {
     subs.push_back(st);
+
     //st->addToDAG(dag); // TODO: call DAG here (when its done)
 }
 
@@ -129,6 +131,7 @@ SwitchCase::Case::~Case()
 }
 
 Block::~Block() {
+    dag->dumpAll();
     for (std::list<Statement*>::iterator it = subs.begin() ; it != subs.end(); it++ ) {
         delete (*it);
     }

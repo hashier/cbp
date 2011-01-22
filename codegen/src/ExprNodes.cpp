@@ -67,11 +67,6 @@ void ConstInt::gen(CodeGen* out) {
     *out << Command("movl")(value)("%eax");
 }
 
-DAG::Node *ConstInt::addToDAG(DAG::DirectedAcyclicGraph *graph)
-{
-    return graph->addToDAG(this->val());
-}
-
 void Expr_EQ::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_EQ::gen()", this);
     // left hand operand into %eax
@@ -308,10 +303,6 @@ void Expr_BitXOR::gen(CodeGen* out) {
     *out << Command("xor")("%rbx")("%rax");  // %rax = %rax xor %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
     *out << Message(DEBUG_EAX, "result of * ^ *", this);
-}
-
-DAG::Node *Expr_Add::addToDAG(DAG::DirectedAcyclicGraph *graph) {
-    return graph->addToDAG(left->addToDAG(graph), right->addToDAG(graph), DAG::PLUS);
 }
 
 void Expr_Add::gen(CodeGen* out) {

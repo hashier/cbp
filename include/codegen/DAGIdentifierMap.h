@@ -9,6 +9,7 @@ namespace DAG {
     private:
         std::map<std::string, Node*> identifierMap;
         std::map<int, Node*> constantIntMap;
+        std::list<Node *> initialIdentifiers;
 
     public:
         void insertNode(int value, Node *node);
@@ -17,6 +18,8 @@ namespace DAG {
         Node *getNode(int value);
         Node *getNode(std::string &identifier);
         void moveIdentifier(std::string &identifier, Node *node);
+
+        void dumpAll();
         
     };
 

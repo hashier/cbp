@@ -10,6 +10,7 @@ namespace DAG {
     void IdentifierMap::insertNode(std::string &name, Node *node)
     {
         identifierMap.insert(std::pair<std::string, Node *>(name, node));
+        initialIdentifiers.push_back(node);
     }
 
     Node *IdentifierMap::getNode(std::string &identifier) {
@@ -39,6 +40,23 @@ namespace DAG {
         else {
             return it->second;
         }
+    }
+
+    void IdentifierMap::dumpAll()
+    {
+        for (std::map<int, Node *>::iterator it = constantIntMap.begin(); it != constantIntMap.end(); it++)
+        {
+            (*it).second->dump();
+        }
+        for (std::map<std::string, Node *>::iterator it = identifierMap.begin(); it != identifierMap.end(); it++)
+        {
+            (*it).second->dump();
+        }
+        for (std::list<Node *>::iterator it = initialIdentifiers.begin(); it != initialIdentifiers.end(); it++)
+        {
+            (*it)->dump();
+        }
+
     }
 
 }

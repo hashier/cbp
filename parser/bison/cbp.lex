@@ -10,7 +10,7 @@
 // bison generates .hh files in cpp mode
 #include "cbp.tab.h"
 
-#if defined(MSVC) || defined(WIN32) || defined(WIN64) || defined(WINDOWS)
+#if defined (MSVC)
 int yylineno = 1; // first line number is 1
 #endif
 int yyerror(char const* s);

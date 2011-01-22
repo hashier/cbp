@@ -14,11 +14,16 @@ public:
 
     DirectedAcyclicGraph() { }
 
-    void buildDAG();
+    // Add node for expression
+    Node *addToDAG(Node *left, Node *right, Operator op, Expression *expr);
 
-    Node *addToDAG(Node *left, Node *right, Operator op);
-    Node *addToDAG(int value); 
-    Node *addToDAG(std::string &name); 
+    // Add node for constant int value
+    Node *addToDAG(int value, Expression *expr); 
+
+    // Add node for identifier
+    Node *addToDAG(std::string &name, Expression *expr); 
+
+    void dumpAll();
     
 private:
     std::list<Statement*> *statements;

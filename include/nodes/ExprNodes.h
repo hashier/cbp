@@ -31,6 +31,8 @@ class Binary : public Expression {
         bool isConst();
 		virtual constant* getConstant();
         virtual Type* getType();
+        Expression *getLeft() { return left; }
+        Expression *getRight() { return right; }
     protected:
         Expression* left;
         Expression* right;
@@ -40,6 +42,7 @@ class Binary : public Expression {
 class Expr_Assign : public Binary {
     public:
         Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {}
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
         virtual void gen(CodeGen* out);
 };
 
@@ -247,6 +250,8 @@ class Expr_Identifier : public Atom {
 		void constProp();
         bool isConst();
 		constant* getConstant();
+        Variable *getRef() { return ref; }
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
 };
 
 class FuncCall : public Atom {
