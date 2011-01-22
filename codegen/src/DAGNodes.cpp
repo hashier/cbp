@@ -1,8 +1,10 @@
 #include "DAGNodes.h"
+#include "DAGIdentifierMap.h"
 
 namespace DAG {
 
     std::fstream Node::dumpStream = std::fstream("D:/Studium/Compilerbaupraktikum/svn/vsbuild/dagdump.txt", std::fstream::in | std::fstream::out);
+    IdentifierMap *Node::iMap;
 
     std::string op2string[] = {
         "+",
@@ -46,23 +48,16 @@ namespace DAG {
         if (!dumped)
         {
             dumped = true;
-            dumpStream << "\"" << this << "\" [label=\"OP: " << op2string[op] << "\"]" << std::endl;
-            if (parent1) dumpStream << "\"" << this->parent1 << "\" -> \"" << this << "\"" << std::endl;
-            if (parent2) dumpStream << "\"" << this->parent2 << "\" -> \"" << this << "\"" << std::endl;
+            dumpStream << "\"" << this << "\" [label=\"" << op2string[op] << "\\n" << iMap->getMarks(this) << "\"]" << std::endl;
 
             for (std::list<InnerNode *>::iterator it = children.begin(); it != children.end(); it++)
             {
-                dumpStream << "\"" << *it << "\" -> \"" << this << "\"" << std::endl;
+                dumpStream << "\"" << this << "\" -> \"" << *it << "\"" << std::endl;
                 (*it)->dump();
             }
         }
         if (parent1) parent1->dump();
         if (parent2) parent2->dump();
-        if (assignment) 
-        {   
-            assignment->dump();
-            if (!dumped) dumpStream << "\"" << assignment << "\" -> \"" << this << "\"" << std::endl;
-        }
     }
 
     void ConstLeafNode::dump()
@@ -70,18 +65,13 @@ namespace DAG {
         if (!dumped)
         {
             dumped = true;
-            dumpStream << "\"" << this << "\" [label=\"" << value << "\"]" << std::endl;
+            dumpStream << "\"" << this << "\" [label=\"" << value << "\\n" << iMap->getMarks(this) <<  "\"]" << std::endl;
 
             for (std::list<InnerNode *>::iterator it = children.begin(); it != children.end(); it++)
             {
-                dumpStream << "\"" << *it << "\" -> \"" << this << "\"" << std::endl;
+                dumpStream << "\"" << this << "\" -> \"" << *it << "\"" << std::endl;
                 (*it)->dump();
             }
-        }
-        if (assignment) 
-        {
-            assignment->dump();
-            if (!dumped) dumpStream << "\"" << assignment << "\" -> \"" << this << "\"" << std::endl;
         }
     }
 
@@ -90,18 +80,13 @@ namespace DAG {
         if (!dumped)
         {
             dumped = true;
-            dumpStream << "\"" << this << "\" [label=\"" << name << "_0\"]" << std::endl;
+            dumpStream << "\"" << this << "\" [label=\"" << name << "0\\n" << iMap->getMarks(this) <<  "\"]" << std::endl;
 
             for (std::list<InnerNode *>::iterator it = children.begin(); it != children.end(); it++)
             {
-                dumpStream << "\"" << *it << "\" -> \"" << this << "\"" << std::endl;
+                dumpStream << "\"" << this << "\" -> \"" << *it << "\"" << std::endl;
                 if (!dumped) (*it)->dump();
             }
-        }
-        if (assignment) 
-        {
-            assignment->dump();
-            if (!dumped) dumpStream << "\"" << assignment << "\" -> \"" << this << "\"" << std::endl;
         }
     }
 }

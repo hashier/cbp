@@ -59,4 +59,14 @@ namespace DAG {
 
     }
 
+    std::string IdentifierMap::getMarks(Node *node)
+    {
+        std::string result = "";
+        for (std::map<std::string, Node *>::iterator it = identifierMap.begin(); it != identifierMap.end(); it++)
+        {
+            if ((*it).second == node)
+                result.append((*it).first).append(" ");
+        }
+        return result;
+    }
 }

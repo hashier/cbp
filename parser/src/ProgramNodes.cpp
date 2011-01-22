@@ -131,7 +131,7 @@ SwitchCase::Case::~Case()
 }
 
 Block::~Block() {
-    dag->dumpAll();
+    //dag->dumpAll();
     for (std::list<Statement*>::iterator it = subs.begin() ; it != subs.end(); it++ ) {
         delete (*it);
     }

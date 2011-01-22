@@ -40,8 +40,6 @@ namespace DAG {
             // we need an assignment with a single identifier on the left side!
             assert(identifier != NULL); 
 
-            right->SetAssignment(map.getNode(identifier->getRef()->getIdentifier()));
-
             map.moveIdentifier(identifier->getRef()->getIdentifier(), right);
 
             return right;
@@ -75,6 +73,7 @@ namespace DAG {
 
     void DirectedAcyclicGraph::dumpAll()
     {
+        Node::setIndentifierMap(&map);
         map.dumpAll();
     }
 

@@ -20,6 +20,9 @@ namespace DAG {
         void moveIdentifier(std::string &identifier, Node *node);
 
         void dumpAll();
+
+        // horrible runtime, only for dumps!
+        std::string getMarks(Node *node);
         
     };
 

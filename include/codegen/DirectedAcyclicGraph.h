@@ -10,9 +10,14 @@ namespace DAG {
 class DirectedAcyclicGraph {
 public:
     DirectedAcyclicGraph(std::list<Statement*> *statements)
-        : statements(statements) { }
+        : statements(statements) 
+    {  
+    }
 
-    DirectedAcyclicGraph() { }
+    DirectedAcyclicGraph() 
+    { 
+
+    }
 
     // Add node for expression
     Node *addToDAG(Node *left, Node *right, Operator op, Expression *expr);

@@ -21,6 +21,7 @@ namespace DAG {
 
 
     class InnerNode;
+    class IdentifierMap;
 
 
     class Node {
@@ -30,20 +31,22 @@ namespace DAG {
         Node *parent2;
         Expression *expr;
         static std::fstream dumpStream;
+        static IdentifierMap *iMap;
+
         bool dumped;
-        Node *assignment;
 
     public:
         Node(Node *parent1, Node *parent2, Expression *expr)
-            : parent1(parent1), parent2(parent2), expr(expr), dumped(false), assignment(NULL) { }
+            : parent1(parent1), parent2(parent2), expr(expr), dumped(false) { }
 
         std::vector<InnerNode *> GetOperatorNode(Operator op);    // kopie von liste?
         void AddNewOperatorNode(InnerNode *opNode);
         Expression *getExpression() { return expr; }
 
+
+        static void setIndentifierMap(IdentifierMap *iMap) { Node::iMap = iMap; }
         virtual void dump() = 0;
 
-        void SetAssignment(Node *node) { assignment = node; }
     };
 
 
