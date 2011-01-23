@@ -426,6 +426,7 @@ void FuncCall::gen(CodeGen *out) {
             // TODO: align rsp towards 16 byte
             std::vector<std::string>::const_iterator reg = classInteger->begin();
             std::vector<Expression *> stackArgs;
+            int stackArgsSize = 0;
             for (std::list<Expression *>::const_iterator it = arguments->begin();
                     it != arguments->end(); ++it) {
                 if((*it)->getType()->isInteger() || dynamic_cast<TypePointer *>((*it)->getType())) {
@@ -433,12 +434,17 @@ void FuncCall::gen(CodeGen *out) {
                         (*it)->gen(out);
                         *out << Command("movq")("%rax")(*reg++);
                     } else {
+                        stackArgsSize++;
                         stackArgs.push_back(*it);
                     }
                 } else {
                     // TODO
                     *out << Command("type not supported as argument type");
                 }
+            }
+            //align towards 16 byte (hopefully)
+            if(stackArgsSize % 2 != 0) {
+                *out << Command("pushq")("%rax");
             }
             for (std::vector<Expression *>::const_reverse_iterator it = stackArgs.rbegin();
                     it != stackArgs.rend(); ++it) {

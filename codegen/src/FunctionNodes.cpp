@@ -39,8 +39,14 @@ void Function::gen(CodeGen* out) {
         // Do we even have local variables?
         if(offset > 0) {
             // Align to something divisible by 4.
+#ifndef __APPLE__
             if(offset % 4 != 0)
-                offset += offset % 4;
+                offset += 4 - offset % 4;
+#else
+            //Align to something divisible by 16.
+            if(offset % 16 != 0)
+                offset += 16 - offset % 16;
+#endif
             *out << Command("subq")(offset)("%rsp");
         }
 

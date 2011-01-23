@@ -42,7 +42,7 @@ class Binary : public Expression {
 class Expr_Assign : public Binary {
     public:
         Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {}
-        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) {return 0;}
         virtual void gen(CodeGen* out);
 };
 
@@ -136,7 +136,7 @@ class Expr_Add : public Binary {
 public:
     Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
-    DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+    DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) {return 0;}
     virtual void gen(CodeGen* out);
 };
 class Expr_Sub : public Binary {
@@ -224,7 +224,7 @@ class ConstInt : public Constant {
         int val() const;
         virtual Type* getType();
         constant* getConstant();
-        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) {return 0;};
 };
 
 class ConstFloat : public Constant {
@@ -251,7 +251,7 @@ class Expr_Identifier : public Atom {
         bool isConst();
 		constant* getConstant();
         Variable *getRef() { return ref; }
-        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) {return 0;};
 };
 
 class FuncCall : public Atom {
