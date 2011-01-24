@@ -16,13 +16,11 @@ void calcConstExpr(Expression** expr) {
 		*expr = new ConstInt(i);
     } else if(type->isFloating() && (*expr)->getConstant()!=NULL) {
         float f = (*expr)->getConstant()->floating;
-        delete *expr;
+        //delete *expr;
         *expr = new ConstFloat(f);
     }
 }
 
 void calcConstExpr(Statement** stmt) {
-    Expression* expr = (Expression*) (*stmt);
-
-    calcConstExpr(&expr);
+    calcConstExpr((Expression**)stmt);
 }
