@@ -127,7 +127,7 @@ unsigned int __cdecl getTimeInMS()
 void __cdecl writeTime()
 {
 	char text [9];
-#ifdef defined(WIN32) || defined(WIN64) || defined(WINDOWS)
+#if defined(WIN32) || defined(WIN64) || defined(WINDOWS)
 	_strtime(text);
     printf("%s ", text);
 #else
