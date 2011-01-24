@@ -191,3 +191,8 @@ Function* FuncCall::getFunction()
 {
     return func;
 }
+
+std::list<Expression*>* FuncCall::getArguments()
+{
+    return arguments;
+}

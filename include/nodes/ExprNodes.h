@@ -266,5 +266,6 @@ public:
     constant* getConstant();
     virtual Type* getType();
     Function* getFunction();
+    std::list<Expression*>* getArguments();
 };
 
