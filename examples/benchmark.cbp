@@ -54,11 +54,11 @@ func main():void
    local var y : uint32
    local var i : uint32
    
-   local var k : unit32
-   local var avg : unit32
-   local var startTime : unit32
-   local var endTime : unit32
-   local var times : []unit32
+   local var k : uint32
+   local var avg : uint32
+   local var startTime : uint32
+   local var endTime : uint32
+   local var times : []uint32
    
    k = 20
    
@@ -80,11 +80,11 @@ func main():void
       }
       
       endTime = call getTimeInMS()
-      times[k] = (endTime - tempTime)
+      times[k] = (endTime - startTime)
       avg = (avg + times[k])
    }
    
-   printBenchmark(times, avg, k)
+   call printBenchmark(times avg k)
    
    call SDL_Flip(screen)
 }
