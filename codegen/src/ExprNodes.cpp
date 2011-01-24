@@ -257,7 +257,7 @@ void Expr_BitLeft::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("shl")("%cl")("%rax");   // %rax = %rax << %cl
     *out << Command("popq")("%rcx");         // restore %rcx from the stack
-    *out << Message(DEBUG_EAX, "result of * << *", this);
+    *out << Message(DEBUG, "result of * << *", this);
 }
 
 // arithmetic right shift
@@ -269,7 +269,7 @@ void Expr_BitRight::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("shr")("%cl")("%rax");   // %rax = %rax >> %cl
     *out << Command("popq")("%rcx");            // restore %rcx from the stack
-    *out << Message(DEBUG_EAX, "result of * >> *", this);
+    *out << Message(DEBUG, "result of * >> *", this);
 }
 
 void Expr_BitOR::gen(CodeGen* out) {
@@ -280,7 +280,7 @@ void Expr_BitOR::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("or")("%rbx")("%rax");   // %rax = %rax or %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * | *", this);
+    *out << Message(DEBUG, "result of * | *", this);
 }
 
 void Expr_BitAND::gen(CodeGen* out) {
@@ -291,7 +291,7 @@ void Expr_BitAND::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("and")("%rbx")("%rax");  // %rax = %rax and %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * & *", this);
+    *out << Message(DEBUG, "result of * & *", this);
 }
 
 void Expr_BitXOR::gen(CodeGen* out) {
@@ -302,7 +302,7 @@ void Expr_BitXOR::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("xor")("%rbx")("%rax");  // %rax = %rax xor %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * ^ *", this);
+    *out << Message(DEBUG, "result of * ^ *", this);
 }
 
 void Expr_Add::gen(CodeGen* out) {
@@ -350,7 +350,7 @@ void Expr_Add::gen(CodeGen* out) {
             ("%bx", bigSizeInBytes)          //  argument with smaller size adding to
             ("%ax", bigSizeInBytes);         //  argument with bigger size
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * + *", this);
+    *out << Message(DEBUG, "result of * + *", this);
 }
 
 void Expr_Sub::gen(CodeGen* out) {
@@ -368,7 +368,7 @@ void Expr_Sub::gen(CodeGen* out) {
     left->gen(out);                          // left hand operand into %rax
     *out << Command("sub")("%rbx")("%rax");  // %rax = %rax - %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
-    *out << Message(DEBUG_EAX, "result of * - *", this);
+    *out << Message(DEBUG, "result of * - *", this);
 }
 
 void Expr_Identifier::genLeft(CodeGen* out) {
