@@ -149,13 +149,13 @@ std::ostream& operator<<(std::ostream& os, Reg const& r);
 class Address {
 public:
     Address()
-        : displacement(0),
+        : displacement("0"),
         multiplier(0){}
 
     //  - base
     Address(Reg const& base_)
         : base(base_),
-        displacement(0),
+        displacement("0"),
         multiplier(0){}
 
     static Address offsetAddress(Reg const& offset, int multiplier){
@@ -166,18 +166,23 @@ public:
     }
 
     static Address displaced(Address const& base, int displacement){
-        assert(base.displacement == 0);
+	std::stringstream temp;
+	temp << displacement;
+	return displaced(base, temp.str());
+    }
+    static Address displaced(Address const& base, std::string displacement){
+        assert(base.displacement == "0");
 
         Address a = base;
-        a.displacement = displacement; // maybe += to allow calculations?
+        a.displacement = displacement;
         return a;
     }
 
     static Address combine(Address const& lhs, Address const& rhs){
         Address a;
         
-        assert(lhs.displacement == 0 || rhs.displacement == 0);
-        a.displacement = (lhs.displacement == 0) ? rhs.displacement : lhs.displacement;
+        assert(lhs.displacement == "0" || rhs.displacement == "0");
+        a.displacement = (lhs.displacement == "0") ? rhs.displacement : lhs.displacement;
 
         int slots = 2;
         if(!rhs.offset.empty() && rhs.multiplier) {
@@ -211,7 +216,7 @@ public:
     }
 
     bool isDisplaced() const{
-        return displacement == 0;
+        return displacement == "0";
     }
 
     std::ostream& write(std::ostream& os) const {
@@ -219,7 +224,7 @@ public:
         assert((!base.empty() || !offset.empty()) && "One register of address has to be specified");
         assert((!offset.empty() || multiplier == 0) && "To use the multiplier the offset register has to be specified");
 
-        if(displacement != 0){
+        if(displacement != "0"){
             os << displacement;
         }
 
@@ -250,7 +255,7 @@ public:
 
 private:
     Reg base;
-    int displacement;
+    std::string displacement;
     Reg offset;
     int multiplier;
 };
@@ -263,11 +268,12 @@ Address operator+(Address const& base, Address const& offset);
 
 //  - base + displacement
 //  - offset * multiplier + displacement
-Address operator+(Address const& base, int displacement);
+Address operator+(Address const& base, int offset);
+Address operator+(Address const& base, std::string displacement);
 
 //  - displacement + base
 //  - displacement + offset * multiplier
-Address operator+(int displacement, Address const& base);
+Address operator+(std::string displacement, Address const& base);
 
 //  - offset * multiplier
 Address operator*(Reg const& lhs, int rhs);

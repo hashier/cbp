@@ -29,9 +29,15 @@ Address operator+(Address const& base, Address const& offset){
 Address operator+(Address const& base, int displacement){
     return Address::displaced(base, displacement);
 }
+Address operator+(Address const& base, std::string displacement){
+    return Address::displaced(base, displacement);
+}
 
 //  - displacement + base
 //  - displacement + offset * multiplier
+Address operator+(std::string displacement, Address const& base){
+    return Address::displaced(base, displacement);
+}
 Address operator+(int displacement, Address const& base){
     return Address::displaced(base, displacement);
 }
