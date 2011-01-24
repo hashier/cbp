@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
 // Open File
 
     std::cout << "[Load File]" << std::endl;
-
     std::cout << " -file: " << fname << std::endl;
 
     //open file
@@ -60,7 +59,11 @@ int main(int argc, char *argv[])
     //yydebug = 1;
     std::cout << "[Parse File]" << std::endl;
     File* tree;
-    yyparse((void*) &tree);
+    error = yyparse((void*) &tree);
+    if ( error) {
+        std::cout << "Parse error -> Abort" << std::endl;
+        exit ( 1);
+    }
     std::cout << " -done" << std::endl << std::endl;
 
 //-----------------------------------------------------------------------------
