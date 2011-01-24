@@ -67,10 +67,15 @@ unsigned int __cdecl getTimeInMS()
 void __cdecl writeTime()
 {
 	char text [9];
-#ifndef __APPLE__
+#ifdef defined(WIN32) || defined(WIN64) || defined(WINDOWS)
 	_strtime(text);
+    printf("%s ", text);
+#else
+    time_t rawtime;
+
+    time(&rawtime);
+    printf("%s ", ctime(&rawtime));
 #endif
-	printf("%s ", text);
 }
 
 void __cdecl waitAnyKey()
