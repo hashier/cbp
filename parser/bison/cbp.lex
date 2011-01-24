@@ -23,6 +23,10 @@ extern YYLTYPE yylloc;
 /* http://stackoverflow.com/questions/1811125/undefined-reference-to-yywrap */
 %option noyywrap
 
+/* Removes warning */
+/* lex.yy.c:1497: warning: ‘void yyunput(int, char*)’ defined but not used */
+%option nounput
+
 letter      [a-zA-Z]
 digit       [0-9]
 word        [a-zA-Z0-9_]*
