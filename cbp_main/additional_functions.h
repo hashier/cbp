@@ -51,7 +51,7 @@ inline void quicksort(unsigned int *a, int left, int right)
 {
 	if (left < right) {
 
-	double pivot = a[right];
+	unsigned int pivot = a[right];
 	int l = left;
 	int r = right;
 
@@ -59,7 +59,7 @@ inline void quicksort(unsigned int *a, int left, int right)
       while (a[l] < pivot) l++;
       while (a[r] > pivot) r--;
       if (l <= r) {
-          double swap = a[l];
+          unsigned int swap = a[l];
           a[l] = a[r];
           a[r] = swap;
           l++;
@@ -72,39 +72,41 @@ inline void quicksort(unsigned int *a, int left, int right)
   }
 }
 
-void __cdecl printBenchmark(unsigned int times[], unsigned int avgInt, unsigned int k)
+void __cdecl printBenchmark(unsigned int* times, unsigned int avgInt, unsigned int k)
 {
-		double avg = (double) avgInt;//average
-		//double avg = reinterpret_cast<double>(avgInt)
 
-		double med = 0;//medium
-		double min = 0;//minimum
-		double max = 0;//maximum
+		//unsigned int ii = 0;
+		//for(ii=0;ii<k; ii++)
+		//{
+		//	printf("%d %d \n", ii,times[ii]);
+		//}
+
+		double avg = (double) avgInt;//average
+
+		unsigned int med = 0;//medium
+		unsigned int min = 0;//minimum
+		unsigned int max = 0;//maximum
 		double dev = 0;//deviation
-    	double tempTime = 0;//temporary time
+    	unsigned int tempTime = 0;//temporary time
 
 		quicksort(&times[0],0,k-1);
 	    med = times[k/2];
 	    min = times[0];
 	    max = times[k-1];
 
-	   	//med = reinterpret_cast<double>(&times[k/2])[0];
-		//min = reinterpret_cast<double>(&times[0])[0];
-	    //max = reinterpret_cast<double>(&times[k-1])[0];
 
 	    avg /= (double)k;
 		unsigned int i;
 
 	    for( i= 0; i<k; i++)
 	    {
-	        //dev += ((reinterpret_cast<double>(&times[i])[0]-avg)*(reinterpret_cast<double>(&times[i])[0]-avg));
 	        dev += ((times[i]-avg)*(times[i]-avg));
 	    }
 
 	    dev /= (double)(k-1);
 	    dev = sqrt(dev);
 
-	    printf("minimum: %f avarage: %f median: %f deviation: %f maximum: %f", min, avg, med, dev ,max );
+	    printf("minimum: %d avarage: %f median: %d deviation: %f maximum: %d", min, avg, med, dev ,max );
 }
 
 unsigned int __cdecl getTimeInMS()
