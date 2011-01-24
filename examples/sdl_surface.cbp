@@ -14,7 +14,7 @@ func abi_c SDL_LockSurface (screen:[]SDL_Surface) : uint32
 func abi_c SDL_UnlockSurface (screen:[]SDL_Surface x:uint32 y:uint32 w:uint32 h:uint32) : uint32
 func abi_c SDL_UpdateRect (screen:[]SDL_Surface) : uint32
 
-func abi_c sleep(seconds:uint32):void
+func abi_c cbp_sleep(seconds:uint32):void
 func abi_c writeInt(i:uint32):void
 func abi_c writeLineEnd():void
 func abi_c getTimeInMS():uint32
@@ -46,7 +46,7 @@ func main () : void
     #display memory
     for i = 0 .. 4 {
       call writeInt( buffer[i] )
-      call sleep(500)
+      call cbp_sleep(500)
     }
     call writeLineEnd()
   

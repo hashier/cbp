@@ -23,10 +23,15 @@
 #endif
 
 #if defined(WIN32) || defined(WIN64) || defined(WINDOWS)
-void __cdecl sleep(unsigned int mseconds)
+void __cdecl cbp_sleep(unsigned int mseconds)
 {
     clock_t goal = mseconds + clock();
     while (goal > clock());
+}
+#else
+void cbp_sleep(unsigned int mseconds)
+{
+    usleep(mseconds);
 }
 #endif
 
