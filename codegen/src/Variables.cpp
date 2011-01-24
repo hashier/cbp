@@ -18,6 +18,10 @@ Address Variable::getAddress() {
     return Reg("rbp") + getMemoryOffset();
 }
 
+Address GlobalVariable::getAddress() {
+    return identifier + Reg("rip");
+}
+
 int StructVariable::setStackOffset(int offset, bool dummy) {
     if(explicitOffset < 0)
         this->offset = offset;

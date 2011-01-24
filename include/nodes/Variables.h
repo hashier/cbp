@@ -25,6 +25,7 @@ class Variable : public Declaration {
 class GlobalVariable : public Variable {
     public:
         GlobalVariable(std::string* identifier, Type* type);
+        virtual Address getAddress();
 };
 
 class LocalVariable : public Variable {
