@@ -14,7 +14,7 @@ int yylex(void);
 %}
 
 %union{
-	File*                   file_val;;
+	File*                   file_val;
 	Function*               func_val;
 	Statement*              statement;
 	Expression*             expr_val;
