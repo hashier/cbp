@@ -5,8 +5,6 @@
 #include "Benchmark.h"
 #include "Peephole.h"
 
-#include <stdlib.h>
-
 #ifdef MSVC
 #include <iostream>
 #include <windows.h>
@@ -19,8 +17,6 @@
 // Parameter: 1. Quellcode-Datei zum Compilieren
 int main(int argc, char *argv[])
 {
-    int error;
-
     MsgHandler::getInstance().printMessage("CompilerBauPraktikum");
     MsgHandler::getInstance().printMessage("--------------------");
     MsgHandler::getInstance().printMessage("");
@@ -38,6 +34,7 @@ int main(int argc, char *argv[])
 // Open File
 
     std::cout << "[Load File]" << std::endl;
+
     std::cout << " -file: " << fname << std::endl;
 
     //open file
@@ -59,11 +56,7 @@ int main(int argc, char *argv[])
     //yydebug = 1;
     std::cout << "[Parse File]" << std::endl;
     File* tree;
-    error = yyparse((void*) &tree);
-    if ( error) {
-        std::cout << "Parse error -> Abort" << std::endl;
-        exit ( 1);
-    }
+    yyparse((void*) &tree);
     std::cout << " -done" << std::endl << std::endl;
 
 //-----------------------------------------------------------------------------
@@ -121,7 +114,7 @@ int main(int argc, char *argv[])
 // Optimize assembler output
 
     std::cout << "[Optimize ASM-Source]" << std::endl;
-    optimizePeephole(ss.str());
+    //optimizePeephole(ss.str());
     std::cout << " -done" << std::endl << std::endl;
 
 #ifdef MSVC
@@ -137,14 +130,14 @@ int main(int argc, char *argv[])
 #endif
 //-----------------------------------------------------------------------------
 // Benchmark
-    std::cout << " -benchmark: " << std::endl;
-    Benchmark bench("benchmark.cpp");
-    bench.writeBenchmarkFiles(20);
-	std::cout << " -done" << std::endl << std::endl;
-#ifdef MSVC
-    ShellExecute(NULL, "open", "benchmark.bat", NULL, NULL, SW_SHOWNORMAL);
-	std::cout << "Press Any Key To Continue" << std::endl;
-    getchar();
-#endif
+//    std::cout << " -benchmark: " << std::endl;
+//    Benchmark bench("benchmark.cpp");
+//    bench.writeBenchmarkFiles(20);
+//	std::cout << " -done" << std::endl << std::endl;
+//#ifdef MSVC
+//    ShellExecute(NULL, "open", "benchmark.bat", NULL, NULL, SW_SHOWNORMAL);
+//    std::cout << "Press Any Key To Continue" << std::endl;
+//    getchar();
+//#endif
     return 0;
 }
