@@ -17,6 +17,8 @@
 // Parameter: 1. Quellcode-Datei zum Compilieren
 int main(int argc, char *argv[])
 {
+    int error;
+
     MsgHandler::getInstance().printMessage("CompilerBauPraktikum");
     MsgHandler::getInstance().printMessage("--------------------");
     MsgHandler::getInstance().printMessage("");
@@ -55,7 +57,11 @@ int main(int argc, char *argv[])
     //yydebug = 1;
     std::cout << "[Parse File]" << std::endl;
     File* tree;
-    yyparse((void*) &tree);
+    error = yyparse((void*) &tree);
+    if ( error) {
+        std::cout << "Parse error -> Abort" << std::endl;
+        exit ( 1);
+    }
     std::cout << " -done" << std::endl << std::endl;
 
 //-----------------------------------------------------------------------------
