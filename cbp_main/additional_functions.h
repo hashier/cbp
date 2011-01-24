@@ -1,5 +1,4 @@
 #include <time.h>
-#include <iostream>
 
 #ifdef __linux__
 	#include <unistd.h>
@@ -102,7 +101,7 @@ void __cdecl printBenchmark(unsigned int times[], unsigned int avgInt, unsigned 
 	    dev /= (double)(k-1);
 	    dev = sqrt(dev);
 
-	    std::cout << "minimum: " << min << std::endl << "avarage: "<< avg << std::endl << "median: " << med << std::endl << "deviation: " << dev << std::endl << "maximum: " << max << std::endl;
+	    printf("minimum: %f avarage: %f median: %f deviation: %f maximum: %f" min, avg, med, dev ,max );
 }
 
 unsigned int __cdecl getTimeInMS()
@@ -127,7 +126,7 @@ unsigned int __cdecl getTimeInMS()
 void __cdecl writeTime()
 {
 	char text [9];
-#if defined(WIN32) || defined(WIN64) || defined(WINDOWS)
+#ifdef defined(WIN32) || defined(WIN64) || defined(WINDOWS)
 	_strtime(text);
     printf("%s ", text);
 #else
