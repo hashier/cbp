@@ -37,6 +37,7 @@
     <ClInclude Include="..\include\optimizer\ConstantPropergation.h" />
     <ClInclude Include="..\include\optimizer\Inlining.h" />
     <ClInclude Include="..\include\optimizer\Optimizer.h" />
+    <ClInclude Include="..\include\optimizer\Peephole.h" />
     <ClInclude Include="..\include\symboltable\Scope.h" />
     <ClInclude Include="..\include\symboltable\SymbolTable.h" />
     <ClInclude Include="..\main.h" />
@@ -73,6 +74,7 @@
     </ClCompile>
     <ClCompile Include="..\optimizer\src\Inlining.cpp" />
     <ClCompile Include="..\optimizer\src\Optimizer.cpp" />
+    <ClCompile Include="..\optimizer\src\Peephole.cpp" />
     <ClCompile Include="..\optimizer\src\ProgramNodes.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\ProgramNodes_C</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\ProgramNodes_C</ObjectFileName>

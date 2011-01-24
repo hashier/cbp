@@ -84,6 +84,9 @@
     <ClInclude Include="..\include\codegen\Message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optimizer\Peephole.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">
@@ -162,6 +165,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\codegen\src\Message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optimizer\src\Peephole.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
