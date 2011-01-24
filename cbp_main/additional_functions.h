@@ -8,6 +8,7 @@
 	#include <sys/time.h>
 	#include <sys/times.h>
 	#include <time.h>
+	#include <math.h>
 #elif defined(WIN32) || defined(WIN64) || defined(WINDOWS)
 	#include <windows.h>
 #else
