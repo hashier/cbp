@@ -35,14 +35,14 @@ class Node {
         }
 
         // TODO: return the correct line number here
-        virtual int getLineNumber() const {
+        int getLineNumber() const {
             return lineNumber;
         }
-
-        Node() {
-            extern int yylineno;   // defined and maintained in lex.c
-            lineNumber = yylineno-1;
+        
+        void setLineNumber(int lineNumber_) {
+            lineNumber = lineNumber_;
         }
+        
         virtual ~Node() {
         }
 

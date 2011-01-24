@@ -14,6 +14,9 @@
 int yylineno = 1; // first line number is 1
 #endif
 int yyerror(char const* s);
+
+extern YYLTYPE yylloc;
+#define YY_USER_INIT yylloc.first_line=1;
 %}
 
 /* Avoid one linker error related to yywrap */
@@ -98,8 +101,8 @@ eol			[\r]?[\n]
 "."             { return DOT; }
 
 [ \t]*          { /* return WHITESPACE; */ }
-{eol}           { yylineno++; /* return EOL; */ }
-[#].*{eol}      { yylineno++; /* return LINE_COMMENT; */ }
+{eol}           { yylineno++; yylloc.first_line++; /* return EOL; */ }
+[#].*{eol}      { yylineno++; yylloc.first_line++; /* return LINE_COMMENT; */ }
 
 {identifier}    { yylval.string_val = new std::string(yytext); return IDENTIFIER; }
 

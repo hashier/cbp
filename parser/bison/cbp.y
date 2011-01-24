@@ -74,6 +74,7 @@ int yylex(void);
 %type <type_val>     KEY_VOID
 %type <func_val>     func_decl
 %type <expr_val>     exp
+%type <expr_val>     exp_
 %type <statement>    statement
 %type <block_val>    st_block
 %type <typeDecl_val> type_decl
@@ -164,8 +165,10 @@ abi:   /* empty */ { $$ = Abi_default; }
 exp_list: /* empty */ { $$ = new std::list<Expression*>(); }
         | exp_list exp { $1->push_back($2); }
         ;
+        
+exp: exp_ { $1->setLineNumber(@1.first_line); $$ = $1; } ;
 
-exp: INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
+exp_: INTEGER_CONSTANT	{ $$ = new ConstInt($1); }
    | FLOAT_CONSTANT	{ $$ = new ConstFloat($1); }
    | exp PLUS exp	{ $$ = new Expr_Add($1, $3); }
    | exp SUBT exp { $$ = new Expr_Sub($1, $3); }
