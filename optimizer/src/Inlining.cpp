@@ -47,7 +47,7 @@ std::vector<FuncCall*> getSubFunctions(Function* func)
 
 unsigned int getStatementCount(Function* func)
 {
-    unsigned int counter = 0;
+    //unsigned int counter = 0;
 
     //skip external functions by zero statements
     if(func->getAbi()!=Abi_default)

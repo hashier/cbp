@@ -12,9 +12,9 @@ namespace DAG {
         Node *resultNode = NULL;
 
         // test if there is already a InnerNode with left, right and op
-        for (int i = 0; i < leftOps.size(); ++i)
+        for (unsigned int i = 0; i < leftOps.size(); ++i)
         {
-            for (int j = 0; j < rightOps.size(); ++j)
+            for (unsigned int j = 0; j < rightOps.size(); ++j)
             {
                 if (leftOps[i] == rightOps[j])
                 {
