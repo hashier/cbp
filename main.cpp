@@ -5,6 +5,8 @@
 #include "Benchmark.h"
 #include "Peephole.h"
 
+#include <stdlib.h>
+
 #ifdef MSVC
 #include <iostream>
 #include <windows.h>
