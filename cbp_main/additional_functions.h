@@ -45,7 +45,7 @@ void __cdecl writeLineEnd()
 	printf("\n");
 }
 
-inline void quicksort(double *a, int left, int right)
+inline void quicksort(unsigned int *a, int left, int right)
 {
 	if (left < right) {
 
@@ -91,8 +91,9 @@ void __cdecl printBenchmark(unsigned int times[], unsigned int avgInt, unsigned 
 	    //max = reinterpret_cast<double>(&times[k-1])[0];
 
 	    avg /= (double)k;
+		unsigned int i;
 
-	    for(unsigned int i = 0; i<k; i++)
+	    for( i= 0; i<k; i++)
 	    {
 	        //dev += ((reinterpret_cast<double>(&times[i])[0]-avg)*(reinterpret_cast<double>(&times[i])[0]-avg));
 	        dev += ((times[i]-avg)*(times[i]-avg));
