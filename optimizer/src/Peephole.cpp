@@ -30,7 +30,7 @@ void optimizePeephole(std::string fname) {
     std::cout << " -Peephole" << std::endl;
 
     // Open generated assembler output file read-write to optimize in-place
-    file = fopen(fname.c_str(), "rw");
+    file = fopen(fname.c_str(), "r+");
 
     if(file==NULL)
         std::cout << " -error: file not found " << fname << std::endl;
