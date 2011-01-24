@@ -3,6 +3,7 @@
 #include "MsgHandler.h"
 #include "Optimizer.h"
 #include "Benchmark.h"
+#include "Peephole.h"
 
 #ifdef MSVC
 #include <iostream>
@@ -107,6 +108,13 @@ int main(int argc, char *argv[])
     std::cout << " -done" << std::endl << std::endl;
 
     delete(tree);
+
+//-----------------------------------------------------------------------------
+// Optimize assembler output
+
+    std::cout << "[Optimize ASM-Source]" << std::endl;
+    optimizePeephole(ss.str());
+    std::cout << " -done" << std::endl << std::endl;
 
 #ifdef MSVC
 //-----------------------------------------------------------------------------
