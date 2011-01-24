@@ -10,6 +10,8 @@ GENERATE_BISON_FLEX_SOURCES(
 file(GLOB_RECURSE SRCS
   RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/bison/*.y"
+  "${CMAKE_CURRENT_SOURCE_DIR}/bison/*.lex"
   )
 
 # some visual studio dance steps to make headers show up in the file view
