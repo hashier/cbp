@@ -5,6 +5,8 @@
 #include "Benchmark.h"
 #include "Peephole.h"
 
+#include <stdlib.h>
+
 #ifdef MSVC
 #include <iostream>
 #include <windows.h>
@@ -17,6 +19,8 @@
 // Parameter: 1. Quellcode-Datei zum Compilieren
 int main(int argc, char *argv[])
 {
+    int error;
+
     MsgHandler::getInstance().printMessage("CompilerBauPraktikum");
     MsgHandler::getInstance().printMessage("--------------------");
     MsgHandler::getInstance().printMessage("");
