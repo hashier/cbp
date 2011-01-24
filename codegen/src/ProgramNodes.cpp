@@ -280,7 +280,7 @@ void Variable::gen(CodeGen* out) {
 }
 
 void Local::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Variable::gen()", this);
+    *out << Message(DEBUG, "Local::gen()", this);
     // Declare local variable
     // Seems nothing is needed for local var declaration. It lives on the stack.
 }
