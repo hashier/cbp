@@ -1,90 +1,117 @@
-var v1:uint32
-var v2:float32
-
-type myuint32:uint32
-var v3:myuint32
-
-type myuint32array:[]uint32
-var v4:myuint32array
-
-type myuint32_2:myuint32
-
-type mystruct1:struct
-{ 
- var x:float32
- var y:float32
-}
-
-type mystruct2:struct
-{
- var i:mystruct1
- var j:mystruct1
-}
-	
 type  SDL_Surface: struct {
   var flags : uint32 @ 0
-  var format : []void @ 4
-  var w : uint32 @ 8
-  var h : uint32 @ 12
-  var pitch : uint16 @ 16
-  var pixels : []uint32 @ 20
+  var format : []void @ 8
+  var w : uint32 @ 16
+  var h : uint32 @ 20
+  var pitch : uint16 @ 24
+  var pixels : []uint32 @ 32
 }
-
-var screen : []SDL_Surface
 
 func abi_c SDL_Init (flags:uint32) : uint32
 func abi_c SDL_SetVideoMode (width:uint32 height:uint32 bpp:uint32 flags:uint32) : []SDL_Surface
 func abi_c SDL_Flip (screen:[]SDL_Surface) : uint32
 func abi_c SDL_LockSurface (screen:[]SDL_Surface) : uint32
-func abi_c SDL_UnlockSurface (screen:[]SDL_Surface xx:uint32 yy:uint32 w:uint32 h:uint32) : uint32
+func abi_c SDL_UnlockSurface (screen:[]SDL_Surface x:uint32 y:uint32 w:uint32 h:uint32) : uint32
 func abi_c SDL_UpdateRect (screen:[]SDL_Surface) : uint32
 
-func abi_c getTimeInMS () : uint32
+func abi_c cbp_sleep(seconds:uint32):void
+func abi_c writeInt(i:uint32):void
+func abi_c writeLineEnd():void
+func abi_c getTimeInMS():uint32
+func abi_c writeTime():void
+func abi_c waitAnyKey():void
+func abi_c processMessages():void
+func abi_c malloc(size:uint32):[]uint32
+func abi_c free(pointer:[]uint32):void
 func abi_c printBenchmark (times:[]uint32 avgInt:uint32 k:uint32) : void
 
-func main():void
+func main () : void
 {
-   call SDL_Init(0)
+  local var i : uint32
 
-   screen = call SDL_SetVideoMode(800 600 32 0)
+  if(0) {
+    call writeTime()
+    call writeInt( call getTimeInMS() )
+    call writeLineEnd()
+    call waitAnyKey()
+  
+    #get memory
+    local var buffer : []uint8
+    buffer = call malloc(4)
+  
+    #fill memory
+    for i = 0 .. 4 {
+      buffer[i] = i+1
+    }
+  
+    #display memory
+    for i = 0 .. 4 {
+      call writeInt( buffer[i] )
+      call cbp_sleep(500)
+    }
+    call writeLineEnd()
+  
+    #free memory
+    call free(buffer)
+  
+    call waitAnyKey()
+  }
 
-   call SDL_LockSurface(screen)
+  call SDL_Init(0)
+  
+  local var screen : []SDL_Surface
+  screen = call SDL_SetVideoMode(800 600 32 0)
+  call SDL_LockSurface(screen)
+  
+  local var x : uint32
+  local var y : uint32
+  
+  local var n : uint32
+  local var k : uint32
 
-   local var x : uint32
-   local var y : uint32
-   local var i : uint32
-   
-   local var k : uint32
-   local var avg : uint32
-   local var startTime : uint32
-   local var endTime : uint32
-   local var times : []uint32
-   
-   k = 20
-   
-   for i = 0 .. k by 1
+  local var avg : uint32
+  local var startTime : uint32
+  local var endTime : uint32
+  local var times : []uint32
+  
+  n = 20
+  times = call malloc(4*n)
+  
+   for i = 0 .. 19 {
+      times[i] = 9999
+    }
+   for k = 0 .. 19
    {
-      startTime = call getTimeInMS()
+    
+    startTime = call getTimeInMS()
    
-      for y = 0 .. 600 by 1 
-      {
-          for x = 0 .. 800 by 2
-          {
-             screen[0].pixels[x + 800 * y] = 
-                ((x | y + i) + 4 * i) + 
-                256 * ((x + 3 * i & y) + 5 * i) +
-                65536 * ((x - 4 * i ^ y - 2 * i) + 6 *i)
-             call SDL_UnlockSurface(screen)
-             call SDL_UpdateRect(screen 0 0 0 0)
-          }
-      }
-      
+	    for y = 0 .. 599 
+	    {
+		      for x = 0 .. 799 
+		      {
+
+			 #call writeInt(x)
+			 #call writeInt(y)
+			 #call writeLineEnd()
+
+			 screen[0].pixels[x + 800 * y] =
+				  ((x | y + i) + 4 * i) +
+			    256 * ((x + 3 * i & y) + 5 * i) +
+			  65536 * ((x - 4 * i ^ y - 2 * i) + 6 *i)
+		      }
+	     }
+
       endTime = call getTimeInMS()
       times[k] = (endTime - startTime)
       avg = (avg + times[k])
    }
-   
-   call printBenchmark(times avg k)
-   
-   call SDL_Flip(screen)
+
+    call SDL_UnlockSurface(screen)
+    call SDL_UpdateRect(screen 0 0 0 0)
+    call SDL_Flip(screen)
+    i = i + 1
+
+    call printBenchmark(times avg 19)
+    call processMessages()
+    call waitAnyKey()
 }
