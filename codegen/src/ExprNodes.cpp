@@ -372,7 +372,15 @@ void Expr_Sub::gen(CodeGen* out) {
 }
 
 void Expr_Identifier::genLeft(CodeGen* out) {
-    *out << Command("leaq")(ref->getAddress())("%rax");
+    GlobalVariable *gv = dynamic_cast<GlobalVariable *>(ref);
+    if (gv)
+    {
+        *out << Command("movq")("%rax")(ref->getIdentifier());
+    }
+    else
+    {
+        *out << Command("leaq")("%rax")(ref->getAddress());
+    }
 }
 void Expr_Identifier::gen(CodeGen* out) {
     int size = ref->getSize();

@@ -317,7 +317,7 @@ public:
     /// appends param as it is to the current command,
     /// inserting a space between them (nothing more).
     Command& operator()(std::string const& reg){
-        assert(reg[0] == '%');
+        //assert(reg[0] == '%'); // can't do this, reg can be name of a global variable
         assert(reg[reg.size() - 1] != ',');
 
         preformat();
