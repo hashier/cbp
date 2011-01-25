@@ -3,7 +3,7 @@
 
 namespace DAG {
 
-    std::fstream Node::dumpStream("D:/Studium/Compilerbaupraktikum/svn/vsbuild/dagdump.txt", std::fstream::in | std::fstream::out);
+    std::fstream Node::dumpStream("dagdump.txt", std::fstream::in | std::fstream::out);
     IdentifierMap *Node::iMap;
 
     std::string op2string[] = {
