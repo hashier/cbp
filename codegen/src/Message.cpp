@@ -50,9 +50,9 @@ std::ostream& Message::write(std::ostream& os, const CodeGen& cg) const {
         os << "	leaq	.LDEBUGEAX_" << labelTextCount << "(%rip), %rdx" << std::endl;
         os << "	movl	%eax, %ecx" << std::endl;
         if (cg.isWithUnderscore()) {
-            os << "	call	_print_eax" << std::endl;
+            os << "	call	_print_int_with_chars" << std::endl;
         } else {
-            os << "	call	print_eax" << std::endl;
+            os << "	call	print_int_with_chars" << std::endl;
         }
         os << "	popq	%r11" << std::endl;
         os << "	popq	%r10" << std::endl;

@@ -1,21 +1,31 @@
 #func abi_c writeInt(value: uint32): void
 #func abi_c writeLineEnd(): void
+func abi_c print_eax(): void
+
 
 func main (): void {
-    2 | 3 # = 3
+    local var x : int16 1 # bug: output is only "movl $1,%eax"
+    local var y : int32 2
+    local var z : uint32 3
+
+	
+    x
+#
+#
+#
+	| 3 # = 3
+	call print_eax()
     2 & 3 # = 2
     2 ^ 3 # = 1
     1 << 2 # = 4
     4 >> 1 # = 2
-    1 + 2  # = 3
+    1
+	+
+	9  # = 10
     9 - 2  # = 7
-
+#
 #call writeInt(0)
 #call writeLineEnd()
-
-    local var x : int16 1 # bug: output is only "movl $1,%eax"
-    local var y : int32 2
-    local var z : uint32 3
 
 #    x = 2 # Absturz
 #    y = 3 # Absturz
