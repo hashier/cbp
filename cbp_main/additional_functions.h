@@ -1,23 +1,13 @@
 #include <time.h>
 #include <math.h>
 
-#ifdef __linux__
+#if defined(__APPLE__) || defined(__linux__)
 	#include <unistd.h>
 	#include <errno.h>
-	#include <time.h>
 	#include <sys/time.h>
 	#include <sys/times.h>
-	#include <time.h>
-	#include <math.h>
 #elif defined(WIN32) || defined(WIN64) || defined(WINDOWS)
 	#include <windows.h>
-#else
-	#include <unistd.h>
-	#include <errno.h>
-	#include <time.h>
-	#include <sys/time.h>
-	#include <sys/times.h>
-	#include <time.h>
 #endif
 
 #if defined(__APPLE__) || defined(__linux__)
