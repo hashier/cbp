@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
 // Optimize assembler output
 
     std::cout << "[Optimize ASM-Source]" << std::endl;
-    //optimizePeephole(ss.str());
+    optimizePeephole(ss.str());
     std::cout << " -done" << std::endl << std::endl;
 
 #ifdef MSVC
