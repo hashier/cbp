@@ -76,6 +76,7 @@ int yylex(void);
 %type <expr_val>     exp
 %type <expr_val>     exp_
 %type <statement>    statement
+%type <statement>    statement_
 %type <block_val>    st_block
 %type <typeDecl_val> type_decl
 %type <abi_val>      abi ABI
@@ -141,7 +142,9 @@ case_list: /* empty */ { $$ = new std::list<SwitchCase::Case*>(); }
          | case_list case { $$->push_back($2); }
          ;
 
-statement:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
+statement: statement_ { $1->setLineNumber(@1.first_line); $$ = $1; } ;
+
+statement_:   CURLY_BRACKET_LEFT st_block CURLY_BRACKET_RIGHT { $$ = $2 }
          | KEY_WHILE exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new WhileLoop($2, $3); }
          | KEY_IF exp statement { Node::symbolTable->leaveCurrentScope(); $$ = new IfElse($2, $3, NULL); }
          | KEY_IF exp statement KEY_ELSE statement { Node::symbolTable->leaveCurrentScope(); $$ = new IfElse($2, $3, $5); }
