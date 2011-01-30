@@ -170,6 +170,9 @@
     <ClCompile Include="..\optimizer\src\Peephole.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\codegen\src\ExprNodesDAG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\parser\bison\cbp.lex">

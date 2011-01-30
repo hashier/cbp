@@ -56,6 +56,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\ExprNodes_B</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\ExprNodes_B</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\codegen\src\ExprNodesDAG.cpp" />
     <ClCompile Include="..\codegen\src\FunctionNodes.cpp" />
     <ClCompile Include="..\codegen\src\Message.cpp" />
     <ClCompile Include="..\codegen\src\Mnemonics.cpp" />
