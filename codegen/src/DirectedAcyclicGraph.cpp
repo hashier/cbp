@@ -6,8 +6,8 @@ namespace DAG {
     Node *DirectedAcyclicGraph::addToDAG(Node *left, Node *right, Operator op, Expression *expr)
     {
         assert (left != 0 && right != 0);
-        std::vector<InnerNode *> leftOps = left->GetOperatorNode(op);
-        std::vector<InnerNode *> rightOps = right->GetOperatorNode(op);
+        std::vector<InnerNode *> leftOps = left->getOperatorNodes(op);
+        std::vector<InnerNode *> rightOps = right->getOperatorNodes(op);
 
         Node *resultNode = NULL;
 

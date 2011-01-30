@@ -27,8 +27,8 @@ namespace DAG {
     class Node {
     protected:
         std::list<InnerNode *> children;
-        Node *parent1;
-        Node *parent2;
+        Node *leftParent;
+        Node *rightParent;
         Expression *expr;
         static std::fstream dumpStream;
         static IdentifierMap *iMap;
@@ -36,11 +36,11 @@ namespace DAG {
         bool dumped;
 
     public:
-        Node(Node *parent1, Node *parent2, Expression *expr)
-            : parent1(parent1), parent2(parent2), expr(expr), dumped(false) { }
+        Node(Node *leftParent, Node *rightParent, Expression *expr)
+            : leftParent(leftParent), rightParent(rightParent), expr(expr), dumped(false) { }
 
-        std::vector<InnerNode *> GetOperatorNode(Operator op);    // kopie von liste?
-        void AddNewOperatorNode(InnerNode *opNode);
+        std::vector<InnerNode *> getOperatorNodes(Operator op);    // kopie von liste?
+        void addNewOperatorNode(InnerNode *opNode);
         Expression *getExpression() { return expr; }
 
 
@@ -55,11 +55,11 @@ namespace DAG {
         Operator op;
 
     public:
-        InnerNode(Node *parent1, Node *parent2, Operator op, Expression *expr);
+        InnerNode(Node *leftParent, Node *rightParent, Operator op, Expression *expr);
 
-        Operator GetOperator() { return op; }
-        Node *Get1stOperand() { return parent1; }
-        Node *Get2ndOperand() { return parent2; }
+        Operator getOperator() { return op; }
+        Node *getLeftOperand() { return leftParent; }
+        Node *getRightOperand() { return rightParent; }
 
         void dump();
 

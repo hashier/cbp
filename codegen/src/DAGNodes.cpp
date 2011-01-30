@@ -15,19 +15,19 @@ namespace DAG {
         "?"
     };
 
-    InnerNode::InnerNode(Node *parent1, Node *parent2, Operator op, Expression *expr)        
-        : Node(parent1, parent2, expr),  op(op)
+    InnerNode::InnerNode(Node *leftParent, Node *rightParent, Operator op, Expression *expr)        
+        : Node(leftParent, rightParent, expr),  op(op)
     {
-        parent1->AddNewOperatorNode(this);
-        parent2->AddNewOperatorNode(this);
+        leftParent->addNewOperatorNode(this);
+        rightParent->addNewOperatorNode(this);
     }
 
-    std::vector<InnerNode *> Node::GetOperatorNode(Operator op) {
+    std::vector<InnerNode *> Node::getOperatorNodes(Operator op) {
         std::vector<InnerNode *> opVector;
 
         for (std::list<InnerNode *>::iterator it = children.begin(); it != children.end(); it++)
         {
-            if ((*it)->GetOperator() == op)
+            if ((*it)->getOperator() == op)
             {
                 opVector.push_back(*it);
             }
@@ -37,7 +37,7 @@ namespace DAG {
     }
 
 
-    void Node::AddNewOperatorNode(InnerNode *opNode)
+    void Node::addNewOperatorNode(InnerNode *opNode)
     {
         children.push_back(opNode);
     }
@@ -56,8 +56,8 @@ namespace DAG {
                 (*it)->dump();
             }
         }
-        if (parent1) parent1->dump();
-        if (parent2) parent2->dump();
+        if (leftParent) leftParent->dump();
+        if (rightParent) rightParent->dump();
     }
 
     void ConstLeafNode::dump()
