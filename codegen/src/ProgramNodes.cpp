@@ -26,6 +26,11 @@ Statement* Function::getStatement()
     return statement;
 }
 
+std::list<Variable*>* Function::getArguments()
+{
+    return arguments;
+}
+
 void File::gen(CodeGen* out) {
 
     std::string filename = out->getInputFileName();
@@ -323,3 +328,33 @@ int ForLoop::calcStackOffset(int offset) {
     // Return the offset
     return offset;
 }
+
+
+void GotoLabel::gen(CodeGen* out) {
+
+    *out << Message(DEBUG, "GotoLabel::gen()", this);
+
+    if(label==NULL) genLabel(out);
+
+    *out << *label;
+}
+
+void GotoLabel::genLabel(CodeGen* out) {
+    Label l = out->newMark("gotoLabel");
+    label = new Label(l);
+}
+
+void Goto::gen(CodeGen* out) {
+
+    *out << Message(DEBUG, "Goto::gen()", this);
+
+    Label* label = gotoLabel->getLabel();
+    if(label==NULL)
+    {
+        gotoLabel->genLabel(out);
+        label = gotoLabel->getLabel();
+    }
+
+    *out << Command("jmp")(*label);
+}
+

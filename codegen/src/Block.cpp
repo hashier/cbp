@@ -14,6 +14,23 @@ std::list<Statement*> Block::getSubStatements()
     return subs;
 }
 
+std::list<Statement*>& Block::getSubStatementsRef()
+{
+    return subs;
+}
+
+void Block::insertAfter(Statement* where, Statement* item)
+{
+    for(std::list<Statement*>::iterator it=subs.begin(); it!=subs.end(); it++)
+    {
+        if(*it==where)
+        {
+            subs.insert(++it, item);
+            return;
+        }
+    }
+}
+
 void Block::gen(CodeGen* out, bool outermost) {
     *out << Message(DEBUG, "Block::gen()", this);
     // Ok, now just output all the substatements one after another

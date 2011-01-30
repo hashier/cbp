@@ -5,6 +5,7 @@
 #include<list>
 #include<iostream>
 #include<typeinfo>
+#include<vector>
 
 #include"Exceptions.h"
 #include"SymbolTable.h"
@@ -39,8 +40,8 @@ class Node {
             return lineNumber;
         }
         
-        void setLineNumber(int lineNumber_) {
-            lineNumber = lineNumber_;
+        void setLineNumber(int lineNumber) {
+            this->lineNumber = lineNumber;
         }
         
         virtual ~Node() {
@@ -52,6 +53,9 @@ private:
 };
 
 namespace DAG { class DirectedAcyclicGraph; class Node; }
+
+class Variable;
+class Expression;
 
 class Statement : public Node {
     public:
@@ -67,6 +71,10 @@ class Statement : public Node {
         }
 
         virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) { return 0; }
+
+        virtual std::vector<Node*> getChildNodes() = 0;
+
+        virtual void replaceChild(Node* currentChild, Node* newChild) = 0;
 };
 
 class Type;

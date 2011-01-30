@@ -108,6 +108,7 @@ File::~File() {
 }
 
 void Block::add(Statement* st) {
+
     subs.push_back(st);
 
     //st->addToDAG(dag); // TODO: call DAG here (when its done)
@@ -267,6 +268,58 @@ ForLoop::~ForLoop() {
     if (step) delete step; step = 0;
     if (body) delete body; init_value = 0;
 }
+
+
+GotoLabel::GotoLabel():label(NULL) {
+
+}
+GotoLabel::~GotoLabel() {
+    delete label;
+}
+void GotoLabel::dump(int num) {
+    indent(num); std::cout << "GotoLabel" << std::endl;
+}
+bool GotoLabel::isConst() {
+    return false;
+}
+void GotoLabel::constProp() {
+
+}
+constant* GotoLabel::getConstant() {
+    return NULL;
+}
+int GotoLabel::calcStackOffset(int offset) {
+    return 0;
+}
+
+
+Goto::Goto(GotoLabel* gotoLabel):gotoLabel(gotoLabel) {
+
+}
+Goto::~Goto() {
+
+}
+void Goto::dump(int num) {
+    indent(num); std::cout << "Goto" << std::endl;
+}
+bool Goto::isConst() {
+    return false;
+}
+void Goto::constProp() {
+
+}
+constant* Goto::getConstant() {
+    return NULL;
+}
+int Goto::calcStackOffset(int offset) {
+    return 0;
+}
+
+
+
+
+
+
 
 
 

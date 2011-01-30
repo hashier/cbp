@@ -115,7 +115,8 @@ int main(int argc, char *argv[])
     tree->gen(out);
     std::cout << " -done" << std::endl << std::endl;
 
-    delete(tree);
+    //bug at inlining - DO NOT DELETE TREE
+    //delete(tree);
 
 //-----------------------------------------------------------------------------
 // Optimize assembler output

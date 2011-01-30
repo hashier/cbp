@@ -25,6 +25,7 @@ class Function : public Declaration {
         Type* getType() { return type; }
         Label getMark(CodeGen* out);
         Statement* getStatement();
+        std::list<Variable*>* getArguments();
         const Func_abi &getAbi() const { return abi; }
         virtual ~Function();
     private:
@@ -82,8 +83,12 @@ class Block : public Statement {
         }
         void gen(CodeGen* out, bool outermost);
         std::list<Statement*> getSubStatements();
+        std::list<Statement*>& getSubStatementsRef();
         virtual int calcStackOffset(int offset);
         virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        virtual std::vector<Node*> getChildNodes();
+        virtual void replaceChild(Node* currentChild, Node* newChild);
+        void insertAfter(Statement* where, Statement* item);
         virtual ~Block();
     private:
         std::list<Statement*> subs;
@@ -100,6 +105,8 @@ class IfElse : public Statement {
         constant* getConstant();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
+        virtual std::vector<Node*> getChildNodes();
+        virtual void replaceChild(Node* currentChild, Node* newChild);
     private:
         Expression* condition;
         Statement* then;
@@ -125,6 +132,8 @@ class SwitchCase : public Statement {
         bool isConst();
         constant* getConstant();
         void gen(CodeGen* out);
+        virtual std::vector<Node*> getChildNodes();
+        virtual void replaceChild(Node* currentChild, Node* newChild);
     private:
         Expression* which;
         std::list<Case*>* cases;
@@ -141,6 +150,8 @@ class WhileLoop : public Statement {
         virtual ~WhileLoop();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
+        virtual std::vector<Node*> getChildNodes();
+        virtual void replaceChild(Node* currentChild, Node* newChild);
     private:
         Expression* condition;
         Statement* body;
@@ -159,6 +170,9 @@ class Return : public Statement {
             this->gen(out, false);
         }
         void gen(CodeGen* out, bool outermost);
+        virtual std::vector<Node*> getChildNodes();
+        virtual void replaceChild(Node* currentChild, Node* newChild);
+        Expression* getExpr() { return expr; };
     private:
         Expression* expr;
 };
@@ -173,6 +187,8 @@ class Local : public Statement {
         /** Sets the memory offset of the wrapped Variable and returns its size. */
         int calcStackOffset(int offset);
         virtual void gen(CodeGen* out);
+        virtual std::vector<Node*> getChildNodes();
+        virtual void replaceChild(Node* currentChild, Node* newChild);
         virtual ~Local();
     private:
         Variable* var;
@@ -208,6 +224,8 @@ class ForLoop : public Statement {
         virtual ~ForLoop();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
+        virtual std::vector<Node*> getChildNodes();
+        virtual void replaceChild(Node* currentChild, Node* newChild);
     private:
         Variable* iterator;
         Expression* init_value;
@@ -216,3 +234,38 @@ class ForLoop : public Statement {
         Statement* body;
 };
 
+class GotoLabel : public Statement {
+public:
+    GotoLabel();
+    void dump(int num = 0);
+    void constProp();
+    bool isConst();
+    constant* getConstant();
+    virtual ~GotoLabel();
+    virtual void gen(CodeGen* out);
+    virtual int calcStackOffset(int offset);
+    virtual std::vector<Node*> getChildNodes();
+    virtual void replaceChild(Node* currentChild, Node* newChild);
+    Label* getLabel() { return label; };
+    void genLabel(CodeGen* out);
+private:
+    Label* label;
+};
+
+class Goto : public Statement {
+public:
+    explicit Goto(GotoLabel* gotoLabel);
+    void dump(int num = 0);
+    void constProp();
+    bool isConst();
+    constant* getConstant();
+    virtual ~Goto();
+    virtual void gen(CodeGen* out);
+    virtual int calcStackOffset(int offset);
+    virtual std::vector<Node*> getChildNodes();
+    virtual void replaceChild(Node* currentChild, Node* newChild);
+    GotoLabel* getGotoLabel() {return gotoLabel;}
+
+private:
+    GotoLabel* gotoLabel;
+};
