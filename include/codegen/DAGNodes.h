@@ -9,17 +9,6 @@
 namespace DAG {
 
 
-    enum Operator {
-        PLUS,
-        MINUS,
-        MULT,
-        DIV,
-        ASSIGN,
-        TODO
-    };
-
-
-
     class InnerNode;
     class IdentifierMap;
 
@@ -39,7 +28,7 @@ namespace DAG {
         Node(Node *leftParent, Node *rightParent, Expression *expr)
             : leftParent(leftParent), rightParent(rightParent), expr(expr), dumped(false) { }
 
-        std::vector<InnerNode *> getOperatorNodes(Operator op);    // kopie von liste?
+        std::vector<InnerNode *> getOperatorNodes(Expression *expr);    // kopie von liste?
         void addNewOperatorNode(InnerNode *opNode);
         Expression *getExpression() { return expr; }
 
@@ -52,12 +41,12 @@ namespace DAG {
 
     class InnerNode : public Node {
     private:
-        Operator op;
+        
 
     public:
-        InnerNode(Node *leftParent, Node *rightParent, Operator op, Expression *expr);
+        InnerNode(Node *leftParent, Node *rightParent, Expression *expr);
 
-        Operator getOperator() { return op; }
+        //Expression getExpression() { return expr; }
         Node *getLeftOperand() { return leftParent; }
         Node *getRightOperand() { return rightParent; }
 

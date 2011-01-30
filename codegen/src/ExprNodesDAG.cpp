@@ -6,13 +6,10 @@
 
 #include <vector>
 
-DAG::Node *Expr_Assign::addToDAG(DAG::DirectedAcyclicGraph *graph) {
-    return graph->addToDAG(left->addToDAG(graph), right->addToDAG(graph), DAG::ASSIGN, this);
+DAG::Node *Binary::addToDAG(DAG::DirectedAcyclicGraph *graph) {
+    return graph->addToDAG(left->addToDAG(graph), right->addToDAG(graph), this);
 }
 
-DAG::Node *Expr_Add::addToDAG(DAG::DirectedAcyclicGraph *graph) {
-    return graph->addToDAG(left->addToDAG(graph), right->addToDAG(graph), DAG::PLUS, this);
-}
 
 DAG::Node *ConstInt::addToDAG(DAG::DirectedAcyclicGraph *graph)
 {

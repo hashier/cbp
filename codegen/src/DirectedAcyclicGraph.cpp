@@ -3,11 +3,11 @@
 
 namespace DAG {
 
-    Node *DirectedAcyclicGraph::addToDAG(Node *left, Node *right, Operator op, Expression *expr)
+    Node *DirectedAcyclicGraph::addToDAG(Node *left, Node *right, Expression *expr)
     {
         assert (left != 0 && right != 0);
-        std::vector<InnerNode *> leftOps = left->getOperatorNodes(op);
-        std::vector<InnerNode *> rightOps = right->getOperatorNodes(op);
+        std::vector<InnerNode *> leftOps = left->getOperatorNodes(expr);
+        std::vector<InnerNode *> rightOps = right->getOperatorNodes(expr);
 
         Node *resultNode = NULL;
 
@@ -16,10 +16,23 @@ namespace DAG {
         {
             for (unsigned int j = 0; j < rightOps.size(); ++j)
             {
+                // found common InnerNode
                 if (leftOps[i] == rightOps[j])
                 {
-                    resultNode = leftOps[i];
-                    break;
+                    // okay, we have a InnerNode with both operands, but we have to check 
+                    // if they are in the right order! 23 / 42 != 42 / 23
+                    if (leftOps[i]->getLeftOperand() == left)
+                    {
+                        resultNode = leftOps[i];
+                        break;
+                    }
+                    // maybe we have a funny commutative operator, like + and *,
+                    // then we can ignore the order. 23 + 42 == 42 + 23
+                    else if(typeid(*expr) == typeid(Expr_Add) || typeid(*expr) == typeid(Expr_Mul))
+                    {
+                        resultNode = leftOps[i];
+                        break;
+                    }
                 }
             }
             if (resultNode != NULL)
@@ -27,17 +40,17 @@ namespace DAG {
         }
 
         // don't create a new node if we have an assign expression
-        if (resultNode == NULL && op != ASSIGN)
-            resultNode = new InnerNode(left, right, op, expr);
+        if (resultNode == NULL && typeid(*expr) != typeid(Expr_Assign))
+            resultNode = new InnerNode(left, right, expr);
 
         // if we have an assign, set the identifier of the left part to the right node
-        if (op == ASSIGN)
+        if (typeid(*expr) == typeid(Expr_Assign))
         {
             Expr_Assign * assign = dynamic_cast<Expr_Assign *>(expr);
             assert (assign != NULL);
             Expr_Identifier * identifier = dynamic_cast<Expr_Identifier *>(assign->getLeft());
 
-            // we need an assignment with a single identifier on the left side!
+            // we need an assignment with a single identifier on the left side! (should always be the case)
             assert(identifier != NULL); 
 
             map.moveIdentifier(identifier->getRef()->getIdentifier(), right);
@@ -45,7 +58,6 @@ namespace DAG {
             return right;
         }
 
-        // if not, create a new one
         return resultNode;
     }
 

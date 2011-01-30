@@ -20,7 +20,7 @@ public:
     }
 
     // Add node for expression
-    Node *addToDAG(Node *left, Node *right, Operator op, Expression *expr);
+    Node *addToDAG(Node *left, Node *right, Expression *expr);
 
     // Add node for constant int value
     Node *addToDAG(int value, Expression *expr); 

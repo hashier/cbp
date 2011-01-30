@@ -33,6 +33,7 @@ class Binary : public Expression {
         virtual Type* getType();
         Expression *getLeft() { return left; }
         Expression *getRight() { return right; }
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
     protected:
         Expression* left;
         Expression* right;
@@ -42,7 +43,6 @@ class Binary : public Expression {
 class Expr_Assign : public Binary {
     public:
         Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {}
-        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
         virtual void gen(CodeGen* out);
 };
 
@@ -136,7 +136,6 @@ class Expr_Add : public Binary {
 public:
     Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
-    DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
     virtual void gen(CodeGen* out);
 };
 class Expr_Sub : public Binary {
