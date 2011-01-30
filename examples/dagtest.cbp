@@ -1,0 +1,11 @@
+var x : uint32
+var y : uint32
+var z : uint32
+var u : uint32
+
+func main () : void {
+x = 1 / 23
+y = 23 / 1
+z = 1 + 42
+u = 42 + 1
+}
