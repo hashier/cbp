@@ -58,6 +58,10 @@ Interval operator- (Interval const& lhs, Interval const& rhs);
 Interval operator* (Interval const& lhs, Interval const& rhs);
 Interval operator/ (Interval const& lhs, Interval const& rhs);
 
+// set operations
+// x ∈ [a,b] ?
+bool in(int x, Interval const& i);
+
 // I/O
 std::ostream& operator<<(std::ostream& os, Interval const& i);
 

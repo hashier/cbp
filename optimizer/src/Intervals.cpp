@@ -53,26 +53,36 @@ Interval operator* (Interval const& lhs, Interval const& rhs){
 }
 
 Interval operator/ (Interval const& lhs, Interval const& rhs){
-    // [a,b] / [c,d] = [min (a/c, a/d, b/c, b/d), max (a/c, a/d, b/c, b/d)]
-    double a = static_cast<double>(lhs.lower());
-    double b = static_cast<double>(lhs.upper());
-    double c = static_cast<double>(rhs.lower());
-    double d = static_cast<double>(rhs.upper());
-    
-    return Interval(
-        (detail::min)(
-            (a / c),
-            (a / d),
-            (b / c),
-            (b / d)
-        ),
-        (detail::max)(
-            (a / c),
-            (a / d),
-            (b / c),
-            (b / d)
-        )
-    );
+    if(in(0, lhs) || in(0, rhs)){
+        return Interval::world();
+    }
+    else{
+        // [a,b] / [c,d] = [min (a/c, a/d, b/c, b/d), max (a/c, a/d, b/c, b/d)]
+        double a = static_cast<double>(lhs.lower());
+        double b = static_cast<double>(lhs.upper());
+        double c = static_cast<double>(rhs.lower());
+        double d = static_cast<double>(rhs.upper());
+        
+        return Interval(
+            (detail::min)(
+                (a / c),
+                (a / d),
+                (b / c),
+                (b / d)
+            ),
+            (detail::max)(
+                (a / c),
+                (a / d),
+                (b / c),
+                (b / d)
+            )
+        );
+    }
+}
+
+//// set operations ////
+bool in(int x, Interval const& i){
+    return x >= i.lower() && x <= i.upper();
 }
 
 std::ostream& operator<<(std::ostream& os, Interval const& i){

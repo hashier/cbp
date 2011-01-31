@@ -8,11 +8,13 @@ func main () : void {
     local var a : uint32
     local var b : uint32
     local var c : uint32
+    local var d : uint32
     a = 4
     b = 5
     c = a + b
     c = a - b
     c = a * b
     c = a / b
+    d = a / c
   # return call test(5 6)
 }
