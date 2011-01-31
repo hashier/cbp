@@ -37,12 +37,16 @@ void Expression::solveConstraints(/*SymbolTable*/){
 }
 
 Interval Expression::constraints(/*SymbolTable*/){
+    std::cout << "expression " << typeid(*this).name() << std::endl;
     return Interval::world();
 }
 
 void Function::solveConstraints(/*SymbolTable*/){
     std::cout << "function" << std::endl;
-    statement->solveConstraints();
+    // check if forward decl
+    if(statement != 0){
+        statement->solveConstraints();
+    }
 }
 
 void Block::solveConstraints(/*SymbolTable*/){
@@ -53,19 +57,19 @@ void Block::solveConstraints(/*SymbolTable*/){
     }
 }
 
-void Declaration::solveConstraints(/*SymbolTable*/){
-    std::cout << "declaration: " << getInterval() << std::endl;
+void Variable::solveConstraints(/*SymbolTable*/){
+    std::cout << "variable: " << getInterval() << std::endl;
 }
 
 void Expr_Assign::solveConstraints(/*SymbolTable*/){
-    getLeft()->dump();
-
     Interval rhsConstraint = getRight()->constraints();
     std::cout << "assign: " << rhsConstraint;
 
-    Variable* lhs = dynamic_cast<Variable*>(getLeft());
+    Expr_Identifier* lhs = dynamic_cast<Expr_Identifier*>(getLeft());
     if(lhs != 0){
-        std::cout << " to " << lhs->getIdentifier() << "." << std::endl;
+        Variable* lhsVar = lhs->getRef();
+        std::cout << " to " << lhsVar->getIdentifier() << "." << std::endl;
+        lhsVar->setInterval(rhsConstraint);
     }
     else {
         std::cout << " lhs unknown." << std::endl;
@@ -75,3 +79,24 @@ void Expr_Assign::solveConstraints(/*SymbolTable*/){
 Interval ConstInt::constraints(/*SymbolTable*/){
     return Interval(val());
 }
+
+Interval Expr_Add::constraints(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->constraints();
+    Interval rhsConstraint = getRight()->constraints();
+    Interval res = lhsConstraint + rhsConstraint;
+    std::cout << "add: " << res << std::endl;
+    return res;
+}
+
+Interval Expr_Sub::constraints(/*SymbolTable*/){
+    return Interval::world();
+}
+
+Interval Expr_Mul::constraints(/*SymbolTable*/){
+    return Interval::world();
+}
+
+Interval Expr_Div::constraints(/*SymbolTable*/){
+    return Interval::world();
+}
+

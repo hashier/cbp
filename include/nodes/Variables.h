@@ -16,10 +16,22 @@ class Variable : public Declaration {
         virtual int getSize();
         virtual void gen(CodeGen* out);
         virtual Address getAddress();
+        
+        Interval getInterval() const {
+            return interval;
+        }
+        
+        void setInterval(Interval const& i){
+            interval = i;
+        }
+        
+        virtual void solveConstraints(/*SymbolTable*/);
+    
     protected:
         virtual int getMemoryOffset();
         Type* type;
         int offset;
+        Interval interval;
 };
 
 class GlobalVariable : public Variable {

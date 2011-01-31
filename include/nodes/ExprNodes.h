@@ -144,12 +144,14 @@ public:
     Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
     virtual void gen(CodeGen* out);
+    virtual Interval constraints(/*SymbolTable*/);
 };
 class Expr_Sub : public Binary {
 public:
     Expr_Sub(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
     virtual void gen(CodeGen* out);
+    virtual Interval constraints(/*SymbolTable*/);
 };
 
 // Precedence 4
@@ -158,12 +160,14 @@ class Expr_Mul : public Binary {
         Expr_Mul(Expression* left, Expression* right) : Binary(left, right) { }
         constant* getConstant();
         virtual void gen(CodeGen* out);
+        virtual Interval constraints(/*SymbolTable*/);
 };
 class Expr_Div : public Binary {
     public:
         Expr_Div(Expression* left, Expression* right) : Binary(left, right) { }
         constant* getConstant();
         virtual void gen(CodeGen* out);
+        virtual Interval constraints(/*SymbolTable*/);
 };
 class Expr_Mod : public Binary {
     public:

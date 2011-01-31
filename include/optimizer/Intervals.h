@@ -44,6 +44,11 @@ private:
     T up;
 };
 
+template<typename T>
+Interval<T> operator+ (Interval<T> const& lhs, Interval<T> const& rhs){
+    return Interval<T>(lhs.lower() + rhs.lower(), lhs.upper() + rhs.upper());
+}
+
 }
 
 template<typename T>

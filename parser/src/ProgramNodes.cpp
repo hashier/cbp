@@ -352,7 +352,8 @@ LocalVariable::LocalVariable(std::string* identifier, Type* type) : Variable(ide
 
 
 
-Variable::Variable(std::string* identifier, Type* type) : Declaration(*identifier, yylineno), type(type), offset(-1) {
+Variable::Variable(std::string* identifier, Type* type)
+    : Declaration(*identifier, yylineno), type(type), offset(-1), interval(Interval::world()) {
 }
 
 void Variable::dump(int num) {

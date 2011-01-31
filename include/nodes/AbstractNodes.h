@@ -148,21 +148,17 @@ class Expression : public Statement {
 class Declaration : public Node {
 public:
     Declaration(std::string &identifier, int lineDefined)
-        : identifier(identifier), lineDefined(lineDefined),
-        interval(Interval::world()) { }
+        : identifier(identifier), lineDefined(lineDefined) { }
+        
     std::string &getIdentifier() { return identifier; }
     int getLineDefined() { return lineDefined; }
-    Interval getInterval() const {
-        return interval;
-    }
     
-	virtual void solveConstraints(/*SymbolTable*/);
+    virtual void solveConstraints(/*SymbolTable*/){}
 	
     virtual ~Declaration() { }
 
 protected:
     std::string identifier;
     int lineDefined;
-    Interval interval;
 };
 
