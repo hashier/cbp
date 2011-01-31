@@ -80,23 +80,35 @@ Interval ConstInt::constraints(/*SymbolTable*/){
     return Interval(val());
 }
 
+Interval Expr_Identifier::constraints(/*SymbolTable*/){
+    return getRef()->getInterval();
+}
+
 Interval Expr_Add::constraints(/*SymbolTable*/){
     Interval lhsConstraint = getLeft()->constraints();
     Interval rhsConstraint = getRight()->constraints();
     Interval res = lhsConstraint + rhsConstraint;
-    std::cout << "add: " << res << std::endl;
     return res;
 }
 
 Interval Expr_Sub::constraints(/*SymbolTable*/){
-    return Interval::world();
+    Interval lhsConstraint = getLeft()->constraints();
+    Interval rhsConstraint = getRight()->constraints();
+    Interval res = lhsConstraint - rhsConstraint;
+    return res;
 }
 
 Interval Expr_Mul::constraints(/*SymbolTable*/){
-    return Interval::world();
+    Interval lhsConstraint = getLeft()->constraints();
+    Interval rhsConstraint = getRight()->constraints();
+    Interval res = lhsConstraint * rhsConstraint;
+    return res;
 }
 
 Interval Expr_Div::constraints(/*SymbolTable*/){
-    return Interval::world();
+    Interval lhsConstraint = getLeft()->constraints();
+    Interval rhsConstraint = getRight()->constraints();
+    Interval res = lhsConstraint / rhsConstraint;
+    return res;
 }
 

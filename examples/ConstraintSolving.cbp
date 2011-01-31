@@ -6,6 +6,13 @@
 
 func main () : void {
     local var a : uint32
+    local var b : uint32
+    local var c : uint32
     a = 4
+    b = 5
+    c = a + b
+    c = a - b
+    c = a * b
+    c = a / b
   # return call test(5 6)
 }

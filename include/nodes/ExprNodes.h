@@ -266,6 +266,7 @@ class Expr_Identifier : public Atom {
         void constProp();
         bool isConst();
         constant* getConstant();
+        virtual Interval constraints(/*SymbolTable*/);
         Variable *getRef() { return ref; }
         void setRef(Variable* ref);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
