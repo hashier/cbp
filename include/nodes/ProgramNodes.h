@@ -21,6 +21,7 @@ class Function : public Declaration {
         Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Type* type, Statement* statement = NULL);
         void dump(int num = 0);
         void constProp();
+		virtual void solveConstraints(/*SymbolTable*/);
         virtual void gen(CodeGen* out);
         Type* getType() { return type; }
         Label getMark(CodeGen* out);
@@ -61,6 +62,7 @@ class File : public Node {
         std::list<Function*>& getFunctions();
         void dump(int num = 0);
         void constProp();
+		virtual void solveConstraints();
         void gen(CodeGen* gen);
         virtual ~File();
     private:
@@ -78,6 +80,7 @@ class Block : public Statement {
         void constProp();
         bool isConst();
         constant* getConstant();
+        virtual void solveConstraints(/*SymbolTable*/);
         inline void gen(CodeGen* out) {
             this->gen(out, false);
         }

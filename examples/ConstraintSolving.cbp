@@ -1,0 +1,11 @@
+# func test (a : uint32 b : uint32) : uint32 {
+#    local var local_var : uint32
+#    local_var = a+b
+#    return local_var
+# }
+
+func main () : void {
+    local var a : uint32
+    a = 4
+  # return call test(5 6)
+}

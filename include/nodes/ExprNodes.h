@@ -48,6 +48,7 @@ class Expr_Assign : public Binary {
     public:
         Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {}
         virtual void gen(CodeGen* out);
+        virtual void solveConstraints(/*SymbolTable*/);
 };
 
 // Precedence 10
@@ -234,6 +235,7 @@ class ConstInt : public Constant {
         int val() const;
         virtual Type* getType();
         constant* getConstant();
+        virtual Interval constraints(/*SymbolTable*/);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
 };
 

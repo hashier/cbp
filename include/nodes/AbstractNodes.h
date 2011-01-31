@@ -12,6 +12,46 @@
 
 #include"CodeGen.h"
 
+#include "Intervals.h"
+typedef Intervals::Interval<int> Interval;
+
+/*
+// Not everything has an interval as result -> Maybe type
+#include <utility>
+#include <cassert>
+typedef std::pair<bool, Interval> MaybeInterval;
+
+template<typename T>
+std::pair<bool, T>
+just(T const& t){
+    return std::pair<bool, T>(true, t);
+}
+
+// generic return type
+struct nothing {
+    template<typename T>
+    operator std::pair<bool, T>(){
+        return std::pair<bool, T>(false, T());
+    }
+};
+
+template<typename T>
+bool isJust(std::pair<bool, T> const& m){
+    return m.first;
+}
+
+template<typename T>
+bool isNothing(std::pair<bool, T> const& m){
+    return !m.first;
+}
+
+template<typename T>
+T const& fromJust(std::pair<bool, T> const& m){
+    assert(isJust(m));
+    return m.second;
+}
+*/
+
 // needed for constant propergation
 struct constant {
    int integer;
@@ -25,6 +65,7 @@ class Node {
         virtual void dump(int num = 0) = 0;
         
         virtual void constProp() = 0;
+		virtual void solveConstraints(/*SymbolTable*/) = 0;
 
         virtual void gen(CodeGen* out) {
             (*out) << Nothing(typeid(this).name());
@@ -61,6 +102,8 @@ class Statement : public Node {
     public:
         virtual bool isConst() = 0;
 		virtual constant* getConstant() = 0;
+		
+		virtual void solveConstraints(/*SymbolTable*/);
 
         /** Recursively calculates stack offsets.
          * @param offset Current position on stack.
@@ -82,6 +125,9 @@ class Type;
 class Expression : public Statement {
     public:
         virtual Type* getType() = 0;
+        
+		virtual void solveConstraints(/*SymbolTable*/);
+		virtual Interval constraints(/*SymbolTable*/);
 
         /** This generates an expression's l-value.
          * Note that most expressions do not have an l-value, which is why
@@ -102,14 +148,21 @@ class Expression : public Statement {
 class Declaration : public Node {
 public:
     Declaration(std::string &identifier, int lineDefined)
-        : identifier(identifier), lineDefined(lineDefined) { }
+        : identifier(identifier), lineDefined(lineDefined),
+        interval(Interval::world()) { }
     std::string &getIdentifier() { return identifier; }
     int getLineDefined() { return lineDefined; }
-
+    Interval getInterval() const {
+        return interval;
+    }
+    
+	virtual void solveConstraints(/*SymbolTable*/);
+	
     virtual ~Declaration() { }
 
 protected:
     std::string identifier;
     int lineDefined;
+    Interval interval;
 };
 
