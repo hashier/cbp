@@ -152,9 +152,10 @@ public:
         
     std::string &getIdentifier() { return identifier; }
     int getLineDefined() { return lineDefined; }
+    virtual std::vector<Node**> getChildren() {assert(false);std::vector<Node**> a; return a;};
+    virtual Node* clone() {assert(false);return NULL;};
     
     virtual void solveConstraints(/*SymbolTable*/){}
-	
     virtual ~Declaration() { }
 
 protected:
