@@ -39,11 +39,10 @@ OptimizerQueue parseOptimizer(int argc_, char *argv[]){
     std::size_t argc = static_cast<std::size_t>(argc_);
     
     for(std::size_t i = 1; i < argc; ++i){
-        if(strcmp(argv[i], "-opt") == 0){
+        if(std::strcmp(argv[i], "-opt") == 0){
             i += 1;
             OptimizerMap::const_iterator opt = optimizer.find(argv[i]);
             if(opt != optimizer.end()){
-                std::cout << "optimize: " << argv[i] << std::endl;
                 opts.push(opt->second);
             }
             else{
