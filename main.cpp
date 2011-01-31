@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 // Optimize Parse Tree
 
     std::cout << "[Optimize Parse Tree]" << std::endl;
-    optimizeTree(tree);
+    optimizeTree(tree, argc, argv);
     std::cout << " -done" << std::endl << std::endl;
 
 //-----------------------------------------------------------------------------

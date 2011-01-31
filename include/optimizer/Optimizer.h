@@ -2,4 +2,4 @@
 
 #include "ProgramNodes.h"
 
-void optimizeTree(File* file);
+void optimizeTree(File* file, int argc, char *argv[]);
