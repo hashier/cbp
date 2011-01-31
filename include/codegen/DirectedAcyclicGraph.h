@@ -29,6 +29,8 @@ public:
     Node *addToDAG(std::string &name, Expression *expr); 
 
     void dumpAll();
+
+    void gen(CodeGen* out, bool outermost);
     
 private:
     std::list<Statement*> *statements;

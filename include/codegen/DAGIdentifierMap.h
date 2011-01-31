@@ -19,6 +19,8 @@ namespace DAG {
         Node *getNode(std::string &identifier);
         void moveIdentifier(std::string &identifier, Node *node);
 
+        std::map<std::string, Node*> *getIdentifierMap() { return &identifierMap; }
+
         void dumpAll();
 
         // horrible runtime, only for dumps!

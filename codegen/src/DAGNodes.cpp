@@ -33,6 +33,16 @@ namespace DAG {
         children.push_back(opNode);
     }
 
+    void Node::gen(CodeGen *out)
+    {
+        if (leftParent)
+            leftParent->gen(out);
+        
+        if (rightParent)
+            rightParent->gen(out);
+        
+        expr->gen(out);
+    }
 
     void InnerNode::dump()
     {

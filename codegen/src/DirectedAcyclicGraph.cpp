@@ -89,4 +89,14 @@ namespace DAG {
         map.dumpAll();
     }
 
+    void DirectedAcyclicGraph::gen(CodeGen *out, bool outermost)
+    {
+        for (std::map<std::string, Node *>::iterator it = map.getIdentifierMap()->begin();
+            it !=  map.getIdentifierMap()->end(); it++)
+        {
+            (*it).second->gen(out);
+        }
+
+        // not sure what to do if "outermost" is true...
+    }
 }

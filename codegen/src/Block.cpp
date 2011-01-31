@@ -33,6 +33,16 @@ void Block::insertAfter(Statement* where, Statement* item)
 
 void Block::gen(CodeGen* out, bool outermost) {
     *out << Message(DEBUG, "Block::gen()", this);
+
+    /*
+    if (dag)
+    {
+        dag->gen(out, outermost);
+        return;
+    }
+    */
+
+
     // Ok, now just output all the substatements one after another
     for (std::list<Statement*>::iterator it = subs.begin(); it != subs.end(); it++) {
         // Is this the last statement of an outermost block in a function?

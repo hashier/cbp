@@ -22,6 +22,7 @@ namespace DAG {
         static std::fstream dumpStream;
         static IdentifierMap *iMap;
 
+        //bool alreadyGenerated;
         bool dumped;
 
     public:
@@ -35,6 +36,8 @@ namespace DAG {
 
         static void setIndentifierMap(IdentifierMap *iMap) { Node::iMap = iMap; }
         virtual void dump() = 0;
+
+        void gen(CodeGen* out);
 
     };
 
