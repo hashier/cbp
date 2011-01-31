@@ -479,6 +479,7 @@ void FuncCall::gen(CodeGen *out) {
                 *out << Command("pushq")("%rax");
             }
             *out << Command("call")(func->getMark(out));
+            *out << Command("addq")(8 * arguments->size())("%rsp");
             break;
     }
 }
