@@ -20,7 +20,7 @@ class Function : public Declaration {
     public:
         Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Type* type, Statement* statement = NULL);
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         virtual void gen(CodeGen* out);
         Type* getType() { return type; }
         Label getMark(CodeGen* out);
@@ -41,7 +41,7 @@ class TypeDecl : public Declaration {
     public:
         TypeDecl(std::string* identifier, Type* type);
         void dump(int num = 0);
-		void constProp() { };
+        void constProp() { };
         Type* getType() { return type; }
         static Type* getDeclaredType(std::string *identifier);
     protected:
@@ -60,7 +60,7 @@ class File : public Node {
         void add(Function* func);
         std::list<Function*>& getFunctions();
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         void gen(CodeGen* gen);
         virtual ~File();
     private:
@@ -75,7 +75,7 @@ class Block : public Statement {
         Block();
         void add(Statement* st);
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
         constant* getConstant();
         inline void gen(CodeGen* out) {
@@ -100,7 +100,7 @@ class IfElse : public Statement {
     public:
         IfElse(Expression* condition, Statement* then, Statement* otherwise);
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
         constant* getConstant();
         virtual void gen(CodeGen* out);
@@ -128,7 +128,7 @@ class SwitchCase : public Statement {
         SwitchCase(Expression* which_, std::list<Case*>* cases_);
         ~SwitchCase();
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
         constant* getConstant();
         void gen(CodeGen* out);
@@ -144,7 +144,7 @@ class WhileLoop : public Statement {
     public:
         WhileLoop(Expression* condition, Statement* body);
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
         constant* getConstant();
         virtual ~WhileLoop();
@@ -162,7 +162,7 @@ class Return : public Statement {
     public:
         Return(Expression* expr);
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
         constant* getConstant();
         virtual ~Return();
@@ -181,7 +181,7 @@ class Local : public Statement {
     public:
         Local(Variable* var);
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
         constant* getConstant();
         /** Sets the memory offset of the wrapped Variable and returns its size. */
@@ -218,7 +218,7 @@ class ForLoop : public Statement {
         //ForLoop with step expression
         ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Expression* step, Statement* body);
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
         constant* getConstant();
         virtual ~ForLoop();

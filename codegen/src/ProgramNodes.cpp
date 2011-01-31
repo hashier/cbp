@@ -213,39 +213,39 @@ void SwitchCase::gen(CodeGen* out) {
     std::stringstream convert;
 
     // generate comparison for each possibility
-	std::list<Case*>::const_iterator caseIterator = cases->begin();
-	std::list<Case*>::const_iterator caseEnd = cases->end();
-	for(; caseIterator != caseEnd; ++caseIterator){
-	    int condition = (*caseIterator)->condition->val();
+    std::list<Case*>::const_iterator caseIterator = cases->begin();
+    std::list<Case*>::const_iterator caseEnd = cases->end();
+    for(; caseIterator != caseEnd; ++caseIterator){
+        int condition = (*caseIterator)->condition->val();
 
-	    convert << "case" << condition;
-	    jumpLabels.push_back(out->newMark(convert.str()));
-	    convert.str(""); convert.clear();
+        convert << "case" << condition;
+        jumpLabels.push_back(out->newMark(convert.str()));
+        convert.str(""); convert.clear();
 
-	    *out << Command("cmpl")(condition)("%eax");
-	    *out << Command("je")(jumpLabels.back());
-	}
+        *out << Command("cmpl")(condition)("%eax");
+        *out << Command("je")(jumpLabels.back());
+    }
 
-	// Jump to exit if no comparsion matched.
-	// If the comparison for the first case is moved to the back
-	// this extra jump instruction can be removed.
-	*out << Command("jmp")(exitLabel);
+    // Jump to exit if no comparsion matched.
+    // If the comparison for the first case is moved to the back
+    // this extra jump instruction can be removed.
+    *out << Command("jmp")(exitLabel);
 
-	// generate jump labels and corresponding code
-	// for statements
-	caseIterator = cases->begin();
-	std::list<Label>::const_iterator labelIterator = jumpLabels.begin();
-	for(; caseIterator != caseEnd; ++caseIterator, ++labelIterator){
-	    // jump label
-	    *out << *labelIterator;
-	    // statement for this case
-	    (*caseIterator)->action->gen(out);
-	    // jump to exit after execution
-	    *out << Command("jmp")(exitLabel);
-	}
+    // generate jump labels and corresponding code
+    // for statements
+    caseIterator = cases->begin();
+    std::list<Label>::const_iterator labelIterator = jumpLabels.begin();
+    for(; caseIterator != caseEnd; ++caseIterator, ++labelIterator){
+        // jump label
+        *out << *labelIterator;
+        // statement for this case
+        (*caseIterator)->action->gen(out);
+        // jump to exit after execution
+        *out << Command("jmp")(exitLabel);
+    }
 
-	// exit label
-	*out << exitLabel;
+    // exit label
+    *out << exitLabel;
 }
 
 void WhileLoop::gen(CodeGen* out) {

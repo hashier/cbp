@@ -23,8 +23,8 @@ struct constant {
 class Node {
     public:
         virtual void dump(int num = 0) = 0;
-		
-		virtual void constProp() = 0;
+        
+        virtual void constProp() = 0;
 
         virtual void gen(CodeGen* out) {
             (*out) << Nothing(typeid(this).name());

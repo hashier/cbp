@@ -16,9 +16,9 @@ class Unary : public Expression {
     public:
         Unary(Expression* sub) : sub(sub) {}
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
-		constant* getConstant();
+        constant* getConstant();
         virtual std::vector<Node*> getChildNodes();
         virtual void replaceChild(Node* currentChild, Node* newChild);
     protected:
@@ -29,14 +29,14 @@ class Binary : public Expression {
     public:
         Binary(Expression* left, Expression* right) : left(left), right(right) {}
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
-		virtual constant* getConstant();
+        virtual constant* getConstant();
         virtual Type* getType();
         Expression *getLeft() { return left; }
         Expression *getRight() { return right; }
-		DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
-		virtual std::vector<Node*> getChildNodes();
+        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        virtual std::vector<Node*> getChildNodes();
         virtual void replaceChild(Node* currentChild, Node* newChild);
     protected:
         Expression* left;
@@ -55,9 +55,9 @@ class Expr_Cast : public Expression {
     public:
         Expr_Cast(Type *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
         virtual void dump(int num = 0);
-		virtual void constProp();
+        virtual void constProp();
         bool isConst();
-		constant* getConstant();
+        constant* getConstant();
         virtual void genLeft(CodeGen* out);
         virtual void gen(CodeGen* out);
         virtual Type* getType() { return castType; }  // Fun fact: Returning this is pretty much the entire functionality of Expr_Cast!
@@ -186,9 +186,9 @@ class Expr_Struc : public Expression {
     public:
         Expr_Struc(Expression* sub, std::string *identifier);
         virtual void dump(int num = 0);
-		virtual void constProp();
+        virtual void constProp();
         bool isConst();
-		constant* getConstant();
+        constant* getConstant();
         virtual void gen(CodeGen* out);
         virtual void genLeft(CodeGen* out);
         virtual Type* getType();
@@ -244,7 +244,7 @@ class ConstFloat : public Constant {
         ConstFloat(float value);
         void dump(int num = 0);
         virtual Type* getType();
-		constant* getConstant();
+        constant* getConstant();
 };
 
 class Expr_Identifier : public Atom {
@@ -256,9 +256,9 @@ class Expr_Identifier : public Atom {
         virtual void gen(CodeGen* out);
         virtual Type* getType();
         void dump(int num = 0);
-		void constProp();
+        void constProp();
         bool isConst();
-		constant* getConstant();
+        constant* getConstant();
         Variable *getRef() { return ref; }
         void setRef(Variable* ref);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
@@ -274,7 +274,7 @@ public:
     FuncCall(std::string* identifier, std::list<Expression*>* arguments);
     virtual void gen(CodeGen *out);
     void dump(int num = 0);
-	void constProp();
+    void constProp();
     bool isConst();
     constant* getConstant();
     virtual Type* getType();

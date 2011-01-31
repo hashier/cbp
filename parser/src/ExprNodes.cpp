@@ -19,13 +19,13 @@ void Unary::dump(int num) {
 
 
 void Binary::dump(int num) {
-	indent(num); std::cout << "Binary: " << typeid(*this).name() << std::endl;
+    indent(num); std::cout << "Binary: " << typeid(*this).name() << std::endl;
 
-	indent(num); std::cout << "Left:" << std::endl;
-	left->dump(num+1);
+    indent(num); std::cout << "Left:" << std::endl;
+    left->dump(num+1);
 
-	indent(num); std::cout << "Right:" << std::endl;
-	right->dump(num+1);
+    indent(num); std::cout << "Right:" << std::endl;
+    right->dump(num+1);
 }
 
 

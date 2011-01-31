@@ -3,7 +3,7 @@
 #include "Variables.h"
 
 void Function::constProp() {
-	if(statement)
+    if(statement)
         (statement->isConst()) ? calcConstExpr(&statement) : statement->constProp();
 }
 

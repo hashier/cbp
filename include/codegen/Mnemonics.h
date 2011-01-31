@@ -29,20 +29,20 @@ CodeGen& operator<<(CodeGen& cg, Mnemonic const& mnemonic);
 class DebuggableMnemonic : public Mnemonic {
 public:
     virtual std::ostream& write(std::ostream& os) const {
-    	assert(false);
-    	return os;
+        assert(false);
+        return os;
     }
     virtual std::ostream& writeUnformatted(std::ostream& os) const {
-    	assert(false);
-    	return os;
+        assert(false);
+        return os;
     }
 
     virtual std::ostream& write(std::ostream& os, CodeGen const& cg) const = 0;
     virtual std::ostream& writeUnformatted(std::ostream& os, CodeGen const& cg) const = 0;
 
-	bool needsDebugInfo() const{
-		return true;
-	}
+    bool needsDebugInfo() const{
+        return true;
+    }
 };
 
 
