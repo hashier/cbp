@@ -1,0 +1,58 @@
+func abi_c putchar (flags:uint32) : uint32
+#func abi_c blubber (temp:uint32) : uint32
+
+func blubber (a:uint32) : uint32
+{
+    local var test : uint32
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    return test
+}
+
+func add (a:uint32) : uint32
+{
+    local var test : uint32
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    test = a
+    return test
+}
+
+func main () : void
+{
+  call blubber(4)
+  call add(4)
+  call putchar(70)
+  call putchar(10)
+}

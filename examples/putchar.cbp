@@ -1,0 +1,8 @@
+func abi_c putchar (flags:uint32) : uint32
+
+func main () : void
+{
+
+  call putchar(70)
+  call putchar(710)
+}
