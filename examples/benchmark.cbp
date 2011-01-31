@@ -21,41 +21,15 @@ func abi_c getTimeInMS():uint32
 func abi_c writeTime():void
 func abi_c waitAnyKey():void
 func abi_c processMessages():void
-func abi_c malloc(size:uint32):[]uint32
 func abi_c free(pointer:[]uint32):void
+
+#function needed for benchmark
+func abi_c malloc(size:uint32):[]uint32
 func abi_c printBenchmark (times:[]uint32 avgInt:uint32 k:uint32) : void
 
 func main () : void
 {
   local var i : uint32
-
-  if(0) {
-    call writeTime()
-    call writeInt( call getTimeInMS() )
-    call writeLineEnd()
-    call waitAnyKey()
-  
-    #get memory
-    local var buffer : []uint8
-    buffer = call malloc(4)
-  
-    #fill memory
-    for i = 0 .. 4 {
-      buffer[i] = i+1
-    }
-  
-    #display memory
-    for i = 0 .. 4 {
-      call writeInt( buffer[i] )
-      call cbp_sleep(500)
-    }
-    call writeLineEnd()
-  
-    #free memory
-    call free(buffer)
-  
-    call waitAnyKey()
-  }
 
   call SDL_Init(0)
   
@@ -66,9 +40,9 @@ func main () : void
   local var x : uint32
   local var y : uint32
   
+  #local vars needed for benchmark
   local var n : uint32
   local var k : uint32
-
   local var avg : uint32
   local var startTime : uint32
   local var endTime : uint32
@@ -77,12 +51,15 @@ func main () : void
   n = 20
   times = call malloc(4*n)
   
-   for i = 0 .. 19 {
+  for i = 0 .. 19 {
       times[i] = 9999
     }
+   
+   #benchmark loop
    for k = 0 .. 19
    {
     
+    #get start Time 
     startTime = call getTimeInMS()
    
 	    for y = 0 .. 599 
@@ -100,7 +77,8 @@ func main () : void
 			  65536 * ((x - 4 * i ^ y - 2 * i) + 6 *i)
 		      }
 	     }
-
+	     
+      #save times
       endTime = call getTimeInMS()
       times[k] = (endTime - startTime)
       avg = (avg + times[k])
@@ -111,7 +89,9 @@ func main () : void
     call SDL_Flip(screen)
     i = i + 1
 
+    #dump benchmark results
     call printBenchmark(times avg 19)
+    
     call processMessages()
     call waitAnyKey()
 }
