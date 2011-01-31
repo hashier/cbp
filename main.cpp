@@ -122,7 +122,11 @@ int main(int argc, char *argv[])
 // Optimize assembler output
 
     std::cout << "[Optimize ASM-Source]" << std::endl;
+#ifndef NOPEEP
     optimizePeephole(ss.str());
+#else
+    std::cout << "Peephole disabled" << std::endl;
+#endif
     std::cout << " -done" << std::endl << std::endl;
 
 #ifdef MSVC

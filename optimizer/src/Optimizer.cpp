@@ -12,11 +12,15 @@ void optimizeTree(File* file)
 #ifndef NOINLINE
     //do inlining
     optimizeTree_Inlining(file);
+#else
+    std::cout << " inlining disabled" << std::endl;
 #endif
 
 #ifndef NOCONST
     // after inlining to have variables on lhs
-    optimizeTree_ConstraintSolving(file);
+    //optimizeTree_ConstraintSolving(file);
+#else
+    std::cout << " Const Prop disabled" << std::endl;
 #endif
 }
 
