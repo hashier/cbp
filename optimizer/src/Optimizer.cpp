@@ -8,9 +8,11 @@ void optimizeTree(File* file)
 {
     //do constant propergation
     //optimizeTree_ConstantPropergation(file);
-    optimizeTree_ConstraintSolving(file);
-
+    
     //do inlining
     optimizeTree_Inlining(file);
+    
+    // after inlining to have variables on lhs
+    optimizeTree_ConstraintSolving(file);
 }
 

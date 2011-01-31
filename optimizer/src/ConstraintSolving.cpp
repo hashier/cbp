@@ -58,9 +58,11 @@ void Declaration::solveConstraints(/*SymbolTable*/){
 }
 
 void Expr_Assign::solveConstraints(/*SymbolTable*/){
+    getLeft()->dump();
+
     Interval rhsConstraint = getRight()->constraints();
     std::cout << "assign: " << rhsConstraint;
-    
+
     Variable* lhs = dynamic_cast<Variable*>(getLeft());
     if(lhs != 0){
         std::cout << " to " << lhs->getIdentifier() << "." << std::endl;
