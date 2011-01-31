@@ -219,6 +219,7 @@ public:
     bool isConst();
     void constProp() { };
     virtual std::vector<Node*> getChildNodes();
+    virtual void genLeft(CodeGen* out);
     virtual void replaceChild(Node* currentChild, Node* newChild);
 };
 

@@ -4,6 +4,7 @@
 #include"DirectedAcyclicGraph.h"
 #include"Message.h"
 
+#include <cstdlib>
 #include <vector>
 
 void Expr_Cast::genLeft(CodeGen* out) {
@@ -61,6 +62,10 @@ void Expr_Mod::gen(CodeGen* out) {
     *out << Command("movl")("%edx")("%eax");
     *out << Command("popq")("%rbx");
     *out << Command("popq")("%rdx");
+}
+void Constant::genLeft(CodeGen* out) {
+    *out << Message(ERROR, "Left values of Constant expressions not supported!", this);
+    exit(42);
 }
 
 void ConstInt::gen(CodeGen* out) {
