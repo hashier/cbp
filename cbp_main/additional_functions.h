@@ -96,7 +96,7 @@ void __cdecl printBenchmark(unsigned int* times, unsigned int avgInt, unsigned i
 	    dev /= (double)(k-1);
 	    dev = sqrt(dev);
 
-	    printf("minimum: %d avarage: %f median: %d deviation: %f maximum: %d", min, avg, med, dev ,max );
+	    printf("minimum: %d ms avarage: %f ms median: %d ms deviation: %f ms maximum: %d ms", min, avg, med, dev ,max );
 }
 
 unsigned int __cdecl getTimeInMS()
