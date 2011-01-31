@@ -44,6 +44,17 @@ endif()
 
 include(${CMAKE_MODULE_PATH}/FindBison.cmake)
 
+# possible options
+set(OPTLIST NOINLINE NOCONST)
+# remove all
+remove_definitions(${OPTLIST})
+# Always use the first one that occurs on the cmd line
+if(NOINLINE)
+  add_definitions(-DNOINLINE)
+elseif(NOCONST)
+  add_definitions(-DNOCONST)
+endif()
+
 # add the current binary dir - where the generated files are
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
