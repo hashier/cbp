@@ -39,6 +39,47 @@ void backupFile(FILE *file) {
     fclose(backupFile);
 }
 
+void readPatterns() {
+
+    std::ifstream patternsFile;
+    std::string lineread;
+    std::string token;
+    std::list<std::string> patternList;
+    std::list<std::string>::iterator it;
+
+    std::string fileName = "peephole_patterns";
+    patternsFile.open(fileName.c_str());
+    if (patternsFile==NULL)
+        std::cout << " -error: file not found " << fileName << std::endl;
+
+    it = patternList.begin();
+    while(std::getline(patternsFile, lineread))
+    {
+        if (lineread == "")
+        {
+            patternList.push_back(lineread);
+            continue;
+        }
+        if (lineread == "=")
+        {
+            patternList.push_back(token);
+            it++;
+            token = "";
+            continue;
+        }
+        if (lineread == "---")
+        {
+            patternList.push_back(token);
+            it++;
+            token = "";
+            continue;
+        }
+	token = token + " " + lineread;
+    }
+
+    patternsFile.close();
+}
+
 void optimizePeephole(std::string fname) {
 
     FILE *file;
@@ -51,6 +92,7 @@ void optimizePeephole(std::string fname) {
         std::cout << " -error: file not found " << fname << std::endl;
 
     backupFile(file);
+    //readPatterns();
 
     fclose(file);
 }
