@@ -156,6 +156,14 @@ void IfElse::dump(int num) {
     }
 }
 
+Node* IfElse::clone()
+{
+    IfElse* copy = new IfElse(  (Expression*)condition->clone(),
+                                (Statement*)then->clone(),
+                                otherwise==NULL ? NULL : (Statement*)otherwise->clone());
+    return copy;
+}
+
 SwitchCase::SwitchCase(Expression* which_, std::list<Case*>* cases_): which(which_),cases(cases_) { }
 
 SwitchCase::~SwitchCase(){
@@ -180,6 +188,12 @@ void WhileLoop::dump(int num) {
 WhileLoop::~WhileLoop() {
     if (condition) delete condition; condition = 0;
     if (body) delete body; body = 0;
+}
+
+Node* WhileLoop::clone()
+{
+    WhileLoop* copy = new WhileLoop((Expression*)condition->clone(), (Statement*)body->clone());
+    return copy;
 }
 
 Return::Return(Expression* expr) : expr(expr) {
@@ -272,6 +286,16 @@ ForLoop::~ForLoop() {
     if (body) delete body; init_value = 0;
 }
 
+Node* ForLoop::clone()
+{
+    ForLoop* copy = new ForLoop(    new std::string(iterator->getIdentifier()),
+                                    (Expression*)init_value->clone(),
+                                    (Expression*)final_value->clone(),
+                                    step==NULL ? NULL : (Expression*)step->clone(),
+                                    body==NULL ? NULL : (Statement*)body->clone());
+    return copy;
+}
+
 
 GotoLabel::GotoLabel():label(NULL) {
 
@@ -294,7 +318,11 @@ constant* GotoLabel::getConstant() {
 int GotoLabel::calcStackOffset(int offset) {
     return 0;
 }
-
+Node* GotoLabel::clone()
+{
+    GotoLabel* copy = new GotoLabel();
+    return copy;
+}
 
 Goto::Goto(GotoLabel* gotoLabel):gotoLabel(gotoLabel) {
 
@@ -316,6 +344,11 @@ constant* Goto::getConstant() {
 }
 int Goto::calcStackOffset(int offset) {
     return 0;
+}
+Node* Goto::clone()
+{
+    Goto* copy = new Goto(this->getGotoLabel());
+    return copy;
 }
 
 

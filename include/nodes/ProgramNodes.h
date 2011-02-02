@@ -111,6 +111,7 @@ class IfElse : public Statement {
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
     private:
         Expression* condition;
         Statement* then;
@@ -154,6 +155,7 @@ class WhileLoop : public Statement {
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
     private:
         Expression* condition;
         Statement* body;
@@ -225,6 +227,7 @@ class ForLoop : public Statement {
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
     private:
         Variable* iterator;
         Expression* init_value;
@@ -246,6 +249,7 @@ public:
     virtual std::vector<Node**> getChildren();
     Label* getLabel() { return label; };
     void genLabel(CodeGen* out);
+    virtual Node* clone();
 private:
     Label* label;
 };
@@ -262,6 +266,7 @@ public:
     virtual int calcStackOffset(int offset);
     virtual std::vector<Node**> getChildren();
     GotoLabel* getGotoLabel() {return gotoLabel;}
+    virtual Node* clone();
 
 private:
     GotoLabel* gotoLabel;
