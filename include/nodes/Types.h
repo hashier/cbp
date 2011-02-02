@@ -33,9 +33,7 @@ class Type
             return false;
         }
 
-        Type() { }
-
-        Type(Type *type);
+        Type *clone() { }
 
         virtual ~Type() { }
 };
@@ -48,6 +46,11 @@ class TypeSimple : public Type
 
         TypeSimple(TypeSimple *type)
             : baseType(type->baseType) { }
+
+        Type *clone() 
+        {
+            return new TypeSimple(this);
+        }
 
         std::string getString() const
         {
@@ -132,6 +135,11 @@ class TypeVoid : public Type {
         TypeVoid(TypeVoid *type) {
         }
 
+        Type *clone()
+        {
+            return new TypeVoid(this);
+        }
+
         virtual int getSize() {
             return 0;
         }
@@ -151,6 +159,11 @@ class TypeStruct : public Type
 
         TypeStruct(TypeStruct *type);
 
+        Type *clone()
+        {
+            return new TypeStruct(this);
+        }
+
         std::string getString() const;
         inline StructVariable* getVariable(std::string identifier) { return (*members)[identifier]; }
 
@@ -167,8 +180,16 @@ class TypePointer : public Type
         TypePointer(Type* type) : type(type) {
         }
 
-        TypePointer(TypePointer *type)
-            : type(new Type(type)) { }
+        TypePointer(TypePointer *t)
+        {
+            type = t->type->clone();
+        }
+
+
+        Type *clone()
+        {
+            return new TypePointer(this);
+        }
 
         std::string getString() const
         {

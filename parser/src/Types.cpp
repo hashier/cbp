@@ -50,7 +50,7 @@ TypeStruct::TypeStruct(TypeStruct *type)
         {
             maxSize = newVar->getExplicitOffset() + newVar->getSize();
         }
-        members->insert((*it).first, newVar);
+        members->insert(std::make_pair((*it).first, newVar));
     }
 
     // Not sure how this behavs with fixed offset..
