@@ -106,6 +106,7 @@ class IfElse : public Statement {
         void constProp();
         bool isConst();
         constant* getConstant();
+        virtual void solveConstraints();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node*> getChildNodes();

@@ -46,6 +46,9 @@ public:
     bool operator==(Interval const& rhs) const {
         return lower() == rhs.lower() && upper() == rhs.upper();
     }
+    bool operator!=(Interval const& rhs) const {
+        return !(*this == rhs);
+    }
 
 private:
     int low;

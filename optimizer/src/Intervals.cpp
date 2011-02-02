@@ -53,6 +53,7 @@ Interval operator* (Interval const& lhs, Interval const& rhs){
 }
 
 Interval operator/ (Interval const& lhs, Interval const& rhs){
+    // this may be improved if multiple intervals are used
     if(in(0, lhs) || in(0, rhs)){
         return Interval::world();
     }

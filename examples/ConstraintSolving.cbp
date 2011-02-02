@@ -16,5 +16,16 @@ func main () : void {
     c = a * b
     c = a / b
     d = a / c
+    if c {
+        d = a
+    }
+    c = a + 1 - b
+    if c {
+        d = a
+    }
+    c = a + b
+    if c {
+        d = a
+    }
   # return call test(5 6)
 }

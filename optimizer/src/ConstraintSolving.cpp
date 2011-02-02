@@ -36,9 +36,9 @@ void Expression::solveConstraints(/*SymbolTable*/){
     std::cout << "expression" << std::endl;
 }
 
-Interval Expression::constraints(/*SymbolTable*/){
+ExpressionProperties Expression::properties(/*SymbolTable*/){
     std::cout << "expression " << typeid(*this).name() << std::endl;
-    return Interval::world();
+    return ExpressionProperties();
 }
 
 void Function::solveConstraints(/*SymbolTable*/){
@@ -62,7 +62,7 @@ void Variable::solveConstraints(/*SymbolTable*/){
 }
 
 void Expr_Assign::solveConstraints(/*SymbolTable*/){
-    Interval rhsConstraint = getRight()->constraints();
+    Interval rhsConstraint = getRight()->properties().interval;
     std::cout << "assign: " << rhsConstraint;
 
     Expr_Identifier* lhs = dynamic_cast<Expr_Identifier*>(getLeft());
@@ -76,39 +76,57 @@ void Expr_Assign::solveConstraints(/*SymbolTable*/){
     }
 }
 
-Interval ConstInt::constraints(/*SymbolTable*/){
-    return Interval(val());
+ExpressionProperties ConstInt::properties(/*SymbolTable*/){
+    Interval domain = Interval(val());
+    return ExpressionProperties(domain, domain != Interval(0), !in(0, domain));
 }
 
-Interval Expr_Identifier::constraints(/*SymbolTable*/){
-    return getRef()->getInterval();
+ExpressionProperties Expr_Identifier::properties(/*SymbolTable*/){
+    Interval domain = getRef()->getInterval();
+    return ExpressionProperties(domain, domain != Interval(0), !in(0, domain));
 }
 
-Interval Expr_Add::constraints(/*SymbolTable*/){
-    Interval lhsConstraint = getLeft()->constraints();
-    Interval rhsConstraint = getRight()->constraints();
-    Interval res = lhsConstraint + rhsConstraint;
-    return res;
+ExpressionProperties Expr_Add::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    return ExpressionProperties(lhsConstraint + rhsConstraint);
 }
 
-Interval Expr_Sub::constraints(/*SymbolTable*/){
-    Interval lhsConstraint = getLeft()->constraints();
-    Interval rhsConstraint = getRight()->constraints();
+ExpressionProperties Expr_Sub::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
     Interval res = lhsConstraint - rhsConstraint;
-    return res;
+    return ExpressionProperties(lhsConstraint - rhsConstraint);
 }
 
-Interval Expr_Mul::constraints(/*SymbolTable*/){
-    Interval lhsConstraint = getLeft()->constraints();
-    Interval rhsConstraint = getRight()->constraints();
-    Interval res = lhsConstraint * rhsConstraint;
-    return res;
+ExpressionProperties Expr_Mul::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    return ExpressionProperties(lhsConstraint * rhsConstraint);
 }
 
-Interval Expr_Div::constraints(/*SymbolTable*/){
-    Interval lhsConstraint = getLeft()->constraints();
-    Interval rhsConstraint = getRight()->constraints();
-    Interval res = lhsConstraint / rhsConstraint;
-    return res;
+ExpressionProperties Expr_Div::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    return ExpressionProperties(lhsConstraint / rhsConstraint);
 }
 
+void IfElse::solveConstraints(/*SymbolTable*/){
+    // Hier könnte auch ein Vergleich stattfinden. Was dann?
+    // Dieser schränkt u.U. nur den Bereich einer Variable ein.
+    ExpressionProperties prop = condition->properties();
+    if(isJust(prop.satisfiable)){
+        if(fromJust(prop.satisfiable)){
+            std::cout << "if accessible" << std::endl;
+            if(fromJust(prop.tautology)){
+                std::cout << "if always fulfilled" << std::endl; // move then-block up
+            }
+        }
+        else{
+            std::cout << "if not accessible" << std::endl; // move else-block up or eleminate completely
+        }
+    }
+    else{
+        std::cout << "if: " << "condition has no logic properties!" << std::endl;
+    }
+}

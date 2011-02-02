@@ -12,7 +12,7 @@
 
 #include"CodeGen.h"
 
-#include "Intervals.h"
+#include "ExpressionProperties.h"
 
 // needed for constant propergation
 struct constant {
@@ -89,7 +89,7 @@ class Expression : public Statement {
         virtual Type* getType() = 0;
         
 		virtual void solveConstraints(/*SymbolTable*/);
-		virtual Interval constraints(/*SymbolTable*/);
+		virtual ExpressionProperties properties(/*SymbolTable*/);
 
         /** This generates an expression's l-value.
          * Note that most expressions do not have an l-value, which is why

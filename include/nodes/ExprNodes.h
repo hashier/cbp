@@ -144,14 +144,14 @@ public:
     Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
     virtual void gen(CodeGen* out);
-    virtual Interval constraints(/*SymbolTable*/);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_Sub : public Binary {
 public:
     Expr_Sub(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
     virtual void gen(CodeGen* out);
-    virtual Interval constraints(/*SymbolTable*/);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 
 // Precedence 4
@@ -160,14 +160,14 @@ class Expr_Mul : public Binary {
         Expr_Mul(Expression* left, Expression* right) : Binary(left, right) { }
         constant* getConstant();
         virtual void gen(CodeGen* out);
-        virtual Interval constraints(/*SymbolTable*/);
+        virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_Div : public Binary {
     public:
         Expr_Div(Expression* left, Expression* right) : Binary(left, right) { }
         constant* getConstant();
         virtual void gen(CodeGen* out);
-        virtual Interval constraints(/*SymbolTable*/);
+        virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_Mod : public Binary {
     public:
@@ -239,7 +239,7 @@ class ConstInt : public Constant {
         int val() const;
         virtual Type* getType();
         constant* getConstant();
-        virtual Interval constraints(/*SymbolTable*/);
+        virtual ExpressionProperties properties(/*SymbolTable*/);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
 };
 
@@ -266,7 +266,7 @@ class Expr_Identifier : public Atom {
         void constProp();
         bool isConst();
         constant* getConstant();
-        virtual Interval constraints(/*SymbolTable*/);
+        virtual ExpressionProperties properties(/*SymbolTable*/);
         Variable *getRef() { return ref; }
         void setRef(Variable* ref);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
