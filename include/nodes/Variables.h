@@ -7,6 +7,7 @@ class Type;
 class Variable : public Declaration {
     public:
         Variable(std::string* identifier, Type* type);
+        Variable(Variable *node);
         virtual void dump(int num = 0);
 
         virtual void constProp() { };
@@ -37,19 +38,24 @@ class Variable : public Declaration {
 class GlobalVariable : public Variable {
     public:
         GlobalVariable(std::string* identifier, Type* type);
+        GlobalVariable(GlobalVariable* node);
         virtual Address getAddress();
         std::vector<Node**> getChildren();
+        virtual Node* clone();
 };
 
 class LocalVariable : public Variable {
     public:
         LocalVariable(std::string* identifier, Type* type);
+        LocalVariable(LocalVariable* node);
         std::vector<Node**> getChildren();
+        virtual Node* clone();
 };
 
 class StructVariable : public Variable {
     public:
         StructVariable(std::string* identifier, Type* type);
+        StructVariable(StructVariable *node);
         inline void setExplicitOffset(int explicitOffset) {
             this->explicitOffset = explicitOffset;
         }
@@ -58,6 +64,7 @@ class StructVariable : public Variable {
         void dump(int num = 0);
         int getExplicitOffset() { return explicitOffset; };
         std::vector<Node**> getChildren();
+        virtual Node* clone();
     protected:
         int explicitOffset;
         virtual int getMemoryOffset();

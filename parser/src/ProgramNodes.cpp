@@ -387,10 +387,20 @@ StructVariable::StructVariable(std::string* identifier, Type* type) : Variable(i
     this->offset = offset;
 }
 
+StructVariable::StructVariable(StructVariable *node) : Variable(node), explicitOffset(node->getExplicitOffset()) {
+    this->offset = node->getMemoryOffset();
+}
+
 void StructVariable::dump(int num) {
     indent(num); std::cout << "StructVariable '" << identifier  << "' @ " << offset << " : " << std::endl;
     // type->dump(num+1);
 }
+
+Node *StructVariable::clone(){
+    StructVariable *copy = new StructVariable(this);
+    return copy;
+}
+
 
 GlobalVariable::GlobalVariable(std::string* identifier, Type* type) : Variable(identifier, type) {
     try {
@@ -400,6 +410,15 @@ GlobalVariable::GlobalVariable(std::string* identifier, Type* type) : Variable(i
     }
 }
 
+GlobalVariable::GlobalVariable(GlobalVariable *node) : Variable(new std::string(node->getIdentifier()), node->getType()->clone()) {
+}
+
+Node *GlobalVariable::clone(){
+    GlobalVariable *copy = new GlobalVariable(this);
+    return copy;
+}
+
+
 LocalVariable::LocalVariable(std::string* identifier, Type* type) : Variable(identifier, type) {
     try {
         symbolTable->insertDefinition(this);
@@ -408,10 +427,21 @@ LocalVariable::LocalVariable(std::string* identifier, Type* type) : Variable(ide
     }
 }
 
+LocalVariable::LocalVariable(LocalVariable *node) : Variable(new std::string(node->getIdentifier()), node->getType()->clone()) {
+}
+
+Node *LocalVariable::clone(){
+    LocalVariable *copy = new LocalVariable(this);
+    return copy;
+}
 
 
 Variable::Variable(std::string* identifier, Type* type)
     : Declaration(*identifier, yylineno), type(type), offset(-1), interval(Interval::world()) {
+}
+
+Variable::Variable(Variable *node)
+: Declaration(node->getIdentifier(), yylineno), type(node->getType()->clone()), offset(node->getMemoryOffset()), interval(Interval::world()) {
 }
 
 void Variable::dump(int num) {
