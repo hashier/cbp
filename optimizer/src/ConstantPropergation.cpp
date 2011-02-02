@@ -1,6 +1,22 @@
 #include "ConstantPropergation.h"
 
-#include <iostream>
+std::list<std::list<ConstVar*>* > blocks;
+
+ConstVar::ConstVar(std::string identifier, constant* value) {
+    this->identifier = identifier;
+    this->value = value;
+}
+
+std::string ConstVar::getIdentifier() {
+    return identifier;
+}
+constant* ConstVar::getValue() {
+    return value;
+}
+
+void ConstVar::setValue(constant* value) {
+    this->value = value;
+}
 
 void optimizeTree_ConstantPropergation(File* file) {
     std::cout << " -Constant Propergation" << std::endl;
@@ -16,7 +32,7 @@ void calcConstExpr(Expression** expr) {
         *expr = new ConstInt(i);
     } else if(type->isFloating() && (*expr)->getConstant()!=NULL) {
         float f = (*expr)->getConstant()->floating;
-        //delete *expr;
+        delete *expr;
         *expr = new ConstFloat(f);
     }
 }

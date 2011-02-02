@@ -27,6 +27,41 @@ constant* Binary::getConstant() {
     return NULL;
 }
 
+bool Expr_Assign::isConst() {
+    return false;
+}
+
+void Expr_Assign::constProp() {
+    (right->isConst()) ? calcConstExpr(&right) : right->constProp();
+
+    // if left child is a variable
+    if(left->getChildren().size() == 0) {
+        bool varExists = false;
+
+        std::string identifier = ((Expr_Identifier*) left)->getRef()->getIdentifier();
+        std::list<std::list<ConstVar*>* >::reverse_iterator it1 = blocks.rbegin();
+        for(; it1 != blocks.rend(); it1++) {
+            std::list<ConstVar*>::iterator it2 = (*it1)->begin();
+            for(; it2 != (*it1)->end(); it2++) {
+                if((*it2)->getIdentifier() == identifier) {
+                    if(right->isConst()) {
+                        (*it2)->setValue(right->getConstant());
+                    } else {
+                        (*it1)->remove(*it2);
+                    }
+                    varExists = true;
+                    break;
+                }
+            }
+        }
+
+        if(!varExists && right->isConst()) {
+            std::list<ConstVar*>* con = blocks.back();
+            con->push_back(new ConstVar(identifier, right->getConstant()));
+        }
+    }
+}
+
 constant* Expr_Add::getConstant() {
     TypeSimple* typeLeft = dynamic_cast<TypeSimple*>(left->getType());
     TypeSimple* typeRight = dynamic_cast<TypeSimple*>(right->getType());
@@ -145,10 +180,31 @@ void Expr_Identifier::constProp() {
 }
 
 bool Expr_Identifier::isConst() {
-    return false;
+    std::string identifier = this->getRef()->getIdentifier();
+    std::list<std::list<ConstVar*>* >::reverse_iterator it1 = blocks.rbegin();
+    for(; it1 != blocks.rend(); it1++) {
+        std::list<ConstVar*>::iterator it2 = (*it1)->begin();
+        for(; it2 != (*it1)->end(); it2++) {
+            if((*it2)->getIdentifier() == identifier) {
+                return true;
+            }
+        }
+    }
+	return false;
 }
 
 constant* Expr_Identifier::getConstant() {
+	std::string identifier = this->getRef()->getIdentifier();
+    std::list<std::list<ConstVar*>* >::reverse_iterator it1 = blocks.rbegin();
+    for(; it1 != blocks.rend(); it1++) {
+        std::list<ConstVar*>::iterator it2 = (*it1)->begin();
+        for(; it2 != (*it1)->end(); it2++) {
+            if((*it2)->getIdentifier() == identifier) {
+                return (*it2)->getValue();
+            }
+        }
+    }
+    
     return NULL;
 }
 

@@ -45,6 +45,8 @@ class Binary : public Expression {
 class Expr_Assign : public Binary {
     public:
         Expr_Assign(Expression* left, Expression* right) : Binary(left, right) {}
+        bool isConst();
+        void constProp();
         virtual void gen(CodeGen* out);
         virtual void solveConstraints(/*SymbolTable*/);
 };

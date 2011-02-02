@@ -1,4 +1,3 @@
-#include "ProgramNodes.h"
 #include "ConstantPropergation.h"
 #include "Variables.h"
 
@@ -25,10 +24,15 @@ void File::constProp() {
 }
 
 void Block::constProp() {
+    blocks.push_back(new std::list<ConstVar*>);
+    
     std::list<Statement*>::iterator it;
     for (it = subs.begin(); it != subs.end(); it++) {
         ((*it)->isConst()) ? calcConstExpr(&(*it)) : (*it)->constProp();
     }
+
+    delete blocks.back();
+    blocks.pop_back();
 }
 
 bool Block::isConst() {
@@ -95,6 +99,17 @@ constant* Local::getConstant() {
 }
 
 void ForLoop::constProp() {
+    std::string identifier = iterator->getIdentifier();
+    std::list<std::list<ConstVar*>* >::reverse_iterator it1 = blocks.rbegin();
+    for(; it1 != blocks.rend(); it1++) {
+        std::list<ConstVar*>::iterator it2 = (*it1)->begin();
+        for(; it2 != (*it1)->end(); it2++) {
+            if((*it2)->getIdentifier() == identifier) {
+                (*it1)->remove(*it2);
+                break;
+            }
+        }
+    }
     (init_value->isConst()) ? calcConstExpr(&init_value) : init_value->constProp();
 
     (final_value->isConst()) ? calcConstExpr(&final_value) : final_value->constProp();
