@@ -73,26 +73,32 @@ class Expr_Cast : public Expression {
 class Expr_EQ : public Binary {
     public: Expr_EQ(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_NEQ : public Binary {
     public: Expr_NEQ(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_LT : public Binary {
     public: Expr_LT(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_GT : public Binary {
     public: Expr_GT(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_LE : public Binary {
     public: Expr_LE(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 class Expr_GE : public Binary {
     public: Expr_GE(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual ExpressionProperties properties(/*SymbolTable*/);
 };
 
 // Precedence 8

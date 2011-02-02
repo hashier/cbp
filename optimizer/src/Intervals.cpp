@@ -86,9 +86,30 @@ bool in(int x, Interval const& i){
     return x >= i.lower() && x <= i.upper();
 }
 
+// A ∩ B = [max(a,c),min(b,d)]
+Interval operator& (Interval const& lhs, Interval const& rhs){
+    return Interval(
+        (std::max)(lhs.lower(), rhs.lower()),
+        (std::min)(lhs.upper(), rhs.upper())
+    );
+}
+
+// A ∩ (B ∪ [-∞,c]) = [a,min(b,d)]
+Interval restrictLeft(Interval const& lhs, Interval const& rhs){
+    return Interval(lhs.lower(), (std::min)(lhs.upper(), rhs.upper()));
+}
+
+// A ∩ (B ∪ [d,+∞]) = [max(a,c),b]
+Interval restrictRight(Interval const& lhs, Interval const& rhs){
+    return Interval((std::max)(lhs.lower(), rhs.lower()), lhs.upper());
+}
+
 std::ostream& operator<<(std::ostream& os, Interval const& i){
     if(i == Interval::world()){
         return os << "[-∞,+∞]";
+    }
+    else if(i.empty()){
+        return os << "∅";
     }
     else{
         return os << '[' << i.lower() << ',' << i.upper() << ']';

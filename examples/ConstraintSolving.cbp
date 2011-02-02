@@ -16,7 +16,7 @@ func main () : void {
     c = a * b
     c = a / b
     d = a / c
-    if c {
+    if c >= a {
         d = a
     }
     c = a + 1 - b

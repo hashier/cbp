@@ -29,15 +29,15 @@ void File::solveConstraints(){
 }
 
 void Statement::solveConstraints(/*SymbolTable*/){
-    std::cout << "statement: " << typeid(*this).name() << std::endl;
+    std::cout << "solving statement: " << typeid(*this).name() << std::endl;
 }
 
 void Expression::solveConstraints(/*SymbolTable*/){
-    std::cout << "expression" << std::endl;
+    std::cout << "!!! solving expression: " << typeid(*this).name() << std::endl;
 }
 
 ExpressionProperties Expression::properties(/*SymbolTable*/){
-    std::cout << "expression " << typeid(*this).name() << std::endl;
+    std::cout << "expression props: " << typeid(*this).name() << std::endl;
     return ExpressionProperties();
 }
 
@@ -76,16 +76,19 @@ void Expr_Assign::solveConstraints(/*SymbolTable*/){
     }
 }
 
+// --- Constant ---
 ExpressionProperties ConstInt::properties(/*SymbolTable*/){
     Interval domain = Interval(val());
     return ExpressionProperties(domain, domain != Interval(0), !in(0, domain));
 }
 
+// --- Variables ---
 ExpressionProperties Expr_Identifier::properties(/*SymbolTable*/){
     Interval domain = getRef()->getInterval();
     return ExpressionProperties(domain, domain != Interval(0), !in(0, domain));
 }
 
+// --- Arithmetic ---
 ExpressionProperties Expr_Add::properties(/*SymbolTable*/){
     Interval lhsConstraint = getLeft()->properties().interval;
     Interval rhsConstraint = getRight()->properties().interval;
@@ -111,19 +114,84 @@ ExpressionProperties Expr_Div::properties(/*SymbolTable*/){
     return ExpressionProperties(lhsConstraint / rhsConstraint);
 }
 
+// --- Comparision ---
+ExpressionProperties Expr_EQ::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    Interval restrictLhs = lhsConstraint & rhsConstraint;
+    Interval restrictRhs = restrictLhs;
+    // TODO: save new interval for variables on stack (inside corresponding block)
+    std::cout << "equality restriction: " << restrictLhs << std::endl;
+    return ExpressionProperties(); // TODO: logical properties
+}
+
+ExpressionProperties Expr_NEQ::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    // TODO: what to do?
+    return ExpressionProperties(); // TODO: logical properties
+}
+
+ExpressionProperties Expr_LT::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    Interval restrictLhs = restrictLeft(lhsConstraint, rhsConstraint);
+    Interval restrictRhs = restrictRight(lhsConstraint, rhsConstraint);
+    // TODO: save new interval for variables on stack (inside corresponding block)
+    std::cout << "< restriction left: " << restrictLhs << std::endl;
+    return ExpressionProperties(); // TODO: logical properties
+}
+
+ExpressionProperties Expr_GT::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    Interval restrictLhs = restrictRight(lhsConstraint, rhsConstraint);
+    Interval restrictRhs = restrictLeft(lhsConstraint, rhsConstraint);
+    // TODO: save new interval for variables on stack (inside corresponding block)
+    std::cout << "> restriction left: " << restrictLhs << std::endl;
+    return ExpressionProperties(); // TODO: logical properties
+}
+
+ExpressionProperties Expr_LE::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    Interval restrictLhs = restrictLeft(lhsConstraint, rhsConstraint);
+    Interval restrictRhs = restrictRight(lhsConstraint, rhsConstraint);
+    // TODO: save new interval for variables on stack (inside corresponding block)
+    std::cout << "<= restriction left: " << restrictLhs << std::endl;
+    return ExpressionProperties(); // TODO: logical properties
+}
+
+ExpressionProperties Expr_GE::properties(/*SymbolTable*/){
+    Interval lhsConstraint = getLeft()->properties().interval;
+    Interval rhsConstraint = getRight()->properties().interval;
+    Interval restrictLhs = restrictRight(lhsConstraint, rhsConstraint);
+    Interval restrictRhs = restrictLeft(lhsConstraint, rhsConstraint);
+    // TODO: save new interval for variables on stack (inside corresponding block)
+    std::cout << ">= restriction left: " << restrictLhs << std::endl;
+    return ExpressionProperties(); // TODO: logical properties
+}
+
+// --- If-Else ---
 void IfElse::solveConstraints(/*SymbolTable*/){
     // Hier könnte auch ein Vergleich stattfinden. Was dann?
     // Dieser schränkt u.U. nur den Bereich einer Variable ein.
     ExpressionProperties prop = condition->properties();
+    // TODO: generate interval stack for variables
     if(isJust(prop.satisfiable)){
         if(fromJust(prop.satisfiable)){
             std::cout << "if accessible" << std::endl;
             if(fromJust(prop.tautology)){
-                std::cout << "if always fulfilled" << std::endl; // move then-block up
+                std::cout << "if: then always accessed" << std::endl; // TODO: move then-block up
+                // TODO: populate stack to then branch
+            }
+            else{
+                // TODO: populate stack to then and else branch
             }
         }
         else{
-            std::cout << "if not accessible" << std::endl; // move else-block up or eleminate completely
+            std::cout << "if: then not accessible" << std::endl; // TODO: move else-block up or eliminate completely
+            // TODO: populate stack to else branch
         }
     }
     else{

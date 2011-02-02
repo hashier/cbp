@@ -64,6 +64,14 @@ Interval operator/ (Interval const& lhs, Interval const& rhs);
 // set operations
 // x ∈ [a,b] ?
 bool in(int x, Interval const& i);
+// A ∩ B
+Interval operator& (Interval const& lhs, Interval const& rhs);
+
+// A = [a,b], B = [c,d]
+// A ∩ (B ∪ [-∞,c])
+Interval restrictLeft(Interval const& lhs, Interval const& rhs);
+// A ∩ (B ∪ [d,+∞])
+Interval restrictRight(Interval const& lhs, Interval const& rhs);
 
 // I/O
 std::ostream& operator<<(std::ostream& os, Interval const& i);
