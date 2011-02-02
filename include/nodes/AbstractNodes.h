@@ -27,7 +27,7 @@ class Node {
         virtual void dump(int num = 0) = 0;
         
         virtual void constProp() = 0;
-		virtual void solveConstraints(/*SymbolTable*/) = 0;
+        virtual void solveConstraints(/*SymbolTable*/) = 0;
 
         virtual void gen(CodeGen* out) {
             (*out) << Nothing(typeid(this).name());
@@ -63,9 +63,9 @@ class Expression;
 class Statement : public Node {
     public:
         virtual bool isConst() = 0;
-		virtual constant* getConstant() = 0;
-		
-		virtual void solveConstraints(/*SymbolTable*/);
+        virtual constant* getConstant() = 0;
+
+        virtual void solveConstraints(/*SymbolTable*/);
 
         /** Recursively calculates stack offsets.
          * @param offset Current position on stack.
@@ -77,9 +77,8 @@ class Statement : public Node {
 
         virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) { return 0; }
 
-        virtual std::vector<Node*> getChildNodes() = 0;
-
-        virtual void replaceChild(Node* currentChild, Node* newChild) = 0;
+        virtual std::vector<Node**> getChildren() {assert(false);std::vector<Node**> a; return a;};
+        virtual Node* clone() {assert(false);return NULL;};
 };
 
 class Type;
@@ -88,8 +87,8 @@ class Expression : public Statement {
     public:
         virtual Type* getType() = 0;
         
-		virtual void solveConstraints(/*SymbolTable*/);
-		virtual ExpressionProperties properties(/*SymbolTable*/);
+        virtual void solveConstraints(/*SymbolTable*/);
+        virtual ExpressionProperties properties(/*SymbolTable*/);
 
         /** This generates an expression's l-value.
          * Note that most expressions do not have an l-value, which is why
@@ -114,9 +113,6 @@ public:
         
     std::string &getIdentifier() { return identifier; }
     int getLineDefined() { return lineDefined; }
-    virtual std::vector<Node**> getChildren() {assert(false);std::vector<Node**> a; return a;};
-    virtual Node* clone() {assert(false);return NULL;};
-    
     virtual void solveConstraints(/*SymbolTable*/){}
     virtual ~Declaration() { }
 
