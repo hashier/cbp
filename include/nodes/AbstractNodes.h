@@ -50,6 +50,9 @@ class Node {
         virtual ~Node() {
         }
 
+        virtual std::vector<Node**> getChildren(); {assert(false);std::vector<Node**> a; return a;};
+        virtual Node* clone() {assert(false);return NULL;};
+
         static SymbolTable::SymbolTable *symbolTable;
 private:
         int lineNumber;
@@ -76,9 +79,6 @@ class Statement : public Node {
         }
 
         virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) { return 0; }
-
-        virtual std::vector<Node**> getChildren() {assert(false);std::vector<Node**> a; return a;};
-        virtual Node* clone() {assert(false);return NULL;};
 };
 
 class Type;
