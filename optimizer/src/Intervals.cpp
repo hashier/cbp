@@ -17,10 +17,10 @@ namespace detail {
 }
 
 Interval::Interval(double val)
-    : low(std::floor(val)), up(std::ceil(val)) {}
+    : low((int)std::floor(val)), up((int)std::ceil(val)) {}
 
 Interval::Interval(double low_, double up_)
-    : low(std::floor(low_)), up(std::ceil(up_)) {}
+    : low((int)std::floor(low_)), up((int)std::ceil(up_)) {}
 
 Interval Interval::world() {
     return Interval(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
