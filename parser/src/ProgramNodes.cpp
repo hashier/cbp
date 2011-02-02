@@ -128,6 +128,16 @@ void Block::dump(int num) {
     indent(num); std::cout << "}" << std::endl;
 }
 
+Node* Block::clone()
+{
+    Block* copy = new Block();
+    std::list<Statement*>::iterator it;
+    for ( it = subs.begin() ; it != subs.end(); it++ ) {
+        copy->add((Statement*)(*it)->clone());
+    }
+    return copy;
+}
+
 SwitchCase::Case::~Case()
 {
     delete condition;
@@ -204,6 +214,12 @@ void Return::dump(int num) {
     if(expr==NULL) return;
     indent(num); std::cout << "expr:" << std::endl;
     expr->dump(num+1);
+}
+
+Node* Return::clone()
+{
+    Return* copy = new Return(expr==NULL ? NULL : (Expression*)expr->clone());
+    return copy;
 }
 
 Return::~Return() {

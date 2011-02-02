@@ -94,6 +94,7 @@ class Block : public Statement {
         void insertBefore(unsigned int where, Statement* item);
         void insertAfter(unsigned int where, Statement* item);
         void erase(unsigned int where);
+        virtual Node* clone();
         virtual ~Block();
     private:
         std::list<Statement*> subs;
@@ -177,6 +178,7 @@ class Return : public Statement {
         void gen(CodeGen* out, bool outermost);
         virtual std::vector<Node**> getChildren();
         Expression* getExpr() { return expr; };
+        virtual Node* clone();
     private:
         Expression* expr;
 };
