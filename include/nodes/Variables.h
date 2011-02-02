@@ -38,11 +38,13 @@ class GlobalVariable : public Variable {
     public:
         GlobalVariable(std::string* identifier, Type* type);
         virtual Address getAddress();
+        std::vector<Node**> getChildren();
 };
 
 class LocalVariable : public Variable {
     public:
         LocalVariable(std::string* identifier, Type* type);
+        std::vector<Node**> getChildren();
 };
 
 class StructVariable : public Variable {
@@ -54,7 +56,8 @@ class StructVariable : public Variable {
         virtual int setStackOffset(int offset, bool offBySize = true);
         virtual Address getAddress();
         void dump(int num = 0);
-        int getExplicitOffset() { return explicitOffset; }
+        int getExplicitOffset() { return explicitOffset; };
+        std::vector<Node**> getChildren();
     protected:
         int explicitOffset;
         virtual int getMemoryOffset();

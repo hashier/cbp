@@ -19,8 +19,7 @@ class Unary : public Expression {
         void constProp();
         bool isConst();
         constant* getConstant();
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     protected:
         Expression* sub;
 };
@@ -36,8 +35,7 @@ class Binary : public Expression {
         Expression *getLeft() { return left; }
         Expression *getRight() { return right; }
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     protected:
         Expression* left;
         Expression* right;
@@ -62,8 +60,7 @@ class Expr_Cast : public Expression {
         virtual void genLeft(CodeGen* out);
         virtual void gen(CodeGen* out);
         virtual Type* getType() { return castType; }  // Fun fact: Returning this is pretty much the entire functionality of Expr_Cast!
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     private:
         Type* castType;
         Expression* expr;
@@ -203,8 +200,7 @@ class Expr_Struc : public Expression {
         virtual void gen(CodeGen* out);
         virtual void genLeft(CodeGen* out);
         virtual Type* getType();
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     private:
         Expression* sub;
         StructVariable* var;
@@ -229,9 +225,8 @@ class Constant : public Atom {
 public:
     bool isConst();
     void constProp() { };
-    virtual std::vector<Node*> getChildNodes();
+    virtual std::vector<Node**> getChildren();
     virtual void genLeft(CodeGen* out);
-    virtual void replaceChild(Node* currentChild, Node* newChild);
 };
 
 class ConstInt : public Constant {
@@ -276,9 +271,7 @@ class Expr_Identifier : public Atom {
         Variable *getRef() { return ref; }
         void setRef(Variable* ref);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
-        
+        virtual std::vector<Node**> getChildren();
 };
 
 class FuncCall : public Atom {
@@ -294,7 +287,6 @@ public:
     virtual Type* getType();
     Function* getFunction();
     std::list<Expression*>* getArguments();
-    virtual std::vector<Node*> getChildNodes();
-    virtual void replaceChild(Node* currentChild, Node* newChild);
+    virtual std::vector<Node**> getChildren();
 };
 

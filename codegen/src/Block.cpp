@@ -9,26 +9,29 @@ Block::Block()
     dag = new DAG::DirectedAcyclicGraph();
 }
 
-std::list<Statement*> Block::getSubStatements()
+void Block::insertBefore(unsigned int where, Statement* item)
 {
-    return subs;
+    std::list<Statement*>::iterator it = subs.begin();
+    for(unsigned int i=0; i<where; i++)
+        it++;
+    subs.insert(it, item);
 }
 
-std::list<Statement*>& Block::getSubStatementsRef()
+void Block::insertAfter(unsigned int where, Statement* item)
 {
-    return subs;
+    std::list<Statement*>::iterator it = subs.begin();
+    for(unsigned int i=0; i<where; i++)
+        it++;
+    it++;
+    subs.insert(it, item);
 }
 
-void Block::insertAfter(Statement* where, Statement* item)
+void Block::erase(unsigned int where)
 {
-    for(std::list<Statement*>::iterator it=subs.begin(); it!=subs.end(); it++)
-    {
-        if(*it==where)
-        {
-            subs.insert(++it, item);
-            return;
-        }
-    }
+    std::list<Statement*>::iterator it = subs.begin();
+    for(unsigned int i=0; i<where; i++)
+        it++;
+    subs.erase(it);
 }
 
 void Block::gen(CodeGen* out, bool outermost) {

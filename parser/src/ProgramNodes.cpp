@@ -67,9 +67,12 @@ void File::add(Function* func) {
     functions.push_back(func);
 }
 
-std::list<Function*>& File::getFunctions()
+std::vector<Function**> File::getFunctions()
 {
-    return functions;
+    std::vector<Function**> temp;
+    for(std::list<Function*>::iterator it=functions.begin(); it!=functions.end(); ++it)
+        temp.push_back((Function**)&(*it));
+    return temp;
 }
 
 void File::dump(int num) {

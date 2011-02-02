@@ -21,7 +21,7 @@ class Function : public Declaration {
         Function(std::string* identifier, Func_abi abi, std::list<Variable*>* arguments, Type* type, Statement* statement = NULL);
         void dump(int num = 0);
         void constProp();
-		virtual void solveConstraints(/*SymbolTable*/);
+        virtual void solveConstraints(/*SymbolTable*/);
         virtual void gen(CodeGen* out);
         Type* getType() { return type; }
         Label getMark(CodeGen* out);
@@ -45,6 +45,7 @@ class TypeDecl : public Declaration {
         void constProp() { };
         Type* getType() { return type; }
         static Type* getDeclaredType(std::string *identifier);
+        std::vector<Node**> getChildren();
     protected:
         Type* type;
 };
@@ -59,11 +60,12 @@ class File : public Node {
         void add(TypeDecl* type);
         void add(Variable* var);
         void add(Function* func);
-        std::list<Function*>& getFunctions();
+        std::vector<Function**> getFunctions();
         void dump(int num = 0);
         void constProp();
-		virtual void solveConstraints();
+        virtual void solveConstraints();
         void gen(CodeGen* gen);
+        std::vector<Node**> getChildren();
         virtual ~File();
     private:
         std::list<TypeDecl*> types;
@@ -85,13 +87,12 @@ class Block : public Statement {
             this->gen(out, false);
         }
         void gen(CodeGen* out, bool outermost);
-        std::list<Statement*> getSubStatements();
-        std::list<Statement*>& getSubStatementsRef();
         virtual int calcStackOffset(int offset);
         virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
-        void insertAfter(Statement* where, Statement* item);
+        virtual std::vector<Node**> getChildren();
+        void insertBefore(unsigned int where, Statement* item);
+        void insertAfter(unsigned int where, Statement* item);
+        void erase(unsigned int where);
         virtual ~Block();
     private:
         std::list<Statement*> subs;
@@ -109,8 +110,7 @@ class IfElse : public Statement {
         virtual void solveConstraints();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     private:
         Expression* condition;
         Statement* then;
@@ -136,8 +136,7 @@ class SwitchCase : public Statement {
         bool isConst();
         constant* getConstant();
         void gen(CodeGen* out);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     private:
         Expression* which;
         std::list<Case*>* cases;
@@ -154,8 +153,7 @@ class WhileLoop : public Statement {
         virtual ~WhileLoop();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     private:
         Expression* condition;
         Statement* body;
@@ -174,8 +172,7 @@ class Return : public Statement {
             this->gen(out, false);
         }
         void gen(CodeGen* out, bool outermost);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
         Expression* getExpr() { return expr; };
     private:
         Expression* expr;
@@ -191,8 +188,7 @@ class Local : public Statement {
         /** Sets the memory offset of the wrapped Variable and returns its size. */
         int calcStackOffset(int offset);
         virtual void gen(CodeGen* out);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
         virtual ~Local();
     private:
         Variable* var;
@@ -228,8 +224,7 @@ class ForLoop : public Statement {
         virtual ~ForLoop();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
-        virtual std::vector<Node*> getChildNodes();
-        virtual void replaceChild(Node* currentChild, Node* newChild);
+        virtual std::vector<Node**> getChildren();
     private:
         Variable* iterator;
         Expression* init_value;
@@ -248,8 +243,7 @@ public:
     virtual ~GotoLabel();
     virtual void gen(CodeGen* out);
     virtual int calcStackOffset(int offset);
-    virtual std::vector<Node*> getChildNodes();
-    virtual void replaceChild(Node* currentChild, Node* newChild);
+    virtual std::vector<Node**> getChildren();
     Label* getLabel() { return label; };
     void genLabel(CodeGen* out);
 private:
@@ -266,8 +260,7 @@ public:
     virtual ~Goto();
     virtual void gen(CodeGen* out);
     virtual int calcStackOffset(int offset);
-    virtual std::vector<Node*> getChildNodes();
-    virtual void replaceChild(Node* currentChild, Node* newChild);
+    virtual std::vector<Node**> getChildren();
     GotoLabel* getGotoLabel() {return gotoLabel;}
 
 private:

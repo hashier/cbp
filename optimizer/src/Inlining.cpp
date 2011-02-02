@@ -9,94 +9,51 @@
 #include "ProgramNodes.h"
 #include "Variables.h"
 
-//get function calls from a certain function
-//if call=NULL get all function calls
-std::list<FuncCall*> getFunctionCalls(Function* func, Function* call)
-{
-    //result list
-    std::list<FuncCall*> calls;
 
-    //is valid function
-    Block* block = dynamic_cast<Block*>(func->getStatement());
-    if(block==NULL) return calls;
-
-    //get all statements of current function
-    std::list<Statement*> statements = block->getSubStatements();
-
-    //for each function
-    for(std::list<Statement*>::iterator it=statements.begin(); it!=statements.end(); ++it)
-    {
-        //statement to explore
-        Statement* statement = *it;
-
-        //check if statement is function
-        FuncCall* call_ = dynamic_cast<FuncCall*>(statement);
-
-        if( ((call==NULL)&&(call_!=NULL)) || ((call_!=NULL)&&(call_->getFunction()==call)) )
-        {
-            calls.push_back(call_);
-        }
-    }
-
-    return calls;
-}
-
-
-std::list<Statement*> getStatementsByList(Function* func)
-{
-    std::list<Statement*> result;
-
-    //get all statements of host function
-    Block* block = dynamic_cast<Block*>(func->getStatement());
-    if(block!=NULL)
-    {
-        result = block->getSubStatements();
-    }
-   
-    return result;
-}
-
-std::vector<Statement*> getStatementsByVector(Function* func)
+std::vector<Statement*> getStatements(Function* func)
 {
     std::vector<Statement*> result;
 
     //get all statements of host function
-    Block* block = dynamic_cast<Block*>(func->getStatement());
+    Block* block = dynamic_cast<Block*>(*func->getChildren()[0]);
     if(block==NULL) return result;
 
-    std::list<Statement*> list = block->getSubStatements();
+    std::vector<Node**> list = block->getChildren();
 
-    for(std::list<Statement*>::iterator it=list.begin(); it!=list.end(); ++it)
+    for(unsigned int i=0; i<list.size(); i++)
     {
-        result.push_back(*it);
+        Statement* statement = dynamic_cast<Statement*>(*list[i]);
+        if(statement!=NULL)
+            result.push_back(statement);
     }
 
-    return result;  
+    return result;
 }
 
 void optimizeTree_traverseTree_ReplaceArguments(Statement* statement, Variable* arg, Expression* exp)
 {
     //get all child nodes
-    std::vector<Node*> childs = statement->getChildNodes();
+    std::vector<Node**> childs = statement->getChildren();
 
     for(unsigned int i=0; i<childs.size(); i++)
     {
         //if child is a variable
-        Expr_Identifier* var = dynamic_cast<Expr_Identifier*>(childs[i]);
+        Expr_Identifier* var = dynamic_cast<Expr_Identifier*>(*childs[i]);
         if(var!=NULL)
         {
             //its the argument we are going to replace?
             if(var->getRef()==arg)
             {
                 std::cout << "    -replace var '" << var->getRef()->getIdentifier() << "' at line " << var->getLineNumber() << std::endl; 
-                statement->replaceChild(var, exp);
+                //statement->replaceChild(var, exp);
+                delete childs[i];
+                *childs[i] = exp;
             }
-
             continue;
         }
 
         //if childs is a Statement
-        Statement* child = dynamic_cast<Statement*>(childs[i]);
+        Statement* child = dynamic_cast<Statement*>(*childs[i]);
         if(child==NULL) continue;
         optimizeTree_traverseTree_ReplaceArguments(child, arg, exp);
     }
@@ -105,12 +62,12 @@ void optimizeTree_traverseTree_ReplaceArguments(Statement* statement, Variable* 
 void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* parentStatement, GotoLabel* label, Expr_Identifier* var)
 {
     //get all child nodes
-    std::vector<Node*> childs = parentStatement->getChildNodes();
+    std::vector<Node**> childs = parentStatement->getChildren();
 
     for(unsigned int i=0; i<childs.size(); i++)
     {
         //if child is a return
-        Return* ret = dynamic_cast<Return*>(childs[i]);
+        Return* ret = dynamic_cast<Return*>(*childs[i]);
         if(ret!=NULL)
         {
             std::cout << "    -replace return at line " << ret->getLineNumber() << std::endl;
@@ -128,22 +85,23 @@ void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* parentStat
             assignResult->getRight()->setLineNumber(-1);
 
             //replace return with assign result statement
-            parentStatement->replaceChild(ret, assignResult);
+            delete ret;
+            *childs[i] = assignResult;
 
             //insert jump to end
             Goto* goto_ = new Goto(label);
             goto_->setLineNumber(-1);
-            block->insertAfter(assignResult, goto_);
-            
+            block->insertAfter(i+1, goto_);
+
             continue;
         }
 
         //if childs is a Statement
-        Statement* child = dynamic_cast<Statement*>(childs[i]);
+        Statement* child = dynamic_cast<Statement*>(*childs[i]);
         if(child==NULL) continue;
 
         //enter new block?
-        Block* newBlock = dynamic_cast<Block*>(childs[i]); 
+        Block* newBlock = dynamic_cast<Block*>(*childs[i]); 
         if(newBlock==NULL)
         {
             optimizeTree_traverseTree_ReplaceReturn(block, child, label, var);
@@ -156,15 +114,26 @@ void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* parentStat
 void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call)
 {
     Block* parentBlock = (Block*)parentFunc->getStatement();
-    std::list<Statement*>& parentBlockStatements = parentBlock->getSubStatementsRef();
-    std::list<Statement*>::iterator itParentStatement = find(parentBlockStatements.begin(), parentBlockStatements.end(), parentStatement);
+    std::vector<Node**> parentBlockChildren = parentBlock->getChildren();
+    
+    //get parent statement index in parent function block
+    unsigned int parentStatementIndex=0;
+    for(unsigned int i=0; i<parentBlockChildren.size(); i++)
+    {
+        Statement* statement = dynamic_cast<Statement*>(*parentBlockChildren[i]);
+        if( (statement!=NULL) && (statement==parentStatement) )
+        {
+            parentStatementIndex = i;
+            break;
+        }
+    }
 
 //-----------------------------------------------------------------------------
 //create new local variable for result
 
     //create unique name
     std::stringstream ssName;
-    ssName << "InlineRet_" << parentBlock->getSubStatements().size(); //TODO: create unique pre/suffix
+    ssName << "InlineRet_" << parentBlock->getChildren().size(); //TODO: create unique pre/suffix
 
     //create local var
     std::string* varRetName = new std::string(ssName.str()); 
@@ -174,23 +143,14 @@ void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call
     localVarRet->setLineNumber(-1); //means lines was created by optimizer
 
     //insert local var before function call
-    parentBlockStatements.insert(itParentStatement, localVarRet);
+    parentBlock->insertBefore(parentStatementIndex, localVarRet);
 
 //-----------------------------------------------------------------------------
 //create copy of inline function
 
-    //create new block
-    Block* inlineBlock = new Block();
+    //create copy of block
+    Block* inlineBlock = (Block*)parentFunc->getStatement()->clone();
     inlineBlock->setLineNumber(-1);
-
-    //get statements from inline function
-    std::list<Statement*> inlineBlockStatements = ((Block*)call->getFunction()->getStatement())->getSubStatements();
-
-    //add statements to block
-    for(std::list<Statement*>::iterator it=inlineBlockStatements.begin(); it!=inlineBlockStatements.end(); ++it)
-    {
-        inlineBlock->add(*it);
-    }
 
     //add additional jump destination at the end for
     GotoLabel* labelEnd = new GotoLabel();
@@ -226,7 +186,7 @@ void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call
 //insert function code after new variable
 
     //insert block before parent statement
-    parentBlockStatements.insert(itParentStatement, inlineBlock);
+    parentBlock->insertAfter(parentStatementIndex, inlineBlock);
 
 //-----------------------------------------------------------------------------
 //remove parent statement, if function call
@@ -237,7 +197,7 @@ void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call
     {
         //remove old call
         delete parentStatement;
-        parentBlockStatements.erase(itParentStatement);
+        parentBlock->erase(parentStatementIndex+1);
     }
 }
 
@@ -253,29 +213,29 @@ unsigned int getStatementCount(Function* func)
     Block* block = dynamic_cast<Block*>(func->getStatement());
     if(block==NULL) return 0;
 
-    return block->getSubStatements().size();
+    return block->getChildren().size();
 }
 
 void optimizeTree_traverseTree(Function* parentFunc, Statement* parentStatement, Statement* statement)
 {
     //if statement is function call from source code
     FuncCall* call = dynamic_cast<FuncCall*>(statement);
-    if( (call!=NULL) && (call->getFunction()->getAbi()==Abi_default) )
+    if( (call!=NULL) && (call->getFunction()!=parentFunc) && (call->getFunction()->getAbi()==Abi_default) )
     {
         std::cout << "   -inline function call '" << call->getFunction()->getIdentifier() << "' in line '" << parentStatement->getLineNumber() << "'" << std::endl;
 
         //do inlining on FuncCall
         doInlining(parentFunc, parentStatement, call);
-        
+
         //finish current node
         return;
     }
 
     //get all child nodes
-    std::vector<Node*> childs = statement->getChildNodes();
+    std::vector<Node**> childs = statement->getChildren();
     for(unsigned int i=0; i<childs.size(); i++)
     {
-        Statement* childStatement = dynamic_cast<Statement*>(childs[i]);
+        Statement* childStatement = dynamic_cast<Statement*>(*childs[i]);
         if(childStatement==NULL) continue;
        
         optimizeTree_traverseTree(parentFunc, parentStatement, childStatement);
@@ -287,26 +247,26 @@ void optimizeTree_Inlining(File* file)
     std::cout << " -Inlining" << std::endl;
 
     //get list of all function in source file
-    std::list<Function*>& functions = file->getFunctions();
+    std::vector<Function**> functions = file->getFunctions();
 
     //calculate statement count for each function  
     std::vector<unsigned int> statementCounts;
-    for(std::list<Function*>::iterator it=functions.begin(); it!=functions.end(); ++it)
+    for(unsigned int i=0; i<functions.size(); i++)
     {
-        statementCounts.push_back(getStatementCount(*it));
+        statementCounts.push_back(getStatementCount(*functions[i]));
     }
 
     //process each function and search for function calls to inline
-    for(std::list<Function*>::iterator it=functions.begin(); it!=functions.end(); ++it)
+    for(unsigned int i=0; i<functions.size(); i++)
     {
         //current function
-        Function* func = *it;
+        Function* func = *functions[i];
 
         //skip external functions
         if(func->getAbi()!=Abi_default) continue;
 
         //get all statements of function
-        std::vector<Statement*> statements= getStatementsByVector(func);
+        std::vector<Statement*> statements= getStatements(func);
 
         std::cout << "  -analyze function '" << func->getIdentifier() << "'" << std::endl;
         
@@ -319,159 +279,92 @@ void optimizeTree_Inlining(File* file)
     }
 }
 
-std::vector<Node*> Block::getChildNodes()
+std::vector<Node**> Block::getChildren()
 {
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     for(std::list<Statement*>::iterator it=subs.begin(); it!=subs.end(); ++it)
-        result.push_back(*it);
+        result.push_back((Node**)&(*it));
     return result;
 }
 
-void Block::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> WhileLoop::getChildren()
 {
-    replace(subs.begin(), subs.end(), (Statement*)currentChild, (Statement*)newChild);
-}
-
-std::vector<Node*> WhileLoop::getChildNodes()
-{
-    std::vector<Node*> result;
-    result.push_back(this->condition);
-    result.push_back(this->body);
+    std::vector<Node**> result;
+    result.push_back((Node**)&condition);
+    result.push_back((Node**)&body);
     return result;
 }
 
-void WhileLoop::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> IfElse::getChildren()
 {
-    if(condition==currentChild) condition = (Expression*)newChild;
-    if(body==currentChild) body = (Statement*)newChild;
-}
-
-std::vector<Node*> IfElse::getChildNodes()
-{
-    std::vector<Node*> result;
-    result.push_back(this->condition);
-    result.push_back(this->otherwise);
-    result.push_back(this->then);
+    std::vector<Node**> result;
+    result.push_back((Node**)&condition);
+    result.push_back((Node**)&then);
+    result.push_back((Node**)&otherwise);
     return result;
 }
 
-void IfElse::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Unary::getChildren()
 {
-    if(currentChild==condition) condition = (Expression*)newChild;
-    if(currentChild==otherwise) otherwise = (Statement*)newChild;
-    if(currentChild==then) then = (Statement*)newChild;
-}
-
-std::vector<Node*> Unary::getChildNodes()
-{
-    std::vector<Node*> result;
-    result.push_back(this->sub);
+    std::vector<Node**> result;
+    result.push_back((Node**)&sub);
     return result;
 }
 
-void Unary::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Binary::getChildren()
 {
-    if(currentChild==sub) sub = (Expression*)newChild;
-}
-
-std::vector<Node*> Binary::getChildNodes()
-{
-    std::vector<Node*> result;
-    result.push_back(this->left);
-    result.push_back(this->right);
+    std::vector<Node**> result;
+    result.push_back((Node**)&left);
+    result.push_back((Node**)&right);
     return result;
 }
 
-void Binary::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Return::getChildren()
 {
-    if(left==currentChild) left = (Expression*)newChild;
-    if(right==currentChild) right = (Expression*)newChild;
-}
-
-std::vector<Node*> Return::getChildNodes()
-{
-    std::vector<Node*> result;
-    result.push_back(this->expr);
+    std::vector<Node**> result;
+    result.push_back((Node**)&expr);
     return result;
 }
 
-void Return::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> ForLoop::getChildren()
 {
-    if(expr==currentChild) expr = (Expression*)newChild;
-}
-
-std::vector<Node*> ForLoop::getChildNodes()
-{
-    std::vector<Node*> result;
-    result.push_back(this->init_value);
-    result.push_back(this->final_value);
-    result.push_back(this->step);
-    result.push_back(this->body);
+    std::vector<Node**> result;
+    result.push_back((Node**)&init_value);
+    result.push_back((Node**)&final_value);
+    result.push_back((Node**)&step);
+    result.push_back((Node**)&body);
     return result;
 }
 
-void ForLoop::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> SwitchCase::getChildren()
 {
-    if(init_value==currentChild) init_value = (Expression*)newChild;
-    if(final_value==currentChild) final_value = (Expression*)newChild;
-    if(step==currentChild) step = (Expression*)newChild;
-    if(body==currentChild) body = (Statement*)newChild;
-}
-
-
-std::vector<Node*> SwitchCase::getChildNodes()
-{
-    std::vector<Node*> result;
-    result.push_back(this->which);
+    std::vector<Node**> result;
+    result.push_back((Node**)&which);
     for(std::list<Case*>::iterator it=cases->begin(); it!=cases->end(); ++it)
     {
         Case* c = *it;
         //result.push_back(c->condition); <-- PERVERS
-        result.push_back(c->action);
+        result.push_back((Node**)&(c->action));
     }
     return result;
 }
 
-void SwitchCase::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Constant::getChildren()
 {
-    for(std::list<Case*>::iterator it=cases->begin(); it!=cases->end(); ++it)
-    {
-        Case* c = *it;
-        if(c->action==currentChild) c->action=(Statement*)newChild;
-    } 
-}
-
-std::vector<Node*> Constant::getChildNodes()
-{
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     return result;
 }
 
-void Constant::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Expr_Cast::getChildren()
 {
-
-}
-
-std::vector<Node*> Expr_Cast::getChildNodes()
-{
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     return result;
 }
 
-void Expr_Cast::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Expr_Identifier::getChildren()
 {
-
-}
-
-std::vector<Node*> Expr_Identifier::getChildNodes()
-{
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     return result;
-}
-
-void Expr_Identifier::replaceChild(Node* currentChild, Node* newChild)
-{
-
 }
 
 void Expr_Identifier::setRef(Variable* ref)
@@ -479,62 +372,88 @@ void Expr_Identifier::setRef(Variable* ref)
     this->ref = ref;
 }
 
-std::vector<Node*> Expr_Struc::getChildNodes()
+std::vector<Node**> Expr_Struc::getChildren()
 {
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     return result;
 }
 
-void Expr_Struc::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> FuncCall::getChildren()
 {
-
-}
-
-std::vector<Node*> FuncCall::getChildNodes()
-{
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     
-    //std::list<Expression*>* arguments = this->getArguments();
-    //for(std::list<Expression*>::iterator it=arguments->begin(); it!=arguments->end(); ++it)
-    //    result.push_back(*it);
+    std::list<Expression*>* arguments = this->getArguments();
+    for(std::list<Expression*>::iterator it=arguments->begin(); it!=arguments->end(); ++it)
+        result.push_back((Node**)&(*it));
 
     return result;
 }
 
-void FuncCall::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Local::getChildren()
 {
-
-}
-
-std::vector<Node*> Local::getChildNodes()
-{
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     return result;
 }
 
-void Local::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> GotoLabel::getChildren()
 {
-    
-}
-
-std::vector<Node*> GotoLabel::getChildNodes()
-{
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     return result;
 }
 
-void GotoLabel::replaceChild(Node* currentChild, Node* newChild)
+std::vector<Node**> Goto::getChildren()
 {
-
-}
-
-std::vector<Node*> Goto::getChildNodes()
-{
-    std::vector<Node*> result;
+    std::vector<Node**> result;
     return result;
 }
 
-void Goto::replaceChild(Node* currentChild, Node* newChild)
-{
+//------------------
 
+std::vector<Node**> File::getChildren()
+{
+    std::vector<Node**> childs;
+
+    for(std::list<TypeDecl*>::iterator it=types.begin(); it!=types.end(); ++it)
+        childs.push_back((Node**)&(*it));
+
+    for(std::list<Variable*>::iterator it=variables.begin(); it!=variables.end(); ++it)
+        childs.push_back((Node**)&(*it));
+
+    for(std::list<Function*>::iterator it=functions.begin(); it!=functions.end(); ++it)
+        childs.push_back((Node**)&(*it));
+
+    return childs;
 }
+
+std::vector<Node**> TypeDecl::getChildren()
+{
+    std::vector<Node**> childs;
+    childs.push_back((Node**)&identifier);
+    childs.push_back((Node**)&type);
+    return childs;
+}
+
+std::vector<Node**> StructVariable::getChildren()
+{
+    std::vector<Node**> childs;
+    childs.push_back((Node**)&identifier);
+    childs.push_back((Node**)&type);
+    return childs;
+}
+
+std::vector<Node**> LocalVariable::getChildren()
+{
+    std::vector<Node**> childs;
+    childs.push_back((Node**)&identifier);
+    childs.push_back((Node**)&type);
+    return childs;
+}
+
+std::vector<Node**> GlobalVariable::getChildren()
+{
+    std::vector<Node**> childs;
+    childs.push_back((Node**)&identifier);
+    childs.push_back((Node**)&type);
+    return childs;
+}
+
