@@ -429,3 +429,14 @@ void SwitchCase::dump(int num) {
     num -= 1;
     indent(num); std::cout << "}" << std::endl;
 }
+
+std::vector<Node**> TypeDecl::getChildren()
+{
+    return std::vector<Node **>();
+}
+
+Node *TypeDecl::clone()
+{
+    TypeDecl *copy = new TypeDecl(this);
+}
+

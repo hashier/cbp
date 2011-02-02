@@ -33,6 +33,10 @@ class Type
             return false;
         }
 
+        Type() { }
+
+        Type(Type *type);
+
         virtual ~Type() { }
 };
 
@@ -41,6 +45,9 @@ class TypeSimple : public Type
     public:
         TypeSimple(BaseType baseType)
             : baseType(baseType) { }
+
+        TypeSimple(TypeSimple *type)
+            : baseType(type->baseType) { }
 
         std::string getString() const
         {
@@ -122,6 +129,9 @@ class TypeVoid : public Type {
         TypeVoid() {
         }
 
+        TypeVoid(TypeVoid *type) {
+        }
+
         virtual int getSize() {
             return 0;
         }
@@ -139,6 +149,8 @@ class TypeStruct : public Type
     public:
         TypeStruct(std::map<std::string, StructVariable*>* members);
 
+        TypeStruct(TypeStruct *type);
+
         std::string getString() const;
         inline StructVariable* getVariable(std::string identifier) { return (*members)[identifier]; }
 
@@ -154,6 +166,9 @@ class TypePointer : public Type
     public:
         TypePointer(Type* type) : type(type) {
         }
+
+        TypePointer(TypePointer *type)
+            : type(new Type(type)) { }
 
         std::string getString() const
         {

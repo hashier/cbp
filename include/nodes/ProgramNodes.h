@@ -46,6 +46,7 @@ class TypeDecl : public Declaration {
         Type* getType() { return type; }
         static Type* getDeclaredType(std::string *identifier);
         std::vector<Node**> getChildren();
+		virtual Node* clone();
     protected:
         Type* type;
 };
