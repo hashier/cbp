@@ -1,11 +1,28 @@
 func main () : void {
    local var x : uint32
-   local var y : float32
+   local var y : uint32
+   local var z : uint32
    local var i : uint32
+
    x = 1
-   y = 1.0 + x
+   y = 1
+   z = 2
+   i = x + y
+
+   for x = 0 .. 599 {
+		x = x + 1
+		i = x
+		z = 3 + x
+   }
+
+   i = x + 2
+   i = y + 2
+   i = z
+   x = 1
+
+   y = 1 + x
    i = 1 + 2 * 3
-   x = 3.3
-   1 + 1
+   x = 3
+
    return i + x * y + (5*(6 - 4))
 }
