@@ -41,12 +41,13 @@ class Function : public Declaration {
 class TypeDecl : public Declaration {
     public:
         TypeDecl(std::string* identifier, Type* type);
+        TypeDecl(TypeDecl *node);
         void dump(int num = 0);
         void constProp() { };
         Type* getType() { return type; }
         static Type* getDeclaredType(std::string *identifier);
         std::vector<Node**> getChildren();
-		virtual Node* clone();
+        virtual Node* clone();
     protected:
         Type* type;
 };

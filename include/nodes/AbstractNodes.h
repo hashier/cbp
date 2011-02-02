@@ -50,8 +50,8 @@ class Node {
         virtual ~Node() {
         }
 
-        virtual std::vector<Node**> getChildren(); {assert(false);std::vector<Node**> a; return a;};
-        virtual Node* clone() {assert(false);return NULL;};
+        virtual std::vector<Node**> getChildren() {assert(false);std::vector<Node**> a; return a;}
+        virtual Node* clone() {assert(false);return NULL;}
 
         static SymbolTable::SymbolTable *symbolTable;
 private:
@@ -110,6 +110,8 @@ class Declaration : public Node {
 public:
     Declaration(std::string &identifier, int lineDefined)
         : identifier(identifier), lineDefined(lineDefined) { }
+    Declaration(Declaration *decl)
+        : identifier(decl->identifier), lineDefined(decl->lineDefined) { }
         
     std::string &getIdentifier() { return identifier; }
     int getLineDefined() { return lineDefined; }

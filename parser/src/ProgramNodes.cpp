@@ -49,6 +49,12 @@ TypeDecl::TypeDecl(std::string* identifier, Type* type)
     }
 }
 
+TypeDecl::TypeDecl(TypeDecl *node) 
+    : Declaration(node)
+{
+    type = node->type->clone();
+}
+
 void TypeDecl::dump(int num)
 {
     indent(num); std::cout << "Type declaration: " << identifier << " of type " << std::endl;
@@ -446,13 +452,9 @@ void SwitchCase::dump(int num) {
     indent(num); std::cout << "}" << std::endl;
 }
 
-std::vector<Node**> TypeDecl::getChildren()
-{
-    return std::vector<Node **>();
-}
-
 Node *TypeDecl::clone()
 {
     TypeDecl *copy = new TypeDecl(this);
+    return copy;
 }
 

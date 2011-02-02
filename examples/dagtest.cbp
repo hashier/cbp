@@ -1,11 +1,12 @@
-var x : uint32
-var y : uint32
-var z : uint32
-var u : uint32
+var miep : int32
+var test : int32
+var x : int32
+var y : int32
+var z : int32
 
 func main () : void {
-x = 1 / 23
-y = 23 / 1
-z = 1 + 42
-u = 42 + 1
+x = x + y
+x = x + 23
+y = x + 5
+z = x + 5 + y
 }

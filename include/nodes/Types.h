@@ -33,7 +33,7 @@ class Type
             return false;
         }
 
-        Type *clone() { }
+        virtual Type *clone() = 0;
 
         virtual ~Type() { }
 };
