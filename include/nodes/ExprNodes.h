@@ -15,6 +15,9 @@ class StructVariable;
 class Unary : public Expression {
     public:
         Unary(Expression* sub) : sub(sub) {}
+        ~Unary() {
+            delete sub;
+        }
         void dump(int num = 0);
         void constProp();
         bool isConst();
@@ -27,6 +30,10 @@ class Unary : public Expression {
 class Binary : public Expression {
     public:
         Binary(Expression* left, Expression* right) : left(left), right(right) {}
+        ~Binary() {
+            delete left;
+            delete right;
+        }
         void dump(int num = 0);
         void constProp();
         bool isConst();
@@ -55,6 +62,9 @@ class Expr_Assign : public Binary {
 class Expr_Cast : public Expression {
     public:
         Expr_Cast(Type *_castType, Expression* _expr) : castType(_castType), expr(_expr) {}
+        ~Expr_Cast() {
+            delete expr;
+        }
         virtual void dump(int num = 0);
         virtual void constProp();
         bool isConst();
@@ -195,6 +205,9 @@ class Expr_Ref : public Unary {
 class Expr_Struc : public Expression {
     public:
         Expr_Struc(Expression* sub, std::string *identifier);
+        ~Expr_Struc() {
+            delete sub;
+        }
         virtual void dump(int num = 0);
         virtual void constProp();
         bool isConst();

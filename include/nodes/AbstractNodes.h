@@ -25,6 +25,17 @@ struct constant {
 
 class Node {
     public:
+        // predefine lineNumber with 0
+        Node()
+            : lineNumber(0)
+        {
+        }
+        // Use virtual attribute on this base-class destructor:
+        // By deleting this class all destructors beginning on leaves are called,
+        // also if a children don't have or have an overloaded destructor
+        // with or without the virtual attribute.
+        virtual ~Node() {
+        }
         virtual void dump(int num = 0) = 0;
         
         virtual void constProp() = 0;
@@ -46,9 +57,6 @@ class Node {
         
         void setLineNumber(int lineNumber) {
             this->lineNumber = lineNumber;
-        }
-        
-        virtual ~Node() {
         }
 
         virtual std::vector<Node**> getChildren() {
