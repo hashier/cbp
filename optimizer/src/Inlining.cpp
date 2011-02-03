@@ -336,17 +336,21 @@ std::vector<Node**> ForLoop::getChildren()
     return result;
 }
 
-std::vector<Node**> SwitchCase::getChildren()
-{
-    std::vector<Node**> result;
-    result.push_back((Node**)&which);
-    for(std::list<Case*>::iterator it=cases->begin(); it!=cases->end(); ++it)
-    {
-        Case* c = *it;
-        //result.push_back(c->condition); <-- PERVERS
-        result.push_back((Node**)&(c->action));
+std::vector<Node**> SwitchCase::getChildren(){
+    std::vector<Node**> children;
+    children.reserve(1 + 2 * cases->size());
+    
+    // uh oh!
+    children.push_back(reinterpret_cast<Node**>(&which));
+    
+    std::list<Case*>::iterator caseIter = cases->begin();
+    std::list<Case*>::iterator caseEnd = cases->end();
+    for(; caseIter != caseEnd; ++caseIter){
+        //children.push_back(reinterpret_cast<Node**>(&((*caseIter)->condition))); <-- PERVERS (???)
+        children.push_back(reinterpret_cast<Node**>(&((*caseIter)->action)));
     }
-    return result;
+    
+    return children;
 }
 
 std::vector<Node**> Constant::getChildren()

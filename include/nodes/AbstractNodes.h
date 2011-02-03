@@ -50,8 +50,18 @@ class Node {
         virtual ~Node() {
         }
 
-        virtual std::vector<Node**> getChildren() {assert(false);std::vector<Node**> a; return a;}
-        virtual Node* clone() {assert(false);return NULL;}
+        virtual std::vector<Node**> getChildren() {
+            std::cerr << "getChildren missing in " << typeid(*this).name() << std::endl;
+            assert(false);
+            std::vector<Node**> a;
+            return a;
+        }
+        
+        virtual Node* clone() {
+            std::cerr << "clone missing in " << typeid(*this).name() << std::endl;
+            assert(false);
+            return 0;
+        }
 
         static SymbolTable::SymbolTable *symbolTable;
 private:

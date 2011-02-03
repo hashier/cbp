@@ -128,11 +128,14 @@ class SwitchCase : public Statement {
             Case(ConstInt* condition_, Statement* action_)
                 : condition(condition_),
                 action(action_) {}
-
+                
+            Case(Case const& other);
             ~Case();
+            
             ConstInt* condition;
             Statement* action;
         };
+        
         SwitchCase(Expression* which_, std::list<Case*>* cases_);
         ~SwitchCase();
         void dump(int num = 0);
@@ -141,6 +144,7 @@ class SwitchCase : public Statement {
         constant* getConstant();
         void gen(CodeGen* out);
         virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
     private:
         Expression* which;
         std::list<Case*>* cases;

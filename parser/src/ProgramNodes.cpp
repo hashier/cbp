@@ -144,11 +144,7 @@ Node* Block::clone()
     return copy;
 }
 
-SwitchCase::Case::~Case()
-{
-    delete condition;
-    delete action;
-}
+
 
 Block::~Block() {
     //dag->dumpAll();
@@ -178,15 +174,6 @@ Node* IfElse::clone()
                                 (Statement*)then->clone(),
                                 otherwise==NULL ? NULL : (Statement*)otherwise->clone());
     return copy;
-}
-
-SwitchCase::SwitchCase(Expression* which_, std::list<Case*>* cases_): which(which_),cases(cases_) { }
-
-SwitchCase::~SwitchCase(){
-    std::list<Case*>::iterator caseIter = cases->begin();
-    for(; caseIter != cases->end(); ++caseIter ){
-        delete (*caseIter);
-    }
 }
 
 WhileLoop::WhileLoop(Expression* condition, Statement* body) : condition(condition), body(body) {
@@ -466,6 +453,27 @@ Type* TypeDecl::getDeclaredType(std::string *identifier)
     return NULL;
 }
 
+Node *TypeDecl::clone()
+{
+    TypeDecl *copy = new TypeDecl(this);
+    return copy;
+}
+
+SwitchCase::SwitchCase(Expression* which_, std::list<Case*>* cases_): which(which_),cases(cases_) { }
+
+SwitchCase::~SwitchCase(){
+    delete which;
+    std::list<Case*>::iterator caseIter = cases->begin();
+    for(; caseIter != cases->end(); ++caseIter ){
+        delete (*caseIter);
+    }
+}
+
+SwitchCase::Case::~Case() {
+    delete condition;
+    delete action;
+}
+
 void SwitchCase::dump(int num) {
     indent(num); std::cout << "SwitchCase {" << std::endl;
     num += 1;
@@ -482,9 +490,21 @@ void SwitchCase::dump(int num) {
     indent(num); std::cout << "}" << std::endl;
 }
 
-Node *TypeDecl::clone()
-{
-    TypeDecl *copy = new TypeDecl(this);
-    return copy;
+SwitchCase::Case::Case(Case const& other)
+    : condition(static_cast<ConstInt*>(other.condition->clone())),
+    action(static_cast<Statement*>(other.action->clone()))
+    {}
+
+Node* SwitchCase::clone(){
+    Expression* which_ = static_cast<Expression*>(which->clone());
+    
+    std::list<Case*>* cases_ = new std::list<Case*>;
+    std::list<Case*>::iterator caseIter = cases->begin();
+    std::list<Case*>::iterator caseEnd = cases->end();
+    for(; caseIter != caseEnd; ++caseIter){
+        cases_->push_back(new Case(**caseIter));
+    }
+    
+    return new SwitchCase(which_, cases_);
 }
 
