@@ -473,8 +473,8 @@ void FuncCall::gen(CodeGen *out) {
             break;
             }
         case Abi_default:
-            std::list<Expression*>::iterator it;
-            for ( it = arguments->begin() ; it != arguments->end(); it++ ) {
+            std::list<Expression*>::reverse_iterator it;
+            for ( it = arguments->rbegin() ; it != arguments->rend(); it++ ) {
                 (*it)->gen(out);
                 *out << Command("pushq")("%rax");
             }
