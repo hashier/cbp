@@ -6,17 +6,17 @@
 // Simple search and replace
 std::string searchReplace(const std::string &SearchString, const std::string &ReplaceString, std::string String)
 {
-        std::string::size_type pos = String.find(SearchString, 0);
-        int LengthSearch = SearchString.length();
-        int LengthReplace = ReplaceString.length();
+    std::string::size_type pos = String.find(SearchString, 0);
+    int LengthSearch = SearchString.length();
+    int LengthReplace = ReplaceString.length();
 
-        while(std::string::npos != pos)
-        {
-                String.replace(pos, LengthSearch, ReplaceString);
-                pos = String.find(SearchString, pos + LengthReplace);
-        }
+    while(std::string::npos != pos)
+    {
+       String.replace(pos, LengthSearch, ReplaceString);
+       pos = String.find(SearchString, pos + LengthReplace);
+    }
 
-        return String;
+    return String;
 }
 
 void backupFile(FILE *file) {
