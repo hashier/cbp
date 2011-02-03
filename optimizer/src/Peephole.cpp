@@ -39,12 +39,11 @@ void backupFile(FILE *file) {
     fclose(backupFile);
 }
 
-void readPatterns() {
+void readPatterns(std::list<std::string> patternList) {
 
     std::ifstream patternsFile;
     std::string lineread;
     std::string token;
-    std::list<std::string> patternList;
     std::list<std::string>::iterator it;
 
     std::string fileName = "peephole_patterns";
@@ -83,6 +82,7 @@ void readPatterns() {
 void optimizePeephole(std::string fname) {
 
     FILE *file;
+    std::list<std::string> patternList;
 
     std::cout << " -Peephole" << std::endl;
 
@@ -92,7 +92,7 @@ void optimizePeephole(std::string fname) {
         std::cout << " -error: file not found " << fname << std::endl;
 
     backupFile(file);
-    //readPatterns();
+    //readPatterns(patternList);
 
     fclose(file);
 }
