@@ -47,6 +47,9 @@ public:
         if(var != variables.back().end()){
             var->second = constr;
         }
+        else{
+            variables.back().insert(ConstrainedVariables::value_type(v, constr));
+        }
     }
 };
 

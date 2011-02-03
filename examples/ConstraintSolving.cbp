@@ -26,7 +26,7 @@ func main () : void {
     if a == e {
         d = a
     }
-    # always true
+    # always false
     if a != e {
         d = a
     }

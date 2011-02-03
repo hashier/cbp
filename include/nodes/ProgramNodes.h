@@ -195,6 +195,7 @@ class Local : public Statement {
         void constProp();
         bool isConst();
         constant* getConstant();
+        virtual void solveConstraints(ConstrainedEnvironment& env);
         /** Sets the memory offset of the wrapped Variable and returns its size. */
         int calcStackOffset(int offset);
         virtual void gen(CodeGen* out);

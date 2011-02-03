@@ -60,8 +60,12 @@ void Block::solveConstraints(ConstrainedEnvironment& env){
 }
 
 void Variable::solveConstraints(ConstrainedEnvironment& env){
-    std::cout << "variable: " << Interval::world() << std::endl;
-    env.update(this, Interval::world());
+    // here should nothing to be done (global var ???)
+    std::cout << "variable: " << env.constrain(this) << std::endl;
+}
+
+void Local::solveConstraints(ConstrainedEnvironment& env){
+    env.update(var, Interval::world());
 }
 
 void Expr_Assign::solveConstraints(ConstrainedEnvironment& env){
@@ -88,6 +92,7 @@ ExpressionProperties ConstInt::properties(ConstrainedEnvironment& env){
 // --- Variables ---
 ExpressionProperties Expr_Identifier::properties(ConstrainedEnvironment& env){
     Interval domain = env.constrain(getRef());
+    //std::cout << "var expr (" << getRef()->getIdentifier() << "): " << domain << std::endl;
     return ExpressionProperties(domain, domain != Interval(0L), !in(0, domain));
 }
 
@@ -114,6 +119,7 @@ ExpressionProperties Expr_Mul::properties(ConstrainedEnvironment& env){
 ExpressionProperties Expr_Div::properties(ConstrainedEnvironment& env){
     Interval lhsConstraint = getLeft()->properties(env).interval;
     Interval rhsConstraint = getRight()->properties(env).interval;
+    //std::cout << "div: " << lhsConstraint << "/" << rhsConstraint << std::endl;
     return ExpressionProperties(lhsConstraint / rhsConstraint);
 }
 
