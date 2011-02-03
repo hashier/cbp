@@ -37,16 +37,25 @@ Interval::Interval(Integer val)
     : low(val), up(val) {}
 
 Interval::Interval(Integer low_, Integer up_)
-    : low(low_), up(up_) {}
+    : low(low_ <= up_ ? low_ : 1),
+    up(up_ >= low_ ? up_ : 0) {}
 
 Interval::Interval(double val)
     : low((Integer)std::floor(val)), up((Integer)std::ceil(val)) {}
 
 Interval::Interval(double low_, double up_)
-    : low((Integer)std::floor(low_)), up((Integer)std::ceil(up_)) {}
+    : low(low_ <= up_ ? (Integer)std::floor(low_) : 1),
+    up(up_ >= low_ ? (Integer)std::ceil(up_) : 0) {}
 
 Interval Interval::world() {
     return Interval(std::numeric_limits<Integer>::min(), std::numeric_limits<Integer>::max());
+}
+
+bool Interval::operator==(Interval const& rhs) const {
+    return lower() == rhs.lower() && upper() == rhs.upper();
+}
+bool Interval::operator!=(Interval const& rhs) const {
+    return !(*this == rhs);
 }
 
 Interval operator+ (Interval const& lhs, Interval const& rhs){

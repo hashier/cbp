@@ -28,6 +28,11 @@ public:
         return up < low;
     }
     
+    // [a,a]?
+    bool singleton() const {
+        return up == low;
+    }
+    
     // return a from [a,b]
     Integer lower() const {
         return low;
@@ -39,14 +44,11 @@ public:
     }
     
     // [a,b] == [c,d] ?
-    bool operator==(Interval const& rhs) const {
-        return lower() == rhs.lower() && upper() == rhs.upper();
-    }
-    bool operator!=(Interval const& rhs) const {
-        return !(*this == rhs);
-    }
+    bool operator==(Interval const& rhs) const;
+    bool operator!=(Interval const& rhs) const;
 
 private:
+    // property: if *this == ∅ then low = 1 and up = 0
     Integer low;
     Integer up;
 };

@@ -9,21 +9,43 @@ func main () : void {
     local var b : uint32
     local var c : uint32
     local var d : uint32
+    local var e : uint32
     a = 4
     b = 5
+    e = 4
     c = a + b
     c = a - b
     c = a * b
     c = a / b
     d = a / c
+    # always false (c < 1 < a = 4)
     if c >= a {
         d = a
     }
+    # always true (a = 4 = e)
+    if a == e {
+        d = a
+    }
+    # always true
+    if a != e {
+        d = a
+    }
+    e = 5
+    # always false (a = 4 != 5 = e)
+    if a == e {
+        d = a
+    }
+    # always true
+    if a != e {
+        d = a
+    }
     c = a + 1 - b
+    # always false (c = 0)
     if c {
         d = a
     }
     c = a + b
+    # always true (c = 9)
     if c {
         d = a
     }

@@ -122,14 +122,24 @@ ExpressionProperties Expr_EQ::properties(/*SymbolTable*/){
     Interval restrictRhs = restrictLhs;
     // TODO: save new interval for variables on stack (inside corresponding block)
     std::cout << "equality restriction: " << restrictLhs << std::endl;
-    return ExpressionProperties(); // TODO: logical properties
+    return ExpressionProperties(
+        ((lhsConstraint & rhsConstraint) != Interval()),   // satisfiable if there are overlaps
+        (lhsConstraint.singleton() && (lhsConstraint == rhsConstraint)) // only a tautology if both are [a,a]
+    );
 }
 
 ExpressionProperties Expr_NEQ::properties(/*SymbolTable*/){
     Interval lhsConstraint = getLeft()->properties().interval;
     Interval rhsConstraint = getRight()->properties().interval;
-    // TODO: what to do?
-    return ExpressionProperties(); // TODO: logical properties
+    // nothing to do
+    Interval restrictLhs = lhsConstraint;
+    Interval restrictRhs = rhsConstraint;
+    std::cout << "inequality no restriction" << std::endl;
+    // dual to equality
+    return ExpressionProperties(
+        !(lhsConstraint.singleton() && (lhsConstraint == rhsConstraint)),
+        ((lhsConstraint & rhsConstraint) == Interval())
+    );
 }
 
 ExpressionProperties Expr_LT::properties(/*SymbolTable*/){
@@ -138,8 +148,11 @@ ExpressionProperties Expr_LT::properties(/*SymbolTable*/){
     Interval restrictLhs = restrictLeft(lhsConstraint, rhsConstraint);
     Interval restrictRhs = restrictRight(lhsConstraint, rhsConstraint);
     // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << "< restriction left: " << restrictLhs << std::endl;
-    return ExpressionProperties(); // TODO: logical properties
+    std::cout << "< restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    return ExpressionProperties(
+        lhsConstraint.lower() < rhsConstraint.upper(),
+        lhsConstraint.upper() < rhsConstraint.lower()
+    );
 }
 
 ExpressionProperties Expr_GT::properties(/*SymbolTable*/){
@@ -148,8 +161,11 @@ ExpressionProperties Expr_GT::properties(/*SymbolTable*/){
     Interval restrictLhs = restrictRight(lhsConstraint, rhsConstraint);
     Interval restrictRhs = restrictLeft(lhsConstraint, rhsConstraint);
     // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << "> restriction left: " << restrictLhs << std::endl;
-    return ExpressionProperties(); // TODO: logical properties
+    std::cout << "> restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    return ExpressionProperties(
+        lhsConstraint.upper() > rhsConstraint.lower(),
+        lhsConstraint.lower() > rhsConstraint.upper()
+    );
 }
 
 ExpressionProperties Expr_LE::properties(/*SymbolTable*/){
@@ -158,8 +174,11 @@ ExpressionProperties Expr_LE::properties(/*SymbolTable*/){
     Interval restrictLhs = restrictLeft(lhsConstraint, rhsConstraint);
     Interval restrictRhs = restrictRight(lhsConstraint, rhsConstraint);
     // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << "<= restriction left: " << restrictLhs << std::endl;
-    return ExpressionProperties(); // TODO: logical properties
+    std::cout << "<= restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    return ExpressionProperties(
+        lhsConstraint.lower() <= rhsConstraint.upper(),
+        lhsConstraint.upper() <= rhsConstraint.lower()
+    );
 }
 
 ExpressionProperties Expr_GE::properties(/*SymbolTable*/){
@@ -168,8 +187,11 @@ ExpressionProperties Expr_GE::properties(/*SymbolTable*/){
     Interval restrictLhs = restrictRight(lhsConstraint, rhsConstraint);
     Interval restrictRhs = restrictLeft(lhsConstraint, rhsConstraint);
     // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << ">= restriction left: " << restrictLhs << std::endl;
-    return ExpressionProperties(); // TODO: logical properties
+    std::cout << ">= restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    return ExpressionProperties(
+        lhsConstraint.upper() >= rhsConstraint.lower(),
+        lhsConstraint.lower() >= rhsConstraint.upper()
+    );
 }
 
 // --- If-Else ---
