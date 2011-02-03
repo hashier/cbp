@@ -5,6 +5,18 @@
 #include <cmath>
 
 namespace detail {
+template<bool>
+struct StaticCheck;
+
+template<>
+struct StaticCheck<true>{};
+}
+
+#define STATIC_CHECK(expr, msg)                     \
+    detail::StaticCheck<(expr)> ASSERTION_##msg;    \
+    (void)ASSERTION_##msg;
+
+namespace detail {
     template<typename T>
     T const& min(T const& t1, T const& t2, T const& t3, T const& t4){
         return (std::min)(t1, (std::min)(t2, (std::min)(t3, t4)));
@@ -16,14 +28,25 @@ namespace detail {
     }
 }
 
+Interval::Interval()
+    : low(1), up(0) {
+    STATIC_CHECK(sizeof(Integer) >= 8, INTEGER_TO_SMALL_MUST_BE_8);
+}
+    
+Interval::Interval(Integer val)
+    : low(val), up(val) {}
+
+Interval::Interval(Integer low_, Integer up_)
+    : low(low_), up(up_) {}
+
 Interval::Interval(double val)
-    : low((int)std::floor(val)), up((int)std::ceil(val)) {}
+    : low((Integer)std::floor(val)), up((Integer)std::ceil(val)) {}
 
 Interval::Interval(double low_, double up_)
-    : low((int)std::floor(low_)), up((int)std::ceil(up_)) {}
+    : low((Integer)std::floor(low_)), up((Integer)std::ceil(up_)) {}
 
 Interval Interval::world() {
-    return Interval(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+    return Interval(std::numeric_limits<Integer>::min(), std::numeric_limits<Integer>::max());
 }
 
 Interval operator+ (Interval const& lhs, Interval const& rhs){
@@ -82,7 +105,7 @@ Interval operator/ (Interval const& lhs, Interval const& rhs){
 }
 
 //// set operations ////
-bool in(int x, Interval const& i){
+bool in(Interval::Integer x, Interval const& i){
     return x >= i.lower() && x <= i.upper();
 }
 

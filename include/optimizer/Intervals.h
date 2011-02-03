@@ -4,19 +4,15 @@
 #include <ostream>
 
 class Interval {
-
 public:
-    // construct ∅
-    Interval()
-        : low(1), up(0) {}
-        
-   // construct [a,a]
-   Interval(int val)
-        : low(val), up(val) {}
+    typedef long Integer;
 
+    // construct ∅
+    Interval();        
+    // construct [a,a]
+    Interval(Integer val);
     // construct [a,b]
-    Interval(int low_, int up_)
-        : low(low_), up(up_) {}
+    Interval(Integer low_, Integer up_);
     
     // rounds:
     // [a] = [⌊a⌋, ⌈a⌉]
@@ -33,12 +29,12 @@ public:
     }
     
     // return a from [a,b]
-    int lower() const {
+    Integer lower() const {
         return low;
     }
     
     // return b from [a,b]
-    int upper() const {
+    Integer upper() const {
         return up;
     }
     
@@ -51,8 +47,8 @@ public:
     }
 
 private:
-    int low;
-    int up;
+    Integer low;
+    Integer up;
 };
 
 // interval arithmetic
@@ -63,7 +59,7 @@ Interval operator/ (Interval const& lhs, Interval const& rhs);
 
 // set operations
 // x ∈ [a,b] ?
-bool in(int x, Interval const& i);
+bool in(Interval::Integer x, Interval const& i);
 // A ∩ B
 Interval operator& (Interval const& lhs, Interval const& rhs);
 

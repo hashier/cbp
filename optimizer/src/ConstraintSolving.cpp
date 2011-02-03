@@ -78,14 +78,14 @@ void Expr_Assign::solveConstraints(/*SymbolTable*/){
 
 // --- Constant ---
 ExpressionProperties ConstInt::properties(/*SymbolTable*/){
-    Interval domain = Interval(val());
-    return ExpressionProperties(domain, domain != Interval(0), !in(0, domain));
+    Interval domain = Interval(static_cast<Interval::Integer>(val()));
+    return ExpressionProperties(domain, domain != Interval(0L), !in(0, domain));
 }
 
 // --- Variables ---
 ExpressionProperties Expr_Identifier::properties(/*SymbolTable*/){
     Interval domain = getRef()->getInterval();
-    return ExpressionProperties(domain, domain != Interval(0), !in(0, domain));
+    return ExpressionProperties(domain, domain != Interval(0L), !in(0, domain));
 }
 
 // --- Arithmetic ---
