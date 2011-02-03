@@ -199,6 +199,7 @@ class Local : public Statement {
         int calcStackOffset(int offset);
         virtual void gen(CodeGen* out);
         virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
         virtual ~Local();
     private:
         Variable* var;

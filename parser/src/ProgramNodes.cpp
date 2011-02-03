@@ -231,6 +231,11 @@ Local::~Local() {
     if (var) delete var; var = 0;
 }
 
+Node* Local::clone()
+{
+    return new Local((Variable*)var->clone());
+}
+
 //ForLoop without step expression
 ForLoop::ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Statement* body) :
     init_value(init_value),final_value(final_value),step(0),body(body)
