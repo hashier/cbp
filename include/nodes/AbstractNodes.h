@@ -13,6 +13,7 @@
 #include"CodeGen.h"
 
 #include "ExpressionProperties.h"
+class ConstrainedEnvironment;
 
 // needed for constant propergation
 struct constant {
@@ -27,7 +28,7 @@ class Node {
         virtual void dump(int num = 0) = 0;
         
         virtual void constProp() = 0;
-        virtual void solveConstraints(/*SymbolTable*/) = 0;
+        virtual void solveConstraints(ConstrainedEnvironment& env) = 0;
 
         virtual void gen(CodeGen* out) {
             (*out) << Nothing(typeid(this).name());
@@ -78,7 +79,7 @@ class Statement : public Node {
         virtual bool isConst() = 0;
         virtual constant* getConstant() = 0;
 
-        virtual void solveConstraints(/*SymbolTable*/);
+        virtual void solveConstraints(ConstrainedEnvironment& env);
 
         /** Recursively calculates stack offsets.
          * @param offset Current position on stack.
@@ -97,8 +98,8 @@ class Expression : public Statement {
     public:
         virtual Type* getType() = 0;
         
-        virtual void solveConstraints(/*SymbolTable*/);
-        virtual ExpressionProperties properties(/*SymbolTable*/);
+        virtual void solveConstraints(ConstrainedEnvironment& env);
+        virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 
         /** This generates an expression's l-value.
          * Note that most expressions do not have an l-value, which is why
@@ -125,7 +126,7 @@ public:
         
     std::string &getIdentifier() { return identifier; }
     int getLineDefined() { return lineDefined; }
-    virtual void solveConstraints(/*SymbolTable*/){}
+    virtual void solveConstraints(ConstrainedEnvironment& env){}
     virtual ~Declaration() { }
 
 protected:

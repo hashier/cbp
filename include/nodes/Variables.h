@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AbstractNodes.h"
+#include "Intervals.h"
 
 class Type;
 
@@ -18,21 +19,12 @@ class Variable : public Declaration {
         virtual void gen(CodeGen* out);
         virtual Address getAddress();
         
-        Interval getInterval() const {
-            return interval;
-        }
-        
-        void setInterval(Interval const& i){
-            interval = i;
-        }
-        
-        virtual void solveConstraints(/*SymbolTable*/);
+        virtual void solveConstraints(ConstrainedEnvironment& env);
     
     protected:
         virtual int getMemoryOffset();
         Type* type;
         int offset;
-        Interval interval;
 };
 
 class GlobalVariable : public Variable {

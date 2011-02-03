@@ -429,11 +429,11 @@ Node *LocalVariable::clone(){
 
 
 Variable::Variable(std::string* identifier, Type* type)
-    : Declaration(*identifier, yylineno), type(type), offset(-1), interval(Interval::world()) {
+    : Declaration(*identifier, yylineno), type(type), offset(-1) {
 }
 
 Variable::Variable(Variable *node)
-: Declaration(node->getIdentifier(), yylineno), type(node->getType()->clone()), offset(node->getMemoryOffset()), interval(Interval::world()) {
+: Declaration(node->getIdentifier(), yylineno), type(node->getType()->clone()), offset(node->getMemoryOffset()) {
 }
 
 void Variable::dump(int num) {

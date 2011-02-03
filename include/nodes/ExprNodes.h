@@ -48,7 +48,7 @@ class Expr_Assign : public Binary {
         bool isConst();
         void constProp();
         virtual void gen(CodeGen* out);
-        virtual void solveConstraints(/*SymbolTable*/);
+        virtual void solveConstraints(ConstrainedEnvironment& env);
 };
 
 // Precedence 10
@@ -72,32 +72,32 @@ class Expr_Cast : public Expression {
 class Expr_EQ : public Binary {
     public: Expr_EQ(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_NEQ : public Binary {
     public: Expr_NEQ(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_LT : public Binary {
     public: Expr_LT(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_GT : public Binary {
     public: Expr_GT(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_LE : public Binary {
     public: Expr_LE(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_GE : public Binary {
     public: Expr_GE(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 
 // Precedence 8
@@ -149,14 +149,14 @@ public:
     Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_Sub : public Binary {
 public:
     Expr_Sub(Expression* left, Expression* right) : Binary(left, right) { }
     constant* getConstant();
     virtual void gen(CodeGen* out);
-    virtual ExpressionProperties properties(/*SymbolTable*/);
+    virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 
 // Precedence 4
@@ -165,14 +165,14 @@ class Expr_Mul : public Binary {
         Expr_Mul(Expression* left, Expression* right) : Binary(left, right) { }
         constant* getConstant();
         virtual void gen(CodeGen* out);
-        virtual ExpressionProperties properties(/*SymbolTable*/);
+        virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_Div : public Binary {
     public:
         Expr_Div(Expression* left, Expression* right) : Binary(left, right) { }
         constant* getConstant();
         virtual void gen(CodeGen* out);
-        virtual ExpressionProperties properties(/*SymbolTable*/);
+        virtual ExpressionProperties properties(ConstrainedEnvironment& env);
 };
 class Expr_Mod : public Binary {
     public:
@@ -242,7 +242,7 @@ class ConstInt : public Constant {
         int val() const;
         virtual Type* getType();
         constant* getConstant();
-        virtual ExpressionProperties properties(/*SymbolTable*/);
+        virtual ExpressionProperties properties(ConstrainedEnvironment& env);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
 };
 
@@ -269,7 +269,7 @@ class Expr_Identifier : public Atom {
         void constProp();
         bool isConst();
         constant* getConstant();
-        virtual ExpressionProperties properties(/*SymbolTable*/);
+        virtual ExpressionProperties properties(ConstrainedEnvironment& env);
         Variable *getRef() { return ref; }
         void setRef(Variable* ref);
         DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
