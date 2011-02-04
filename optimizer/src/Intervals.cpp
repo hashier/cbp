@@ -137,13 +137,29 @@ Interval restrictRight(Interval const& lhs, Interval const& rhs){
 }
 
 std::ostream& operator<<(std::ostream& os, Interval const& i){
-    if(i == Interval::world()){
-        return os << "[-∞,+∞]";
-    }
-    else if(i.empty()){
-        return os << "∅";
+    if(i.empty()){
+        os << "∅";
     }
     else{
-        return os << '[' << i.lower() << ',' << i.upper() << ']';
+        os << '[';
+        if(i.lower() == Interval::world().lower()){
+            os << "-∞";
+        }
+        else {
+            os << i.lower();
+        }
+        
+        os << ',';
+        
+        if(i.upper() == Interval::world().upper()){
+            os << "+∞";
+        }
+        else {
+            os << i.upper();
+        }
+        
+        os << ']';
     }
+    
+    return os;
 }

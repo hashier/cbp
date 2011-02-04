@@ -18,8 +18,8 @@ public:
     }
     
     // starts a new block
-    void startBlock() {
-        variables.push_back(ConstrainedVariables());
+    void startBlock(ConstrainedVariables const& init = ConstrainedVariables()) {
+        variables.push_back(init);
     }
     
     // ends a block

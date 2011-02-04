@@ -4,6 +4,7 @@
 #include "ExprNodes.h"
 #include "Variables.h"
 #include "AbstractNodes.h"
+#include "ExpressionProperties.h"
 #include "ConstrainedEnvironment.h"
 
 #include <iostream>
@@ -36,6 +37,7 @@ void Statement::solveConstraints(ConstrainedEnvironment& env){
 
 void Expression::solveConstraints(ConstrainedEnvironment& env){
     std::cout << "!!! solving expression: " << typeid(*this).name() << std::endl;
+    assert(false);
 }
 
 ExpressionProperties Expression::properties(ConstrainedEnvironment& env){
@@ -123,87 +125,167 @@ ExpressionProperties Expr_Div::properties(ConstrainedEnvironment& env){
     return ExpressionProperties(lhsConstraint / rhsConstraint);
 }
 
+// Helper for calculating comparison constraints
+bool atom(Expression* node){
+    return dynamic_cast<Atom*>(node) != 0;
+}
+
+typedef std::pair<Variable*, Interval> ChangedVariable;
+
+void insertIfVariable(ExpressionProperties::ChangedVariables& changes,
+    Expression* node, Interval const& i){
+    Expr_Identifier* var = dynamic_cast<Expr_Identifier*>(node);
+    if(var != 0){
+        changes.insert(ChangedVariable(var->getRef(), i));
+    }
+}
+
+ExpressionProperties::ChangedVariables
+restrictEquality(ConstrainedEnvironment& env, Expression* lhs, Expression* rhs, bool invert = false){
+    ExpressionProperties::ChangedVariables changes;
+
+    // only changes if both operands are variables/constants
+    if(atom(lhs) && atom(rhs)){
+        Interval lhsConstraint = lhs->properties(env).interval;
+        Interval rhsConstraint = rhs->properties(env).interval;
+        Interval restrictLhs;
+        Interval restrictRhs;
+        if(invert){
+            // nothing to do for !=
+            restrictLhs = lhsConstraint;
+            restrictRhs = rhsConstraint;
+        }
+        else{
+            restrictLhs = lhsConstraint & rhsConstraint;
+            restrictRhs = restrictLhs;
+            std::cout << "equality restriction: " << restrictLhs << std::endl;
+        }
+        
+        insertIfVariable(changes, lhs, restrictLhs);
+        insertIfVariable(changes, rhs, restrictRhs);
+    }
+    return changes;
+}
+
+ExpressionProperties::ChangedVariables
+restrictLess(ConstrainedEnvironment& env, Expression* lhs, Expression* rhs, bool invert = false){
+    ExpressionProperties::ChangedVariables changes;
+    
+    // only changes if both operands are variables/constants
+    if(atom(lhs) && atom(rhs)){
+        Interval lhsConstraint = lhs->properties(env).interval;
+        Interval rhsConstraint = rhs->properties(env).interval;
+        Interval restrictLhs;
+        Interval restrictRhs;
+        if(invert){
+            restrictLhs = restrictRight(lhsConstraint, rhsConstraint);
+            restrictRhs = restrictLeft(lhsConstraint, rhsConstraint);
+        }
+        else{
+            restrictLhs = restrictLeft(lhsConstraint, rhsConstraint);
+            restrictRhs = restrictRight(lhsConstraint, rhsConstraint);
+            std::cout << "less restriction: " << restrictLhs << std::endl;
+        }
+        
+        insertIfVariable(changes, lhs, restrictLhs);
+        insertIfVariable(changes, rhs, restrictRhs);
+    }
+    return changes;
+}
+
 // --- Comparision ---
 ExpressionProperties Expr_EQ::properties(ConstrainedEnvironment& env){
+    ExpressionProperties::ChangedVariables equalConstraints
+        = restrictEquality(env, getLeft(), getRight());
+    ExpressionProperties::ChangedVariables notEqualConstraints
+        = restrictEquality(env, getLeft(), getRight(), true);
+        
     Interval lhsConstraint = getLeft()->properties(env).interval;
     Interval rhsConstraint = getRight()->properties(env).interval;
-    
-    // TODO: save new interval for variables on stack (inside corresponding block)
-    //ExpressionProperties::ChangedVariables changed;
-    // only change if both operands are variables/constants
-    if(dynamic_cast<Atom*>(getLeft()) != 0 && dynamic_cast<Atom*>(getRight()) != 0){
-        Interval restrictLhs = lhsConstraint & rhsConstraint;
-        Interval restrictRhs = restrictLhs;
-        std::cout << "equality restriction: " << restrictLhs << std::endl;
-    }
-    
+        
     return ExpressionProperties(
+        equalConstraints, notEqualConstraints,
         ((lhsConstraint & rhsConstraint) != Interval()),   // satisfiable if there are overlaps
         (lhsConstraint.singleton() && (lhsConstraint == rhsConstraint)) // only a tautology if both are [a,a]
     );
 }
 
 ExpressionProperties Expr_NEQ::properties(ConstrainedEnvironment& env){
+    ExpressionProperties::ChangedVariables equalConstraints
+        = restrictEquality(env, getLeft(), getRight());
+    ExpressionProperties::ChangedVariables notEqualConstraints
+        = restrictEquality(env, getLeft(), getRight(), true);
+        
     Interval lhsConstraint = getLeft()->properties(env).interval;
     Interval rhsConstraint = getRight()->properties(env).interval;
-    // nothing to do
-    Interval restrictLhs = lhsConstraint;
-    Interval restrictRhs = rhsConstraint;
-    std::cout << "inequality no restriction" << std::endl;
+    
     // dual to equality
     return ExpressionProperties(
-        !(lhsConstraint.singleton() && (lhsConstraint == rhsConstraint)),
-        ((lhsConstraint & rhsConstraint) == Interval())
+        notEqualConstraints, equalConstraints,
+        !(lhsConstraint.singleton() && (lhsConstraint == rhsConstraint)),   // satisfiable whenever intervals are not both [a,a]
+        ((lhsConstraint & rhsConstraint) == Interval()) // tautology if intervals are distinct
     );
 }
 
 ExpressionProperties Expr_LT::properties(ConstrainedEnvironment& env){
+    ExpressionProperties::ChangedVariables lessConstraints
+        = restrictLess(env, getLeft(), getRight());
+    ExpressionProperties::ChangedVariables greaterConstraints
+        = restrictLess(env, getLeft(), getRight(), true);
+        
     Interval lhsConstraint = getLeft()->properties(env).interval;
     Interval rhsConstraint = getRight()->properties(env).interval;
-    Interval restrictLhs = restrictLeft(lhsConstraint, rhsConstraint);
-    Interval restrictRhs = restrictRight(lhsConstraint, rhsConstraint);
-    // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << "< restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    
     return ExpressionProperties(
+        lessConstraints, greaterConstraints,
         lhsConstraint.lower() < rhsConstraint.upper(),
         lhsConstraint.upper() < rhsConstraint.lower()
     );
 }
 
 ExpressionProperties Expr_GT::properties(ConstrainedEnvironment& env){
+    ExpressionProperties::ChangedVariables lessConstraints
+        = restrictLess(env, getLeft(), getRight());
+    ExpressionProperties::ChangedVariables greaterConstraints
+        = restrictLess(env, getLeft(), getRight(), true);
+        
     Interval lhsConstraint = getLeft()->properties(env).interval;
     Interval rhsConstraint = getRight()->properties(env).interval;
-    Interval restrictLhs = restrictRight(lhsConstraint, rhsConstraint);
-    Interval restrictRhs = restrictLeft(lhsConstraint, rhsConstraint);
-    // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << "> restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    
     return ExpressionProperties(
+        greaterConstraints, lessConstraints,
         lhsConstraint.upper() > rhsConstraint.lower(),
         lhsConstraint.lower() > rhsConstraint.upper()
     );
 }
 
 ExpressionProperties Expr_LE::properties(ConstrainedEnvironment& env){
+    ExpressionProperties::ChangedVariables lessConstraints
+        = restrictLess(env, getLeft(), getRight());
+    ExpressionProperties::ChangedVariables greaterConstraints
+        = restrictLess(env, getLeft(), getRight(), true);
+        
     Interval lhsConstraint = getLeft()->properties(env).interval;
     Interval rhsConstraint = getRight()->properties(env).interval;
-    Interval restrictLhs = restrictLeft(lhsConstraint, rhsConstraint);
-    Interval restrictRhs = restrictRight(lhsConstraint, rhsConstraint);
-    // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << "<= restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    
     return ExpressionProperties(
+        lessConstraints, greaterConstraints,
         lhsConstraint.lower() <= rhsConstraint.upper(),
         lhsConstraint.upper() <= rhsConstraint.lower()
     );
 }
 
 ExpressionProperties Expr_GE::properties(ConstrainedEnvironment& env){
+    ExpressionProperties::ChangedVariables lessConstraints
+        = restrictLess(env, getLeft(), getRight());
+    ExpressionProperties::ChangedVariables greaterConstraints
+        = restrictLess(env, getLeft(), getRight(), true);
+        
     Interval lhsConstraint = getLeft()->properties(env).interval;
     Interval rhsConstraint = getRight()->properties(env).interval;
-    Interval restrictLhs = restrictRight(lhsConstraint, rhsConstraint);
-    Interval restrictRhs = restrictLeft(lhsConstraint, rhsConstraint);
-    // TODO: save new interval for variables on stack (inside corresponding block)
-    std::cout << ">= restriction left: " << restrictLhs << " right:" << restrictRhs << std::endl;
+    
     return ExpressionProperties(
+        greaterConstraints, lessConstraints,
         lhsConstraint.upper() >= rhsConstraint.lower(),
         lhsConstraint.lower() >= rhsConstraint.upper()
     );
@@ -211,26 +293,45 @@ ExpressionProperties Expr_GE::properties(ConstrainedEnvironment& env){
 
 // --- If-Else ---
 void IfElse::solveConstraints(ConstrainedEnvironment& env){
-    // Hier könnte auch ein Vergleich stattfinden. Was dann?
-    // Dieser schränkt u.U. nur den Bereich einer Variable ein.
     ExpressionProperties prop = condition->properties(env);
-    // TODO: generate interval stack for variables
     if(isJust(prop.satisfiable)){
+        // the predicate may be true
         if(fromJust(prop.satisfiable)){
             std::cout << "if accessible" << std::endl;
+            // the predicate is always true
             if(fromJust(prop.tautology)){
-                std::cout << "if: then always accessed" << std::endl; // TODO: move then-block up
-                // TODO: populate stack to then branch
+                std::cout << "if: then always accessed" << std::endl;
+                env.startBlock(prop.changesFulfilled);
+                then->solveConstraints(env);
+                env.endBlock();
+                // TODO: move then-block up
             }
             else{
-                // TODO: populate stack to then and else branch
+                env.startBlock(prop.changesFulfilled);
+                then->solveConstraints(env);
+                env.endBlock();
+                if(otherwise != 0){
+                    env.startBlock(prop.changesNotFulfilled);
+                    otherwise->solveConstraints(env);
+                    env.endBlock();
+                }
             }
         }
+        // the predicate will never be true
         else{
-            std::cout << "if: then not accessible" << std::endl; // TODO: move else-block up or eliminate completely
-            // TODO: populate stack to else branch
+            std::cout << "if: then not accessible" << std::endl;
+            if(otherwise != 0){
+                env.startBlock(prop.changesNotFulfilled);
+                otherwise->solveConstraints(env);
+                env.endBlock();
+                //TODO: move else-block up
+            }
+            else{
+                // TODO: eliminate "if" completely
+            }
         }
     }
+    // Should not happen (type error)
     else{
         std::cout << "if: " << "condition has no logic properties!" << std::endl;
     }

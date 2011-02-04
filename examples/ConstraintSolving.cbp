@@ -10,6 +10,8 @@ func main () : void {
     local var c : uint32
     local var d : uint32
     local var e : uint32
+    local var f : uint32
+    local var g : uint32
     a = 4
     b = 5
     e = 4
@@ -49,5 +51,17 @@ func main () : void {
     if c {
         d = a
     }
+    # constrain f
+    if f > 0 {
+        # I(g) = [0,+∞]
+        g = f
+        # TODO: this should be optimized away
+        # but this requires open intervals
+        if(g > 0) {
+            e = g
+        }
+    }
+    # back to I(g) = [-∞,+∞]
+    e = g
   # return call test(5 6)
 }
