@@ -41,7 +41,7 @@ class Binary : public Expression {
         virtual Type* getType();
         Expression *getLeft() { return left; }
         Expression *getRight() { return right; }
-        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        DAG::Node *addToDAG(DAG::Container *graph);
         virtual std::vector<Node**> getChildren();
     protected:
         Expression* left;
@@ -263,7 +263,7 @@ class ConstInt : public Constant {
         virtual Type* getType();
         constant* getConstant();
         virtual ExpressionProperties properties(ConstrainedEnvironment& env);
-        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        DAG::Node *addToDAG(DAG::Container *graph);
 };
 
 class ConstFloat : public Constant {
@@ -292,7 +292,7 @@ class Expr_Identifier : public Atom {
         virtual ExpressionProperties properties(ConstrainedEnvironment& env);
         Variable *getRef() { return ref; }
         void setRef(Variable* ref);
-        DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
+        DAG::Node *addToDAG(DAG::Container *graph);
         virtual std::vector<Node**> getChildren();
 };
 

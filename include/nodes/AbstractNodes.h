@@ -14,6 +14,7 @@
 
 struct ExpressionProperties;
 class ConstrainedEnvironment;
+namespace DAG { class Container; class DirectedAcyclicGraph; class Node; }
 
 // needed for constant propergation
 struct constant {
@@ -77,8 +78,6 @@ private:
         int lineNumber;
 };
 
-namespace DAG { class DirectedAcyclicGraph; class Node; }
-
 class Variable;
 class Expression;
 
@@ -97,7 +96,7 @@ class Statement : public Node {
             return 0;
         }
 
-        virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph) { return 0; }
+        virtual void searchAndReplaceBlocks() {}
 };
 
 class Type;
@@ -122,6 +121,8 @@ class Expression : public Statement {
         virtual void genLeft(CodeGen* out) {
             throw InvalidAssignmentException();
         }
+
+        virtual DAG::Node *addToDAG(DAG::Container *graph) /* = 0; */ { std::cout << "todo: unimplemented addtodag-expression!" << std::endl; return NULL; }
 };
 
 // Declarations can be stored in the symbol table and then retrieved by identifier

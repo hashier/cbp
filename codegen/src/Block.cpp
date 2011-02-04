@@ -74,11 +74,24 @@ int Block::calcStackOffset(int offset) {
     return offset;
 }
 
-DAG::Node *Block::addToDAG(DAG::DirectedAcyclicGraph *graph)
+DAG::Container *Block::replaceBlock()
 {
-     for (std::list<Statement*>::iterator it = subs.begin(); it != subs.end(); it++) {
-         (*it)->addToDAG(graph);
-     }
-     // TODO return?
-     return NULL;
+    DAG::Container *container = new DAG::Container();
+    for (std::list<Statement *>::iterator it = subs.begin(); it != subs.end(); it++)
+    {
+        if (dynamic_cast<Block *>(*it))
+        {
+            container->addToDAGContainer(dynamic_cast<Block *>(*it)->replaceBlock());
+        }
+        else if (dynamic_cast<Expression *>(*it))
+        {
+            dynamic_cast<Expression *>(*it)->addToDAG(container);
+        }
+        else
+        {
+            (*it)->searchAndReplaceBlocks();
+            container->addToDAGContainer(*it);
+        }
+    }
+    return container;
 }

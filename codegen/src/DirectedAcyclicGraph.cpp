@@ -3,13 +3,13 @@
 
 namespace DAG {
 
-    Node *DirectedAcyclicGraph::addToDAG(Node *left, Node *right, Expression *expr)
+    DAG::Node *DirectedAcyclicGraph::addToDAG(DAG::Node *left, DAG::Node *right, Expression *expr)
     {
         assert (left != 0 && right != 0);
         std::vector<InnerNode *> leftOps = left->getOperatorNodes(expr);
         std::vector<InnerNode *> rightOps = right->getOperatorNodes(expr);
 
-        Node *resultNode = NULL;
+        DAG::Node *resultNode = NULL;
 
         // test if there is already a InnerNode with left, right and op
         for (unsigned int i = 0; i < leftOps.size(); ++i)
@@ -41,7 +41,7 @@ namespace DAG {
 
         // don't create a new node if we have an assign expression
         if (resultNode == NULL && typeid(*expr) != typeid(Expr_Assign))
-            resultNode = new InnerNode(left, right, expr);
+            resultNode = new DAG::InnerNode(left, right, expr);
 
         // if we have an assign, set the identifier of the left part to the right node
         if (typeid(*expr) == typeid(Expr_Assign))
@@ -61,23 +61,23 @@ namespace DAG {
         return resultNode;
     }
 
-    Node *DirectedAcyclicGraph::addToDAG(int value, Expression *expr)
+    DAG::Node *DirectedAcyclicGraph::addToDAG(int value, Expression *expr)
     {
-        Node *node = NULL;
+        DAG::Node *node = NULL;
         if (!(node = map.getNode(value)))
         {
-            node = new ConstLeafNode(value, expr);
+            node = new DAG::ConstLeafNode(value, expr);
             map.insertNode(value, node);
         }
         return node;
     }
 
-    Node *DirectedAcyclicGraph::addToDAG(std::string &name, Expression *expr)
+    DAG::Node *DirectedAcyclicGraph::addToDAG(std::string &name, Expression *expr)
     {
-        Node *node = NULL;
+        DAG::Node *node = NULL;
         if (!(node = map.getNode(name)))
         {
-            node = new IdentifierLeafNode(name, expr);
+            node = new DAG::IdentifierLeafNode(name, expr);
             map.insertNode(name, node);
         }
         return node;
@@ -85,13 +85,13 @@ namespace DAG {
 
     void DirectedAcyclicGraph::dumpAll()
     {
-        Node::setIndentifierMap(&map);
+        DAG::Node::setIndentifierMap(&map);
         map.dumpAll();
     }
 
     void DirectedAcyclicGraph::gen(CodeGen *out, bool outermost)
     {
-        for (std::map<std::string, Node *>::iterator it = map.getIdentifierMap()->begin();
+        for (std::map<std::string, DAG::Node *>::iterator it = map.getIdentifierMap()->begin();
             it !=  map.getIdentifierMap()->end(); it++)
         {
             (*it).second->gen(out);

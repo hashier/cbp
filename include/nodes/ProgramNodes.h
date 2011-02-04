@@ -90,12 +90,13 @@ class Block : public Statement {
         }
         void gen(CodeGen* out, bool outermost);
         virtual int calcStackOffset(int offset);
-        virtual DAG::Node *addToDAG(DAG::DirectedAcyclicGraph *graph);
         virtual std::vector<Node**> getChildren();
         void insertBefore(unsigned int where, Statement* item);
         void insertAfter(unsigned int where, Statement* item);
         void erase(unsigned int where);
         virtual Node* clone();
+        DAG::Container *replaceBlock();
+        virtual void searchAndReplaceBlocks() { assert(false); }
         virtual ~Block();
     private:
         std::list<Statement*> subs;
@@ -115,6 +116,7 @@ class IfElse : public Statement {
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
         virtual Node* clone();
+        virtual void searchAndReplaceBlocks();
     private:
         Expression* condition;
         Statement* then;
@@ -145,6 +147,7 @@ class SwitchCase : public Statement {
         void gen(CodeGen* out);
         virtual std::vector<Node**> getChildren();
         virtual Node* clone();
+        virtual void searchAndReplaceBlocks();
     private:
         Expression* which;
         std::list<Case*>* cases;
@@ -163,6 +166,7 @@ class WhileLoop : public Statement {
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
         virtual Node* clone();
+        virtual void searchAndReplaceBlocks();
     private:
         Expression* condition;
         Statement* body;
@@ -184,6 +188,7 @@ class Return : public Statement {
         virtual std::vector<Node**> getChildren();
         Expression* getExpr() { return expr; };
         virtual Node* clone();
+        virtual void searchAndReplaceBlocks() { }
     private:
         Expression* expr;
 };
@@ -202,6 +207,7 @@ class Local : public Statement {
         virtual std::vector<Node**> getChildren();
         virtual Node* clone();
         virtual ~Local();
+        virtual void searchAndReplaceBlocks() { }
     private:
         Variable* var;
 };
@@ -238,6 +244,7 @@ class ForLoop : public Statement {
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
         virtual Node* clone();
+        virtual void searchAndReplaceBlocks();
     private:
         Variable* iterator;
         Expression* init_value;
@@ -260,6 +267,7 @@ public:
     Label* getLabel() { return label; };
     void genLabel(CodeGen* out);
     virtual Node* clone();
+    virtual void searchAndReplaceBlocks() { }
 private:
     Label* label;
 };
@@ -277,6 +285,7 @@ public:
     virtual std::vector<Node**> getChildren();
     GotoLabel* getGotoLabel() {return gotoLabel;}
     virtual Node* clone();
+    virtual void searchAndReplaceBlocks() { }
 
 private:
     GotoLabel* gotoLabel;
