@@ -12,7 +12,7 @@
 
 #include"CodeGen.h"
 
-class ExpressionProperties;
+struct ExpressionProperties;
 class ConstrainedEnvironment;
 
 // needed for constant propergation
