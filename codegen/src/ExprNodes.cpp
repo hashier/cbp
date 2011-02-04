@@ -252,6 +252,13 @@ void Expr_BoolXOR::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
 }
 
+Node* Expr_BitLeft::clone() {
+    return new Expr_BitLeft(
+            static_cast<Expression*>(left->clone()),
+            static_cast<Expression*>(right->clone())
+    );
+}
+
 // Shift operators use the 8-bit %cl register, which is equal to the lowest 8 bits of %ecx.
 // arithmetic left shift
 void Expr_BitLeft::gen(CodeGen* out) {
@@ -263,6 +270,13 @@ void Expr_BitLeft::gen(CodeGen* out) {
     *out << Command("shl")("%cl")("%rax");   // %rax = %rax << %cl
     *out << Command("popq")("%rcx");         // restore %rcx from the stack
     *out << Message(DEBUG, "result of * << *", this);
+}
+
+Node* Expr_BitRight::clone() {
+    return new Expr_BitRight(
+            static_cast<Expression*>(left->clone()),
+            static_cast<Expression*>(right->clone())
+    );
 }
 
 // arithmetic right shift
@@ -277,6 +291,13 @@ void Expr_BitRight::gen(CodeGen* out) {
     *out << Message(DEBUG, "result of * >> *", this);
 }
 
+Node* Expr_BitOR::clone() {
+    return new Expr_BitOR(
+            static_cast<Expression*>(left->clone()),
+            static_cast<Expression*>(right->clone())
+    );
+}
+
 void Expr_BitOR::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BitOR::gen()", this);
     right->gen(out);                         // right hand operand into %rax
@@ -286,6 +307,13 @@ void Expr_BitOR::gen(CodeGen* out) {
     *out << Command("or")("%rbx")("%rax");   // %rax = %rax or %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
     *out << Message(DEBUG, "result of * | *", this);
+}
+
+Node* Expr_BitAND::clone() {
+    return new Expr_BitAND(
+            static_cast<Expression*>(left->clone()),
+            static_cast<Expression*>(right->clone())
+    );
 }
 
 void Expr_BitAND::gen(CodeGen* out) {
@@ -299,6 +327,13 @@ void Expr_BitAND::gen(CodeGen* out) {
     *out << Message(DEBUG, "result of * & *", this);
 }
 
+Node* Expr_BitXOR::clone() {
+    return new Expr_BitXOR(
+            static_cast<Expression*>(left->clone()),
+            static_cast<Expression*>(right->clone())
+    );
+}
+
 void Expr_BitXOR::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BitXOR::gen()", this);
     right->gen(out);                         // right hand operand into %rax
@@ -308,6 +343,13 @@ void Expr_BitXOR::gen(CodeGen* out) {
     *out << Command("xor")("%rbx")("%rax");  // %rax = %rax xor %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
     *out << Message(DEBUG, "result of * ^ *", this);
+}
+
+Node* Expr_Add::clone() {
+    return new Expr_Add(
+            static_cast<Expression*>(left->clone()),
+            static_cast<Expression*>(right->clone())
+    );
 }
 
 void Expr_Add::gen(CodeGen* out) {
@@ -356,6 +398,13 @@ void Expr_Add::gen(CodeGen* out) {
             ("%ax", bigSizeInBytes);         //  argument with bigger size
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
     *out << Message(DEBUG, "result of * + *", this);
+}
+
+Node* Expr_Sub::clone() {
+    return new Expr_Sub(
+            static_cast<Expression*>(left->clone()),
+            static_cast<Expression*>(right->clone())
+    );
 }
 
 void Expr_Sub::gen(CodeGen* out) {

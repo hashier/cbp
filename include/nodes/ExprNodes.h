@@ -128,11 +128,13 @@ class Expr_BoolXOR : public Binary {
 class Expr_BitLeft : public Binary {
 public:
     Expr_BitLeft(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual Node* clone();
     virtual void gen(CodeGen* out);
 };
 class Expr_BitRight : public Binary {
 public:
     Expr_BitRight(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual Node* clone();
     virtual void gen(CodeGen* out);
 };
 
@@ -140,16 +142,19 @@ public:
 class Expr_BitOR : public Binary {
 public:
     Expr_BitOR(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual Node* clone();
     virtual void gen(CodeGen* out);
 };
 class Expr_BitAND : public Binary {
 public:
     Expr_BitAND(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual Node* clone();
     virtual void gen(CodeGen* out);
 };
 class Expr_BitXOR : public Binary {
 public:
     Expr_BitXOR(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual Node* clone();
     virtual void gen(CodeGen* out);
 };
 
@@ -157,6 +162,7 @@ public:
 class Expr_Add : public Binary {
 public:
     Expr_Add(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual Node* clone();
     constant* getConstant();
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
@@ -164,6 +170,7 @@ public:
 class Expr_Sub : public Binary {
 public:
     Expr_Sub(Expression* left, Expression* right) : Binary(left, right) { }
+    virtual Node* clone();
     constant* getConstant();
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
