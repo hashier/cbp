@@ -99,6 +99,12 @@
     <ClInclude Include="..\include\optimizer\Maybe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optimizer\ConstrainedEnvironment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nodes\Variables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">

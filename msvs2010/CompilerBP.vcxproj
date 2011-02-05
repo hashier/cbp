@@ -34,7 +34,9 @@
     <ClInclude Include="..\include\nodes\ExprNodes.h" />
     <ClInclude Include="..\include\nodes\ProgramNodes.h" />
     <ClInclude Include="..\include\nodes\Types.h" />
+    <ClInclude Include="..\include\nodes\Variables.h" />
     <ClInclude Include="..\include\optimizer\ConstantPropergation.h" />
+    <ClInclude Include="..\include\optimizer\ConstrainedEnvironment.h" />
     <ClInclude Include="..\include\optimizer\ConstraintSolving.h" />
     <ClInclude Include="..\include\optimizer\ExpressionProperties.h" />
     <ClInclude Include="..\include\optimizer\Inlining.h" />
