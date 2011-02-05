@@ -190,11 +190,11 @@ bool Expr_Identifier::isConst() {
             }
         }
     }
-	return false;
+    return false;
 }
 
 constant* Expr_Identifier::getConstant() {
-	std::string identifier = this->getRef()->getIdentifier();
+    std::string identifier = this->getRef()->getIdentifier();
     std::list<std::list<ConstVar*>* >::reverse_iterator it1 = blocks.rbegin();
     for(; it1 != blocks.rend(); it1++) {
         std::list<ConstVar*>::iterator it2 = (*it1)->begin();

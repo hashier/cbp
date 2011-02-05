@@ -26,8 +26,13 @@ void Expr_Mul::gen(CodeGen* out) {
     // multiply
     *out << Command("imull")("%ebx");
     *out << Command("popq")("%rbx");
-
 }
+
+Node* Expr_Mul::clone()
+{
+    return new Expr_Mul((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Expr_Div::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Div::gen()", this);
     // right hand operand into %eax
@@ -45,6 +50,12 @@ void Expr_Div::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
     *out << Command("popq")("%rdx");
 }
+
+Node* Expr_Div::clone()
+{
+    return new Expr_Div((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Expr_Mod::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Mod::gen()", this);
     // right hand operand into %eax
@@ -63,6 +74,12 @@ void Expr_Mod::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
     *out << Command("popq")("%rdx");
 }
+
+Node* Expr_Mod::clone()
+{
+    return new Expr_Mod((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Constant::genLeft(CodeGen* out) {
     *out << Message(ERROR, "Left values of Constant expressions not supported!", this);
     exit(42);
@@ -70,6 +87,11 @@ void Constant::genLeft(CodeGen* out) {
 
 void ConstInt::gen(CodeGen* out) {
     *out << Command("movl")(value)("%eax");
+}
+
+Node* ConstInt::clone()
+{
+    return new ConstInt(value);
 }
 
 void Expr_EQ::gen(CodeGen* out) {
@@ -90,6 +112,11 @@ void Expr_EQ::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
 }
 
+Node* Expr_EQ::clone()
+{
+    return new Expr_EQ((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Expr_NEQ::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_NEQ::gen()", this);
     // left hand operand into %eax
@@ -106,6 +133,11 @@ void Expr_NEQ::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+}
+
+Node* Expr_NEQ::clone()
+{
+    return new Expr_NEQ((Expression*)left->clone(), (Expression*)right->clone());
 }
 
 void Expr_LT::gen(CodeGen* out) {
@@ -126,6 +158,11 @@ void Expr_LT::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
 }
 
+Node* Expr_LT::clone()
+{
+    return new Expr_LT((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Expr_GT::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_GT::gen()", this);
     // left hand operand into %eax
@@ -142,6 +179,11 @@ void Expr_GT::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+}
+
+Node* Expr_GT::clone()
+{
+    return new Expr_GT((Expression*)left->clone(), (Expression*)right->clone());
 }
 
 void Expr_LE::gen(CodeGen* out) {
@@ -162,6 +204,11 @@ void Expr_LE::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
 }
 
+Node* Expr_LE::clone()
+{
+    return new Expr_LE((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Expr_GE::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_GE::gen()", this);
     // left hand operand into %eax
@@ -178,6 +225,11 @@ void Expr_GE::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+}
+
+Node* Expr_GE::clone()
+{
+    return new Expr_GE((Expression*)left->clone(), (Expression*)right->clone());
 }
 
 void Expr_BoolOR::gen(CodeGen* out) {
@@ -205,6 +257,11 @@ void Expr_BoolOR::gen(CodeGen* out) {
     *out << labelEnd;
 }
 
+Node* Expr_BoolOR::clone()
+{
+    return new Expr_BoolOR((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Expr_BoolAND::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BoolAND::gen()", this);
     Label labelFalse = out->newMark("false");
@@ -230,6 +287,11 @@ void Expr_BoolAND::gen(CodeGen* out) {
     *out << labelEnd;
 }
 
+Node* Expr_BoolAND::clone()
+{
+    return new Expr_BoolAND((Expression*)left->clone(), (Expression*)right->clone());
+}
+
 void Expr_BoolXOR::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BoolXOR::gen()", this);
     *out << Command("pushq")("%rbx");
@@ -250,6 +312,11 @@ void Expr_BoolXOR::gen(CodeGen* out) {
     *out << Command("sete")("%al");
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+}
+
+Node* Expr_BoolXOR::clone()
+{
+    return new Expr_BoolXOR((Expression*)left->clone(), (Expression*)right->clone());
 }
 
 Node* Expr_BitLeft::clone() {
@@ -432,6 +499,10 @@ void Expr_Identifier::gen(CodeGen* out) {
     int size = ref->getSize();
     *out << Command("mov", size)(ref->getAddress())("%ax", size);
 }
+Node* Expr_Identifier::clone()
+{
+    return new Expr_Identifier(ref);
+}
 
 void Expr_Assign::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Assign:gen()", this);
@@ -442,6 +513,11 @@ void Expr_Assign::gen(CodeGen* out) {
     int size = right->getType()->getSize();
     *out << Command("mov", size)("%ax", size)(Reg("rbx"));   // %ebx = %eax
     *out << Command("popq")("%rbx");            // restore %ebx from the stack
+}
+
+Node* Expr_Assign::clone()
+{
+    return new Expr_Assign((Expression*)left->clone(), (Expression*)right->clone());
 }
 
 void FuncCall::gen(CodeGen *out) {
@@ -533,8 +609,22 @@ void FuncCall::gen(CodeGen *out) {
     }
 }
 
+Node* FuncCall::clone()
+{
+    std::list<Expression*>* args = new std::list<Expression*>();
+    for(std::list<Expression*>::iterator it=arguments->begin(); it!=arguments->end(); ++it)
+        args->push_back((Expression*)(*it)->clone());
+
+    return new FuncCall(new std::string(func->getIdentifier()), args); 
+}
+
 void Expr_Ref::gen(CodeGen* out) {
     sub->genLeft(out);
+}
+
+Node* Expr_Ref::clone()
+{
+    return new Expr_Ref((Expression*)sub->clone());
 }
 
 void Expr_Deref::genLeft(CodeGen* out) {
@@ -607,6 +697,19 @@ void Expr_Deref::gen(CodeGen* out) {
     *out << Command("popq")("%rbx");
 }
 
+std::vector<Node**> Expr_Deref::getChildren()
+{
+    std::vector<Node**> result;
+    result.push_back((Node**)&sub);
+    result.push_back((Node**)&index);
+    return result;
+}
+
+Node* Expr_Deref::clone()
+{
+    return new Expr_Deref((Expression*)sub->clone(), (Expression*)index->clone());
+}
+
 void Expr_Struc::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Struc::gen()", this);
     // Get a pointer to top of the struct
@@ -616,6 +719,11 @@ void Expr_Struc::gen(CodeGen* out) {
     int size = var->getSize();
     // Return the var (with appropiate mov command) in %rax
     *out << Command("mov", size)(reg)("%ax", size);
+}
+
+Node* Expr_Struc::clone()
+{
+    return new Expr_Struc((Expression*)sub->clone(), new std::string(var->getIdentifier()));
 }
 
 void Expr_Struc::genLeft(CodeGen* out) {

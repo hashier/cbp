@@ -9,29 +9,41 @@ Block::Block()
     dag = new DAG::DirectedAcyclicGraph();
 }
 
-void Block::insertBefore(unsigned int where, Statement* item)
+void Block::insertBefore(Statement* where, Statement* item)
 {
-    std::list<Statement*>::iterator it = subs.begin();
-    for(unsigned int i=0; i<where; i++)
-        it++;
-    subs.insert(it, item);
+    for(std::list<Statement*>::iterator it=subs.begin(); it!=subs.end(); ++it)
+    {
+        if((*it)==where)
+        {
+            subs.insert(it, item);
+            return;
+        }
+    }
 }
 
-void Block::insertAfter(unsigned int where, Statement* item)
+void Block::insertAfter(Statement* where, Statement* item)
 {
-    std::list<Statement*>::iterator it = subs.begin();
-    for(unsigned int i=0; i<where; i++)
-        it++;
-    it++;
-    subs.insert(it, item);
+    for(std::list<Statement*>::iterator it=subs.begin(); it!=subs.end(); ++it)
+    {
+        if((*it)==where)
+        {
+            it++;
+            subs.insert(it, item);
+            return;
+        }
+    }
 }
 
-void Block::erase(unsigned int where)
+void Block::erase(Statement* what)
 {
-    std::list<Statement*>::iterator it = subs.begin();
-    for(unsigned int i=0; i<where; i++)
-        it++;
-    subs.erase(it);
+    for(std::list<Statement*>::iterator it=subs.begin(); it!=subs.end(); ++it)
+    {
+        if((*it)==what)
+        {
+            subs.erase(it);
+            return;
+        }
+    }
 }
 
 void Block::gen(CodeGen* out, bool outermost) {

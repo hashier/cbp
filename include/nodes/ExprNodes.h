@@ -56,6 +56,7 @@ class Expr_Assign : public Binary {
         void constProp();
         virtual void gen(CodeGen* out);
         virtual void solveConstraints(ConstrainedEnvironment& env);
+        virtual Node* clone();
 };
 
 // Precedence 10
@@ -83,45 +84,54 @@ class Expr_EQ : public Binary {
     public: Expr_EQ(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+    virtual Node* clone();
 };
 class Expr_NEQ : public Binary {
     public: Expr_NEQ(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+    virtual Node* clone();
 };
 class Expr_LT : public Binary {
     public: Expr_LT(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+    virtual Node* clone();
 };
 class Expr_GT : public Binary {
     public: Expr_GT(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+    virtual Node* clone();
 };
 class Expr_LE : public Binary {
     public: Expr_LE(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+    virtual Node* clone();
 };
 class Expr_GE : public Binary {
     public: Expr_GE(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
     virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+    virtual Node* clone();
 };
 
 // Precedence 8
 class Expr_BoolOR : public Binary {
     public: Expr_BoolOR(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual Node* clone();
 };
 class Expr_BoolAND : public Binary {
     public: Expr_BoolAND(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual Node* clone();
 };
 class Expr_BoolXOR : public Binary {
     public: Expr_BoolXOR(Expression* left, Expression* right) : Binary(left, right) { }
     virtual void gen(CodeGen* out);
+    virtual Node* clone();
 };
 
 // Precedence 7
@@ -183,6 +193,7 @@ class Expr_Mul : public Binary {
         constant* getConstant();
         virtual void gen(CodeGen* out);
         virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+        virtual Node* clone();
 };
 class Expr_Div : public Binary {
     public:
@@ -190,12 +201,14 @@ class Expr_Div : public Binary {
         constant* getConstant();
         virtual void gen(CodeGen* out);
         virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+        virtual Node* clone();
 };
 class Expr_Mod : public Binary {
     public:
         Expr_Mod(Expression* left, Expression* right) : Binary(left, right) { }
         constant* getConstant();
         virtual void gen(CodeGen* out);
+        virtual Node* clone();
 };
 
 // Precedence 3
@@ -204,6 +217,7 @@ class Expr_Ref : public Unary {
         Expr_Ref(Expression* sub);
         virtual Type* getType() { return type; }
         virtual void gen(CodeGen* out);
+        virtual Node* clone();
     private:
         Type* type;
 };
@@ -223,6 +237,7 @@ class Expr_Struc : public Expression {
         virtual void genLeft(CodeGen* out);
         virtual Type* getType();
         virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
     private:
         Expression* sub;
         StructVariable* var;
@@ -237,6 +252,8 @@ class Expr_Deref : public Unary {
         virtual Type* getType();
         virtual void gen(CodeGen* out);
         virtual void genLeft(CodeGen* out);
+        virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
 };
 
 // Precedence 1
@@ -264,6 +281,7 @@ class ConstInt : public Constant {
         constant* getConstant();
         virtual ExpressionProperties properties(ConstrainedEnvironment& env);
         DAG::Node *addToDAG(DAG::Container *graph);
+        virtual Node* clone();
 };
 
 class ConstFloat : public Constant {
@@ -282,6 +300,7 @@ class Expr_Identifier : public Atom {
         Variable* ref;
     public:
         Expr_Identifier(std::string *identifier);
+        Expr_Identifier(Variable* ref);
         virtual void genLeft(CodeGen* out);
         virtual void gen(CodeGen* out);
         virtual Type* getType();
@@ -294,6 +313,7 @@ class Expr_Identifier : public Atom {
         void setRef(Variable* ref);
         DAG::Node *addToDAG(DAG::Container *graph);
         virtual std::vector<Node**> getChildren();
+        virtual Node* clone();
 };
 
 class FuncCall : public Atom {
@@ -310,5 +330,6 @@ public:
     Function* getFunction();
     std::list<Expression*>* getArguments();
     virtual std::vector<Node**> getChildren();
+    virtual Node* clone();
 };
 

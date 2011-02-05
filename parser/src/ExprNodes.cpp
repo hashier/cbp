@@ -111,6 +111,11 @@ Type* Expr_Struc::getType() {
     return var->getType();
 }
 
+Expr_Identifier::Expr_Identifier(Variable* ref):ref(ref)
+{
+
+}
+
 Expr_Identifier::Expr_Identifier(std::string *identifier)
 {
     try

@@ -91,9 +91,9 @@ class Block : public Statement {
         void gen(CodeGen* out, bool outermost);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
-        void insertBefore(unsigned int where, Statement* item);
-        void insertAfter(unsigned int where, Statement* item);
-        void erase(unsigned int where);
+        void insertBefore(Statement* where, Statement* item);
+        void insertAfter(Statement* where, Statement* item);
+        void erase(Statement* what);
         virtual Node* clone();
         DAG::Container *replaceBlock();
         virtual void searchAndReplaceBlocks() { assert(false); }
@@ -235,6 +235,8 @@ class ForLoop : public Statement {
         ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Statement* body);
         //ForLoop with step expression
         ForLoop(std::string* iteratorname, Expression* init_value, Expression* final_value, Expression* step, Statement* body);
+        //ForLoop for clone
+        ForLoop(Variable* iterator, Expression* init_value, Expression* final_value, Expression* step, Statement* body);
         void dump(int num = 0);
         void constProp();
         bool isConst();

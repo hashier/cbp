@@ -145,7 +145,6 @@ Node* Block::clone()
 }
 
 
-
 Block::~Block() {
     //dag->dumpAll();
     for (std::list<Statement*>::iterator it = subs.begin() ; it != subs.end(); it++ ) {
@@ -272,6 +271,12 @@ init_value(init_value),final_value(final_value),step(step),body(body)
     }
 }
 
+//ForLoop with step expression
+ForLoop::ForLoop(Variable* iterator, Expression* init_value, Expression* final_value, Expression* step, Statement* body) :
+iterator(iterator),init_value(init_value),final_value(final_value),step(step),body(body)
+{
+}
+
 void ForLoop::dump(int num) {
     indent(num); std::cout << "For Loop" << std::endl;
     indent(num); std::cout << "Iterator: " << iterator->getIdentifier() << std::endl;
@@ -302,7 +307,7 @@ ForLoop::~ForLoop() {
 
 Node* ForLoop::clone()
 {
-    ForLoop* copy = new ForLoop(    new std::string(iterator->getIdentifier()),
+    ForLoop* copy = new ForLoop(    iterator,
                                     (Expression*)init_value->clone(),
                                     (Expression*)final_value->clone(),
                                     step==NULL ? NULL : (Expression*)step->clone(),
