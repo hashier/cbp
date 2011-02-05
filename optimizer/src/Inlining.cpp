@@ -9,13 +9,12 @@
 #include "ProgramNodes.h"
 #include "Variables.h"
 
-
 std::vector<Statement*> getStatements(Function* func)
 {
     std::vector<Statement*> result;
 
     //get all statements of host function
-    Block* block = dynamic_cast<Block*>(*func->getChildren()[0]);
+    Block* block = dynamic_cast<Block*>(func->getStatement());
     if(block==NULL) return result;
 
     std::vector<Node**> list = block->getChildren();
@@ -45,8 +44,7 @@ void optimizeTree_traverseTree_ReplaceArguments(Statement* statement, Variable* 
             if(var->getRef()==arg)
             {
                 std::cout << "    -replace var '" << var->getRef()->getIdentifier() << "' at line " << var->getLineNumber() << std::endl; 
-                //statement->replaceChild(var, exp);
-                delete childs[i];
+                delete *childs[i];
                 *childs[i] = exp;
             }
             continue;
@@ -59,10 +57,10 @@ void optimizeTree_traverseTree_ReplaceArguments(Statement* statement, Variable* 
     }
 }
 
-void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* parentStatement, GotoLabel* label, Expr_Identifier* var)
+void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* statement, GotoLabel* label, Expr_Identifier* var)
 {
     //get all child nodes
-    std::vector<Node**> childs = parentStatement->getChildren();
+    std::vector<Node**> childs = statement->getChildren();
 
     for(unsigned int i=0; i<childs.size(); i++)
     {
@@ -77,7 +75,7 @@ void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* parentStat
             //any return value here?
             if(ret->getExpr()!=NULL)
             {
-                assignResult = new Expr_Assign(var, ret->getExpr());
+                assignResult = new Expr_Assign(var, (Expression*)ret->getExpr()->clone());
             }else{
                 assignResult = new Expr_Assign(var, new ConstInt(0));
             }
@@ -85,13 +83,13 @@ void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* parentStat
             assignResult->getRight()->setLineNumber(-1);
 
             //replace return with assign result statement
-            delete ret;
+            delete *childs[i];
             *childs[i] = assignResult;
 
             //insert jump to end
             Goto* goto_ = new Goto(label);
             goto_->setLineNumber(-1);
-            block->insertAfter(i+1, goto_);
+            block->insertAfter(assignResult, goto_);
 
             continue;
         }
@@ -111,23 +109,35 @@ void optimizeTree_traverseTree_ReplaceReturn(Block* block, Statement* parentStat
     }
 }
 
-void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call)
+void optimizeTree_traverseTree_FuncCall(Statement* statement, FuncCall* call, Variable* var)
 {
-    Block* parentBlock = (Block*)parentFunc->getStatement();
-    std::vector<Node**> parentBlockChildren = parentBlock->getChildren();
-    
-    //get parent statement index in parent function block
-    unsigned int parentStatementIndex=0;
-    for(unsigned int i=0; i<parentBlockChildren.size(); i++)
-    {
-        Statement* statement = dynamic_cast<Statement*>(*parentBlockChildren[i]);
-        if( (statement!=NULL) && (statement==parentStatement) )
-        {
-            parentStatementIndex = i;
-            break;
-        }
-    }
+    //get all child nodes
+    std::vector<Node**> childs = statement->getChildren();
 
+    for(unsigned int i=0; i<childs.size(); i++)
+    {
+        //if child is a return
+        FuncCall* call_ = dynamic_cast<FuncCall*>(*childs[i]);
+        if(call_!=NULL)
+        {
+            std::cout << "    -replace function call with local var at line " << call_->getLineNumber() << std::endl;
+
+            //replace return with assign result statement
+            delete *childs[i];
+            *childs[i] = new Expr_Identifier((Variable*)var->clone());
+            return;
+        }
+
+        //if childs is a Statement
+        Statement* child = dynamic_cast<Statement*>(*childs[i]);
+        if(child==NULL) continue;
+
+        optimizeTree_traverseTree_FuncCall(child, call, var);
+    }
+}
+
+void doInlining(Function* parentFunc, Block* parentBlock, Statement* parentStatement, FuncCall* call)
+{
 //-----------------------------------------------------------------------------
 //create new local variable for result
 
@@ -143,13 +153,13 @@ void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call
     localVarRet->setLineNumber(-1); //means lines was created by optimizer
 
     //insert local var before function call
-    parentBlock->insertBefore(parentStatementIndex, localVarRet);
+    parentBlock->insertBefore(parentStatement, localVarRet);
 
 //-----------------------------------------------------------------------------
 //create copy of inline function
 
     //create copy of block
-    Block* inlineBlock = (Block*)parentFunc->getStatement()->clone();
+    Block* inlineBlock = (Block*)call->getFunction()->getStatement()->clone();
     inlineBlock->setLineNumber(-1);
 
     //add additional jump destination at the end for
@@ -186,7 +196,7 @@ void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call
 //insert function code after new variable
 
     //insert block before parent statement
-    parentBlock->insertAfter(parentStatementIndex, inlineBlock);
+    parentBlock->insertBefore(parentStatement, inlineBlock);
 
 //-----------------------------------------------------------------------------
 //remove parent statement, if function call
@@ -197,7 +207,10 @@ void doInlining(Function* parentFunc, Statement* parentStatement, FuncCall* call
     {
         //remove old call
         delete parentStatement;
-        parentBlock->erase(parentStatementIndex+1);
+        parentBlock->erase(parentStatement);
+    }else{
+        //replace call with local variable
+        optimizeTree_traverseTree_FuncCall(parentStatement, call, varRet);
     }
 }
 
@@ -216,16 +229,16 @@ unsigned int getStatementCount(Function* func)
     return block->getChildren().size();
 }
 
-void optimizeTree_traverseTree(Function* parentFunc, Statement* parentStatement, Statement* statement)
+void optimizeTree_traverseTree(Function* parentFunc, Block* parentBlock, Statement* parentStatement, Statement* statement)
 {
     //if statement is function call from source code
     FuncCall* call = dynamic_cast<FuncCall*>(statement);
     if( (call!=NULL) && (call->getFunction()!=parentFunc) && (call->getFunction()->getAbi()==Abi_default) )
     {
-        std::cout << "   -inline function call '" << call->getFunction()->getIdentifier() << "' in line '" << parentStatement->getLineNumber() << "'" << std::endl;
+        std::cout << "   -inline function call '" << call->getFunction()->getIdentifier() << "' in line '" << statement->getLineNumber() << "'" << std::endl;
 
         //do inlining on FuncCall
-        doInlining(parentFunc, parentStatement, call);
+        doInlining(parentFunc, parentBlock, parentStatement, call);
 
         //finish current node
         return;
@@ -237,8 +250,15 @@ void optimizeTree_traverseTree(Function* parentFunc, Statement* parentStatement,
     {
         Statement* childStatement = dynamic_cast<Statement*>(*childs[i]);
         if(childStatement==NULL) continue;
-       
-        optimizeTree_traverseTree(parentFunc, parentStatement, childStatement);
+
+        //enter new block?
+        Block* newBlock = dynamic_cast<Block*>(*childs[i]); 
+        if(newBlock==NULL)
+        {
+            optimizeTree_traverseTree(parentFunc, parentBlock, parentStatement, childStatement);
+        }else{
+            optimizeTree_traverseTree(parentFunc, newBlock, newBlock, childStatement);
+        }
     }
 }
 
@@ -274,7 +294,7 @@ void optimizeTree_Inlining(File* file)
         for(unsigned int i=0; i<statements.size(); i++)
         {
             //explore statement recursive - try to find function calls
-            optimizeTree_traverseTree(func, statements[i], statements[i]);
+            optimizeTree_traverseTree(func, (Block*)func->getStatement(), statements[i], statements[i]);
         }
     }
 }
@@ -379,6 +399,8 @@ void Expr_Identifier::setRef(Variable* ref)
 std::vector<Node**> Expr_Struc::getChildren()
 {
     std::vector<Node**> result;
+    result.push_back((Node**)&sub);
+    result.push_back((Node**)&var);
     return result;
 }
 
