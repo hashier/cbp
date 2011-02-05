@@ -2,6 +2,7 @@
 #include"Variables.h"
 #include"ProgramNodes.h"
 #include"Message.h"
+#include"DirectedAcyclicGraph.h"
 
 #include <sstream>
 
@@ -29,6 +30,14 @@ Statement* Function::getStatement()
 std::list<Variable*>* Function::getArguments()
 {
     return arguments;
+}
+
+void Function::searchAndReplaceBlocks()
+{
+    if (dynamic_cast<Block *>(statement))
+        statement = dynamic_cast<Block *>(statement)->replaceBlock();
+    else
+        statement->searchAndReplaceBlocks();
 }
 
 void File::gen(CodeGen* out) {

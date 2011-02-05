@@ -3,6 +3,7 @@
 #include "Inlining.h"
 #include "ConstantPropergation.h"
 #include "ConstraintSolving.h"
+#include "CommonSubexpressionElimination.h"
 
 #include <map>
 #include <queue>
@@ -20,6 +21,7 @@ namespace {
         NamedOptimizer("inlining", PrioritizedOptimizer(20, &optimizeTree_Inlining))
         , NamedOptimizer("constprop", PrioritizedOptimizer(10, &optimizeTree_ConstantPropergation))
         , NamedOptimizer("constraint", PrioritizedOptimizer(30, &optimizeTree_ConstraintSolving))
+        , NamedOptimizer("elimination", PrioritizedOptimizer(1, &optimizeTree_CommonSubexpressionElimination))
     };
     
     enum { optimizerInitSize = sizeof(optimizerInit) / sizeof(NamedOptimizer) };

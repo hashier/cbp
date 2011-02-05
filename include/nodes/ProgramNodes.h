@@ -28,6 +28,7 @@ class Function : public Declaration {
         Statement* getStatement();
         std::list<Variable*>* getArguments();
         const Func_abi &getAbi() const { return abi; }
+        virtual void searchAndReplaceBlocks();
         virtual ~Function();
     private:
         Func_abi abi;
