@@ -6,7 +6,6 @@ using namespace std;
 
 Block::Block()
 {
-    dag = new DAG::DirectedAcyclicGraph();
 }
 
 void Block::insertBefore(Statement* where, Statement* item)
