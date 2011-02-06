@@ -77,12 +77,16 @@ void Block::gen(CodeGen* out, bool outermost) {
 
 int Block::calcStackOffset(int offset) {
     std::list<Statement*>::iterator it;
+    int mySize = 0;
+    int tmp;
     for ( it = subs.begin(); it != subs.end(); it++ ) {
           // If so, trade some information: offset for size
-          offset += (*it)->calcStackOffset(offset);
+            tmp = (*it)->calcStackOffset(offset);
+            offset += tmp;
+            mySize += tmp;
     }
     // Return the offset
-    return offset;
+    return mySize;
 }
 
 DAG::Container *Block::replaceBlock()

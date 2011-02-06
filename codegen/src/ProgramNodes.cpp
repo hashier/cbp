@@ -321,21 +321,31 @@ int Local::calcStackOffset(int offset) {
 }
 
 int IfElse::calcStackOffset(int offset) {
-    offset += then->calcStackOffset(offset);
+    int mySize = 0;
+    int tmp;
+
+    tmp = then->calcStackOffset(offset);
+    offset += tmp;
+    mySize += tmp;
     if(otherwise)
-        offset += otherwise->calcStackOffset(offset);
+    {
+        tmp = otherwise->calcStackOffset(offset);
+        mySize += tmp;
+    }
     // Return the offset
-    return offset;
+    return mySize;
 }
 int WhileLoop::calcStackOffset(int offset) {
-    offset += body->calcStackOffset(offset);
+    int mySize = 0;
+    mySize += body->calcStackOffset(offset);
     // Return the offset
-    return offset;
+    return mySize;
 }
 int ForLoop::calcStackOffset(int offset) {
+    int mySize = 0;
     offset += body->calcStackOffset(offset);
     // Return the offset
-    return offset;
+    return mySize;
 }
 
 
