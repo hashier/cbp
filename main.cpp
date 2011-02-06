@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     error = yyparse((void*) &tree);
     if ( error) {
         std::cout << "Parse error -> Abort" << std::endl;
-        exit ( 1);
+        return 1;
     }
     std::cout << " -done" << std::endl << std::endl;
 
