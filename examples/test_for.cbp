@@ -2,8 +2,23 @@ func abi_c print_eax():void
 
 func main () : void {
 	local var i : int32
-	for i = 3 .. 12 {
+
+	# loop from 7 to 7: only i = 7
+	for i = 7 .. 7 {
 		i = i # trick to move i to register eax
 		call print_eax()
 	}
+
+	# loop from -3 to -1: i = -3,-2,-1
+	for i = -3 .. -1 {
+		i = i # trick to move i to register eax
+		call print_eax()
+	}
+
+	# loop from 3 to 1 should do nothing, but loops infinitly!
+#	for i = 3 .. 1 {
+#		i = i # trick to move i to register eax
+#		call print_eax()
+#	}
+
 }
