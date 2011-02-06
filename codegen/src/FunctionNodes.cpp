@@ -33,6 +33,9 @@ void Function::gen(CodeGen* out) {
         int offset = statement->calcStackOffset(0);
         offset = offset > 0 ? offset : -offset;
 
+        //debug helper
+        //std::cout << " -" << getIdentifier() << " : stackframe=" << offset << std::endl;
+
         *out << Command("pushq")("%rbp");
         *out << Command("movq")("%rsp")("%rbp");
 

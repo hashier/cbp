@@ -43,9 +43,9 @@ void optimizeTree_traverseTree_ReplaceArguments(Statement* statement, Variable* 
             //its the argument we are going to replace?
             if(var->getRef()==arg)
             {
-                std::cout << "    -replace var '" << var->getRef()->getIdentifier() << "' at line " << var->getLineNumber() << std::endl; 
+                //std::cout << "    -replace var '" << var->getRef()->getIdentifier() << "' at line " << var->getLineNumber() << std::endl; 
                 delete *childs[i];
-                *childs[i] = exp;
+                *childs[i] = exp->clone();
             }
             continue;
         }
@@ -124,7 +124,7 @@ void optimizeTree_traverseTree_FuncCall(Statement* statement, FuncCall* call, Va
 
             //replace return with assign result statement
             delete *childs[i];
-            *childs[i] = new Expr_Identifier((Variable*)var->clone());
+            *childs[i] = new Expr_Identifier(var);
             return;
         }
 
@@ -136,24 +136,126 @@ void optimizeTree_traverseTree_FuncCall(Statement* statement, FuncCall* call, Va
     }
 }
 
-void doInlining(Function* parentFunc, Block* parentBlock, Statement* parentStatement, FuncCall* call)
+int optimizeTree_NoLocalVar_traverseTree(int count, Statement* statement)
 {
+    Local* local = dynamic_cast<Local*>(statement);
+    if(local!=NULL)
+        count++;
+
+    //get all child nodes
+    std::vector<Node**> childs = statement->getChildren();
+    for(unsigned int i=0; i<childs.size(); i++)
+    {
+        Statement* childStatement = dynamic_cast<Statement*>(*childs[i]);
+        if(childStatement==NULL) continue;
+        count = optimizeTree_NoLocalVar_traverseTree(count, childStatement);
+    }
+
+    return count;
+}
+
+bool optimizeTree_NoLocalVar(Function* func)
+{
+    int count = optimizeTree_NoLocalVar_traverseTree(0, func->getStatement());
+    return count==0;
+}
+
+int optimizeTree_NoArgumentAssign_traverseTree(int count, Statement* statement, Variable* var)
+{
+    Expr_Assign* assign = dynamic_cast<Expr_Assign*>(statement);
+    if(assign!=NULL)
+    {
+        Expr_Identifier* identifier = dynamic_cast<Expr_Identifier*>(assign->getLeft());
+        if( (identifier!=NULL) && (identifier->getRef()==var))
+            count++;
+    }
+
+    //get all child nodes
+    std::vector<Node**> childs = statement->getChildren();
+    for(unsigned int i=0; i<childs.size(); i++)
+    {
+        Statement* childStatement = dynamic_cast<Statement*>(*childs[i]);
+        if(childStatement==NULL) continue;
+        count = optimizeTree_NoArgumentAssign_traverseTree(count, childStatement, var);
+    }
+
+    return count;
+}
+
+bool optimizeTree_NoArgumentAssign(Function* func)
+{
+    std::list<Variable*>* args = func->getArguments();
+
+    int count = 0;
+    for(std::list<Variable*>::iterator it=args->begin(); it!=args->end(); ++it)
+    {
+        count += optimizeTree_NoArgumentAssign_traverseTree(0, func->getStatement(), *it);
+    }
+
+    return count==0;
+}
+
+int optimizeTree_ParentStatement(int count, Node* statement, Node* item)
+{
+    if(statement==item)
+        count++;
+
+    //get all child nodes
+    std::vector<Node**> childs = statement->getChildren();
+    for(unsigned int i=0; i<childs.size(); i++)
+    {
+        Statement* childStatement = dynamic_cast<Statement*>(*childs[i]);
+        if(childStatement==NULL) continue;
+        count = optimizeTree_ParentStatement(count, childStatement, item);
+    }
+
+    return count;
+}
+
+void doInlining(Function* parentFunc, Block* parentBlock, FuncCall* call)
+{
+//-----------------------------------------------------------------------------
+//find parent statement in parent block
+
+    Statement* parentStatement;
+    std::vector<Node**> childs = parentBlock->getChildren();
+    for(unsigned int i=0; i<childs.size(); i++)
+    {
+        Statement* statement = dynamic_cast<Statement*>(*childs[i]);
+        if(statement==NULL) continue;
+
+        if(optimizeTree_ParentStatement(0, statement, call)>0)
+        {
+            parentStatement = statement; 
+        }
+    }
 //-----------------------------------------------------------------------------
 //create new local variable for result
 
-    //create unique name
-    std::stringstream ssName;
-    ssName << "InlineRet_" << parentBlock->getChildren().size(); //TODO: create unique pre/suffix
+    LocalVariable* varRet   = NULL;
+    Local* localVarRet      = NULL;
+    std::string* varRetName = NULL;
 
-    //create local var
-    std::string* varRetName = new std::string(ssName.str()); 
-    LocalVariable* varRet = new LocalVariable(varRetName, call->getFunction()->getType());
-    varRet->setLineNumber(-1); //means lines was created by optimizer
-    Local* localVarRet = new Local(varRet);
-    localVarRet->setLineNumber(-1); //means lines was created by optimizer
+    ////ignore when void
+    //if(parentFunc->getType()!=NULL)
+    //{
+        //create unique name
+        std::stringstream ssName;
 
-    //insert local var before function call
-    parentBlock->insertBefore(parentStatement, localVarRet);
+        //ssName << "InlineRet_" << parentBlock->getChildren().size(); //TODO: create unique pre/suffix
+        ssName << "InlineRet_" << parentFunc->getIdentifier() << "_" << optimizeTree_NoLocalVar_traverseTree(0, parentFunc->getStatement());
+        std::cout << "    -create new local var '" << ssName.str() << "'" << std::endl;
+
+        //create local var
+        varRetName = new std::string(ssName.str()); 
+        varRet = new LocalVariable(varRetName, call->getFunction()->getType());
+        varRet->setLineNumber(-1); //means lines was created by optimizer
+        localVarRet = new Local(varRet);
+        localVarRet->setLineNumber(-1); //means lines was created by optimizer
+
+        //insert local var before function call
+        parentBlock->insertBefore(parentStatement, localVarRet);
+    //}
 
 //-----------------------------------------------------------------------------
 //create copy of inline function
@@ -188,9 +290,13 @@ void doInlining(Function* parentFunc, Block* parentBlock, Statement* parentState
 //-----------------------------------------------------------------------------
 //treat return statements - convert to jump
 
-    Expr_Identifier* retValId = new Expr_Identifier(varRetName);
-    retValId->setLineNumber(-1);
-    optimizeTree_traverseTree_ReplaceReturn(inlineBlock, inlineBlock, labelEnd, retValId);
+    //ignore when void
+    //if(parentFunc->getType()!=NULL)
+    //{
+        Expr_Identifier* retValId = new Expr_Identifier(varRetName);
+        retValId->setLineNumber(-1);
+        optimizeTree_traverseTree_ReplaceReturn(inlineBlock, inlineBlock, labelEnd, retValId);
+    //}
 
 //-----------------------------------------------------------------------------
 //insert function code after new variable
@@ -212,6 +318,10 @@ void doInlining(Function* parentFunc, Block* parentBlock, Statement* parentState
         //replace call with local variable
         optimizeTree_traverseTree_FuncCall(parentStatement, call, varRet);
     }
+
+//-----------------------------------------------------------------------------
+//redo stackOffset calculation
+    
 }
 
 unsigned int getStatementCount(Function* func)
@@ -229,16 +339,23 @@ unsigned int getStatementCount(Function* func)
     return block->getChildren().size();
 }
 
-void optimizeTree_traverseTree(Function* parentFunc, Block* parentBlock, Statement* parentStatement, Statement* statement)
+void optimizeTree_traverseTree(Function* parentFunc, Block* parentBlock, Statement* statement)
 {
     //if statement is function call from source code
     FuncCall* call = dynamic_cast<FuncCall*>(statement);
-    if( (call!=NULL) && (call->getFunction()!=parentFunc) && (call->getFunction()->getAbi()==Abi_default) )
+
+
+    if( (call!=NULL) &&                                         //call found
+        (call->getFunction()!=parentFunc) &&                    //no recursion
+        (call->getFunction()->getAbi()==Abi_default) &&         //no extern function
+        (optimizeTree_NoLocalVar(call->getFunction())) &&       //no local variables in called function
+        (optimizeTree_NoArgumentAssign(call->getFunction()))    //no arguments get reassigned
+        )
     {
         std::cout << "   -inline function call '" << call->getFunction()->getIdentifier() << "' in line '" << statement->getLineNumber() << "'" << std::endl;
 
         //do inlining on FuncCall
-        doInlining(parentFunc, parentBlock, parentStatement, call);
+        doInlining(parentFunc, parentBlock, call);
 
         //finish current node
         return;
@@ -255,9 +372,9 @@ void optimizeTree_traverseTree(Function* parentFunc, Block* parentBlock, Stateme
         Block* newBlock = dynamic_cast<Block*>(*childs[i]); 
         if(newBlock==NULL)
         {
-            optimizeTree_traverseTree(parentFunc, parentBlock, parentStatement, childStatement);
+            optimizeTree_traverseTree(parentFunc, parentBlock, childStatement);
         }else{
-            optimizeTree_traverseTree(parentFunc, newBlock, newBlock, childStatement);
+            optimizeTree_traverseTree(parentFunc, newBlock, childStatement);
         }
     }
 }
@@ -294,7 +411,7 @@ void optimizeTree_Inlining(File* file)
         for(unsigned int i=0; i<statements.size(); i++)
         {
             //explore statement recursive - try to find function calls
-            optimizeTree_traverseTree(func, (Block*)func->getStatement(), statements[i], statements[i]);
+            optimizeTree_traverseTree(func, (Block*)func->getStatement(), statements[i]);
         }
     }
 }

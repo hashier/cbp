@@ -1,0 +1,62 @@
+func abi_c writeInt(i:uint32):void
+func abi_c writeLineEnd():void
+func abi_c getTimeInMS():uint32
+func abi_c writeTime():void
+func abi_c waitAnyKey():void
+
+func inline_fail1(arg1:uint32 arg2:uint32 arg3:uint32) : uint32
+{
+	local var a : uint32
+	a = 0
+	
+	if(arg1==4)
+	{
+		return arg2 + arg3
+	}
+	
+	a = a - arg3
+	
+	return a
+}
+
+func inline_fail2(arg1:uint32 arg2:uint32 arg3:uint32) : uint32
+{
+	arg1 = arg2 + 1
+	return arg1
+}
+
+func inline_fail3(arg1:uint32 arg2:uint32 arg3:uint32) : uint32
+{
+	if(arg1==0)
+	{
+		arg1 = arg2 + 1
+	}else{
+		arg3 = arg1 + 1
+	}
+	return arg1
+}
+
+func inline(arg1:uint32 arg2:uint32 arg3:uint32) : uint32
+{
+	if(arg1==1)
+	{
+		return arg1+arg2+arg3
+	}else{
+		return arg1*arg2*arg3
+	}
+}
+
+
+func main () : void
+{
+  local var j : uint32
+  
+  j = 5+5
+  #j = j + call inline_fail1(1 2 3)
+  #j = j + call inline_fail2(1 2 3)
+  #j = j + call inline_fail3(1 2 3)
+  j = j + call inline(1 2 3)
+  j = j + call inline(2 3 4)
+  
+  call writeInt(j) call writeLineEnd()
+}
