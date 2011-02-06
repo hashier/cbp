@@ -12,6 +12,7 @@
 void optimizeTree_ConstraintSolving(File* file) {
     std::cout << " - Constraint Solving" << std::endl;
     ConstrainedEnvironment env;
+    file->propagateParent(0);
     file->solveConstraints(env);
 }
 
@@ -304,7 +305,10 @@ void IfElse::solveConstraints(ConstrainedEnvironment& env){
                 env.startBlock(prop.changesFulfilled);
                 then->solveConstraints(env);
                 env.endBlock();
-                // TODO: move then-block up
+                
+                // move then-block up
+                std::cout << "moving then-block up and dropping else-block" << std::endl;
+                getParent()->replaceChild(this, then);
             }
             else{
                 env.startBlock(prop.changesFulfilled);
@@ -324,10 +328,15 @@ void IfElse::solveConstraints(ConstrainedEnvironment& env){
                 env.startBlock(prop.changesNotFulfilled);
                 otherwise->solveConstraints(env);
                 env.endBlock();
-                //TODO: move else-block up
+                
+                // move else-block up
+                std::cout << "moving else-block up and dropping then-block" << std::endl;
+                getParent()->replaceChild(this, otherwise);
             }
             else{
-                // TODO: eliminate "if" completely
+                // eliminate "if" completely
+                std::cout << "dropping if-block under " << typeid(*getParent()).name() << std::endl;
+                getParent()->replaceChild(this, 0);
             }
         }
     }

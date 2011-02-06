@@ -63,5 +63,16 @@ func main () : void {
     }
     # back to I(g) = [-∞,+∞]
     e = g
+    
+    # constrain f to (0,10) TODO
+    if f > 0 && f < 10 {
+        # I(g) = [0,+∞]
+        g = f
+        # TODO: this should be optimized away
+        # but this requires open intervals
+        if(g > 0) {
+            e = g
+        }
+    }
   # return call test(5 6)
 }

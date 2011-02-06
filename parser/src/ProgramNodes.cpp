@@ -4,6 +4,23 @@
 #include "AbstractNodes.h"
 #include "DirectedAcyclicGraph.h"
 
+namespace Nodes {
+    Node** findInChildren(std::vector<Node**> const& children, Node* node){
+        typedef std::vector<Node**>::const_iterator ChildIter;
+        ChildIter childIter = children.begin();
+        ChildIter childEnd = children.end();
+        for(; childIter != childEnd; ++childIter){
+            if(**childIter == node){
+                return *childIter;
+            }
+        }
+        
+        // should not get here
+        assert(false && "No valid child!");
+        return 0;
+    }
+}
+
 SymbolTable::SymbolTable *Node::symbolTable = new SymbolTable::SymbolTable();
 extern int yylineno; // from lex/bison
 
@@ -35,6 +52,18 @@ Function::~Function() {
     if (statement) delete statement; statement = 0;
 }
 
+std::vector<Node**> Function::getChildren(){
+    std::vector<Node**> children;
+    std::list<Variable*>::iterator argIter = arguments->begin();
+    std::list<Variable*>::iterator argEnd = arguments->end();
+    for(; argIter != argEnd; ++argIter){
+        children.push_back(reinterpret_cast<Node**>(&(*argIter)));
+    }
+    
+    children.push_back(reinterpret_cast<Node**>(&statement));
+    
+    return children;
+}
 
 TypeDecl::TypeDecl(std::string* identifier, Type* type)
     : Declaration(*identifier, yylineno), type(type)
@@ -134,6 +163,27 @@ void Block::dump(int num) {
     indent(num); std::cout << "}" << std::endl;
 }
 
+void Block::replaceChild(Node* oldChild, Node* newChild){
+    std::list<Statement*>::iterator stIter = subs.begin();
+    for ( ; stIter != subs.end(); stIter++ ) {
+        if(*stIter == oldChild){
+            if(newChild == 0){
+                delete *stIter;
+                // move node to the back and delete it there
+                // to prevent iterator invalidation
+                std::swap(*stIter, subs.back());
+                subs.erase(--subs.end());
+            }
+            else {
+                *stIter = polymorphic_cast<Statement*>(newChild);
+            }
+            return;
+        }
+    }
+    
+    assert(false && "Invalid child");
+}
+
 Node* Block::clone()
 {
     Block* copy = new Block();
@@ -167,6 +217,30 @@ void IfElse::dump(int num) {
     }
 }
 
+void IfElse::replaceChild(Node* oldChild, Node* newChild){
+    if(oldChild == condition){
+        assert(newChild != 0);
+        condition = polymorphic_cast<Expression*>(newChild);
+    }
+    else if(oldChild == then){
+        if(newChild == 0){
+            if(otherwise == 0){
+                getParent()->replaceChild(this, 0);
+            }
+            else {
+                // The predicate p should be replaced by
+                // ¬p and otherwise would then turn into
+                // "then". But we have no negation ...
+                assert(false && "Don't know how to handle this");
+            }
+            
+        }
+        else{
+            then = polymorphic_cast<Statement*>(newChild);
+        }
+    }
+}
+
 Node* IfElse::clone()
 {
     IfElse* copy = new IfElse(  (Expression*)condition->clone(),
@@ -190,6 +264,24 @@ void WhileLoop::dump(int num) {
 WhileLoop::~WhileLoop() {
     if (condition) delete condition; condition = 0;
     if (body) delete body; body = 0;
+}
+
+void WhileLoop::replaceChild(Node* oldChild, Node* newChild){
+    if(oldChild == condition){
+        assert(newChild != 0);
+        condition = polymorphic_cast<Expression*>(newChild);
+    }
+    else if(oldChild == body){
+        if(newChild == 0){
+            getParent()->replaceChild(this, 0);
+        }
+        else {
+            body = polymorphic_cast<Statement*>(newChild);
+        }
+    }
+    else{
+        assert(false && "Unknown child");
+    }
 }
 
 Node* WhileLoop::clone()
@@ -303,6 +395,21 @@ ForLoop::~ForLoop() {
     if (final_value) delete final_value; final_value = 0;
     if (step) delete step; step = 0;
     if (body) delete body; init_value = 0;
+}
+
+void ForLoop::replaceChild(Node* oldChild, Node* newChild){
+    if(oldChild == init_value || oldChild == final_value){
+        assert(false && "Only step and body may be replaced");
+    }
+    else if(oldChild == step){
+        step = polymorphic_cast<Expression*>(newChild);
+    }
+    else if(oldChild == body){
+        body = polymorphic_cast<Statement*>(newChild);
+    }
+    else{
+        assert(false && "Unknown child");
+    }
 }
 
 Node* ForLoop::clone()
@@ -504,6 +611,33 @@ SwitchCase::Case::Case(Case const& other)
     : condition(static_cast<ConstInt*>(other.condition->clone())),
     action(static_cast<Statement*>(other.action->clone()))
     {}
+    
+void SwitchCase::replaceChild(Node* oldChild, Node* newChild){
+    if(oldChild == which){
+        assert(newChild != 0);
+        which = polymorphic_cast<Expression*>(newChild);
+    }
+    else {
+        std::list<Case*>::iterator caseIter = cases->begin();
+        std::list<Case*>::iterator caseEnd = cases->end();
+        for(; caseIter != caseEnd; ++caseIter){
+            if((*caseIter)->action == oldChild){
+                if(newChild == 0){
+                    delete *caseIter;
+                    // move to end before erasing to
+                    // prevent iterator invalidation
+                    std::swap(*caseIter, cases->back());
+                    cases->erase(--(cases->end()));
+                }
+                else{
+                    (*caseIter)->action = polymorphic_cast<Statement*>(newChild);
+                }
+                return;
+            }
+        }
+        assert(false && "Invalid child");
+    }
+}
 
 Node* SwitchCase::clone(){
     Expression* which_ = static_cast<Expression*>(which->clone());

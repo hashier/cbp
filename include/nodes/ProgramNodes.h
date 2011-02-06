@@ -30,6 +30,8 @@ class Function : public Declaration {
         const Func_abi &getAbi() const { return abi; }
         virtual void searchAndReplaceBlocks();
         virtual ~Function();
+        virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
     private:
         Func_abi abi;
         std::list<Variable*>* arguments;
@@ -48,6 +50,7 @@ class TypeDecl : public Declaration {
         Type* getType() { return type; }
         static Type* getDeclaredType(std::string *identifier);
         std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
         virtual Node* clone();
     protected:
         Type* type;
@@ -69,6 +72,7 @@ class File : public Node {
         virtual void solveConstraints(ConstrainedEnvironment& env);
         void gen(CodeGen* gen);
         std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
         virtual ~File();
     private:
         std::list<TypeDecl*> types;
@@ -92,6 +96,7 @@ class Block : public Statement {
         void gen(CodeGen* out, bool outermost);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild);
         void insertBefore(Statement* where, Statement* item);
         void insertAfter(Statement* where, Statement* item);
         void erase(Statement* what);
@@ -116,6 +121,7 @@ class IfElse : public Statement {
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild);
         virtual Node* clone();
         virtual void searchAndReplaceBlocks();
     private:
@@ -147,6 +153,7 @@ class SwitchCase : public Statement {
         constant* getConstant();
         void gen(CodeGen* out);
         virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild);
         virtual Node* clone();
         virtual void searchAndReplaceBlocks();
     private:
@@ -166,6 +173,7 @@ class WhileLoop : public Statement {
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild);
         virtual Node* clone();
         virtual void searchAndReplaceBlocks();
     private:
@@ -187,6 +195,7 @@ class Return : public Statement {
         }
         void gen(CodeGen* out, bool outermost);
         virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
         Expression* getExpr() { return expr; };
         virtual Node* clone();
         virtual void searchAndReplaceBlocks() { }
@@ -206,6 +215,7 @@ class Local : public Statement {
         int calcStackOffset(int offset);
         virtual void gen(CodeGen* out);
         virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
         virtual Node* clone();
         virtual ~Local();
         virtual void searchAndReplaceBlocks() { }
@@ -246,6 +256,7 @@ class ForLoop : public Statement {
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
         virtual std::vector<Node**> getChildren();
+        virtual void replaceChild(Node* oldChild, Node* newChild);
         virtual Node* clone();
         virtual void searchAndReplaceBlocks();
     private:
@@ -267,6 +278,7 @@ public:
     virtual void gen(CodeGen* out);
     virtual int calcStackOffset(int offset);
     virtual std::vector<Node**> getChildren();
+    virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
     Label* getLabel() { return label; };
     void genLabel(CodeGen* out);
     virtual Node* clone();
@@ -286,6 +298,7 @@ public:
     virtual void gen(CodeGen* out);
     virtual int calcStackOffset(int offset);
     virtual std::vector<Node**> getChildren();
+    virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
     GotoLabel* getGotoLabel() {return gotoLabel;}
     virtual Node* clone();
     virtual void searchAndReplaceBlocks() { }

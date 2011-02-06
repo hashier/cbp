@@ -20,6 +20,7 @@ class Variable : public Declaration {
         virtual Address getAddress();
         
         virtual void solveConstraints(ConstrainedEnvironment& env);
+        virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
     
     protected:
         virtual int getMemoryOffset();

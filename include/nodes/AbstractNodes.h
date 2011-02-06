@@ -67,16 +67,53 @@ class Node {
             return a;
         }
         
+        virtual void replaceChild(Node* oldChild, Node* newChild) = 0;
+        
         virtual Node* clone() {
             std::cerr << "clone missing in " << typeid(*this).name() << std::endl;
             assert(false);
             return 0;
         }
+        
+        Node* getParent() {
+            return parentNode;
+        }
+        
+        void setParent(Node* parent){
+            parentNode = parent;
+        }
+        
+        void propagateParent(Node* parent){
+            this->setParent(parent);
+            
+            std::vector<Node**> children = getChildren();
+            std::vector<Node**>::iterator childIter = children.begin();
+            std::vector<Node**>::iterator childEnd = children.end();
+            for(; childIter != childEnd; ++childIter){
+                Node* child = **childIter;
+                if(child != 0){
+                    child->propagateParent(this);
+                }
+            }
+        }   
 
         static SymbolTable::SymbolTable *symbolTable;
 private:
         int lineNumber;
+        Node* parentNode;
 };
+
+template<typename To, typename From>
+To polymorphic_cast(From* x){
+    To y = dynamic_cast<To>(x);
+    assert(y != 0);
+    return y;
+}
+
+namespace Nodes {
+    /// \pre *children[i] == node for some i
+    Node** findInChildren(std::vector<Node**> const& children, Node* node);
+}
 
 class Variable;
 class Expression;
@@ -107,6 +144,11 @@ class Expression : public Statement {
         
         virtual void solveConstraints(ConstrainedEnvironment& env);
         virtual ExpressionProperties properties(ConstrainedEnvironment& env);
+        
+        virtual void replaceChild(Node* oldChild, Node* newChild){
+            std::cerr << "replaceChild missing in " << typeid(*this).name() << std::endl;
+            assert(false);
+        }
 
         /** This generates an expression's l-value.
          * Note that most expressions do not have an l-value, which is why
