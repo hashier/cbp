@@ -105,6 +105,9 @@
     <ClInclude Include="..\include\nodes\Variables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optimizer\CommonSubexpressionElimination.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">
@@ -195,6 +198,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\optimizer\src\Intervals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optimizer\src\CommonSubexpressionElimination.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

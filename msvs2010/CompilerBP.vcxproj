@@ -35,6 +35,7 @@
     <ClInclude Include="..\include\nodes\ProgramNodes.h" />
     <ClInclude Include="..\include\nodes\Types.h" />
     <ClInclude Include="..\include\nodes\Variables.h" />
+    <ClInclude Include="..\include\optimizer\CommonSubexpressionElimination.h" />
     <ClInclude Include="..\include\optimizer\ConstantPropergation.h" />
     <ClInclude Include="..\include\optimizer\ConstrainedEnvironment.h" />
     <ClInclude Include="..\include\optimizer\ConstraintSolving.h" />
@@ -74,6 +75,7 @@
     </ClCompile>
     <ClCompile Include="..\codegen\src\Variables.cpp" />
     <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\optimizer\src\CommonSubexpressionElimination.cpp" />
     <ClCompile Include="..\optimizer\src\ConstantPropergation.cpp" />
     <ClCompile Include="..\optimizer\src\ConstraintSolving.cpp" />
     <ClCompile Include="..\optimizer\src\ExprNodes.cpp">
