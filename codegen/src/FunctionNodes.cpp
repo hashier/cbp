@@ -5,10 +5,15 @@
 using namespace std;
 
 void Function::gen(CodeGen* out) {
-    *out << Message(DEBUG, "Function::gen()", this);
     // ignore forward declarations
     if(statement) {
+        // write filename and line of source file into target assembler file
+        *out << Message(DEBUG, "Function::gen()", this);
+
         Label mark = getMark(out);
+
+        // mark beginning of function for gdb
+        *out << (Directive(".func")(identifier)(mark) << " # mark beginning of function for gdb");
 
         if (identifier == "main") {
             *out << (Directive(".globl") << ' ' << (out->isWithUnderscore() ? "_" : "") << "_cbp_main");
@@ -64,5 +69,7 @@ void Function::gen(CodeGen* out) {
         // Return from this function
         *out << Command("ret");
 
+        // mark end of function for gdb
+        *out << (Directive(".endfunc") << " # mark end of function \"" << identifier << "\" for gdb");
     }
 }

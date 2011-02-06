@@ -1,0 +1,9 @@
+func abi_c print_eax():void
+
+func main () : void {
+	local var i : int32
+	for i = 3 .. 12 {
+		i = i # trick to move i to register eax
+		call print_eax()
+	}
+}

@@ -396,12 +396,33 @@ private:
 // use this to get ostream formatting
 class Directive : public Mnemonic {
 public:
-    Directive(Directive const& other){
+    Directive(Directive const& other)
+    : gotFirstArg(other.gotFirstArg)
+    {
         directive << other.directive.str();
     }
-
-    explicit Directive(std::string const& directive_){
+    explicit Directive(std::string const& directive_)
+    : gotFirstArg(false)
+    {
         directive << directive_;
+    }
+
+    /// Semantic:
+    /// appends param as it is to the current command,
+    /// inserting a space between them (nothing more).
+    Directive& operator()(const std::string& str){
+        preformat();
+        directive << str;
+        return *this;
+    }
+
+    /// Semantic:
+    /// appends label as it is to the current command,
+    /// inserting a space between them (nothing more).
+    Directive& operator()(Label const& label){
+        preformat();
+        label.writeUnformatted(directive);
+        return *this;
     }
 
     template<typename T>
@@ -419,5 +440,15 @@ public:
     }
 
 private:
+    void preformat(){
+        if(gotFirstArg){
+            directive << ',';
+        } else {
+            directive << ' ';
+            gotFirstArg = true;
+        }
+    }
+
+    bool gotFirstArg;
     std::stringstream directive;
 };
