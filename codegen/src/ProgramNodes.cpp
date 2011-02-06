@@ -130,6 +130,10 @@ void ForLoop::gen(CodeGen* out) {
     *out << Command("pushq")("%rax");                         //save eax
     final_value->gen(out);                                    ///get final-value-expression to eax
     *out << Command("mov")("%eax")("%ebx");                   //mov eax to ebx
+    // TODO: optimize the following workaround
+    // BEGIN WORKAROUND: correct upper bound by incrementing it
+    *out << Command("inc")("%ebx");                           //ebx = ebx + 1
+    // END WORKAROUND
     *out << Command("mov")(it_address)("%eax");               //mov iterator to eax
     *out << Command("cmp")("%eax")("%ebx");                   //compare eax, ebx [iterator, final value]
     *out << Command("popq")("%rax");                          //restore eax
