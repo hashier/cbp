@@ -340,7 +340,8 @@ func main() : void
 #------------------------------------------------------------------------------
 #Init Benchmark
 
-	n = 5
+	n   = 5
+	avg = 0
 	times = call malloc(4*n)
 
 	for i = 0 .. (n - 1) {
@@ -355,7 +356,7 @@ func main() : void
 		#get start Time 
 		startTime = call getTimeInMS()
 
-		call juliaMain(640 480)
+		call juliaMain(80 60)
 		
 		#save times
 		endTime = call getTimeInMS()
