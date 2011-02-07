@@ -5,7 +5,7 @@
 
 class Interval {
 public:
-    typedef long Integer;
+    typedef unsigned long long Integer;
 
     // construct ∅
     Interval();        

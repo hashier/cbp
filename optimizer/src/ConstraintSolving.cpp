@@ -99,14 +99,14 @@ void Expr_Assign::solveConstraints(ConstrainedEnvironment& env){
 // --- Constant ---
 ExpressionProperties ConstInt::properties(ConstrainedEnvironment& env){
     Interval domain = Interval(static_cast<Interval::Integer>(val()));
-    return ExpressionProperties(domain, domain != Interval(0L), !in(0, domain));
+    return ExpressionProperties(domain, domain != Interval(0ULL), !in(0, domain));
 }
 
 // --- Variables ---
 ExpressionProperties Expr_Identifier::properties(ConstrainedEnvironment& env){
     Interval domain = env.constrain(getRef());
     //std::cout << "var expr (" << getRef()->getIdentifier() << "): " << domain << std::endl;
-    return ExpressionProperties(domain, domain != Interval(0L), !in(0, domain));
+    return ExpressionProperties(domain, domain != Interval(0ULL), !in(0, domain));
 }
 
 // --- Arithmetic ---
