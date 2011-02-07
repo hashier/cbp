@@ -169,10 +169,17 @@ void Block::replaceChild(Node* oldChild, Node* newChild){
         if(*stIter == oldChild){
             if(newChild == 0){
                 delete *stIter;
+                // FIXME: moving around nodes is no good idea!
+                // Invalidation of iterators has to be prevented
+                // in another way. But I know none.
                 // move node to the back and delete it there
                 // to prevent iterator invalidation
-                std::swap(*stIter, subs.back());
-                subs.erase(--subs.end());
+                //std::swap(*stIter, subs.back());
+                //subs.erase(--subs.end());
+                
+                // for now we only erase the node and
+                // restart the iteration.
+                subs.erase(stIter);
             }
             else {
                 *stIter = polymorphic_cast<Statement*>(newChild);
@@ -624,10 +631,13 @@ void SwitchCase::replaceChild(Node* oldChild, Node* newChild){
             if((*caseIter)->action == oldChild){
                 if(newChild == 0){
                     delete *caseIter;
+                    // FIXME: see Block::replaceChild
                     // move to end before erasing to
                     // prevent iterator invalidation
-                    std::swap(*caseIter, cases->back());
-                    cases->erase(--(cases->end()));
+                    //std::swap(*caseIter, cases->back());
+                    //cases->erase(--(cases->end()));
+                    
+                    cases->erase(caseIter);
                 }
                 else{
                     (*caseIter)->action = polymorphic_cast<Statement*>(newChild);

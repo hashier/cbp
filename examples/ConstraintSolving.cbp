@@ -74,5 +74,13 @@ func main () : void {
             e = g
         }
     }
+    # c = 9 > 5
+    while c > 5 {
+        d = a
+    }
+    # here c <= 5
+    while c > 5 {
+        d = a
+    }
   # return call test(5 6)
 }

@@ -58,7 +58,17 @@ void Block::solveConstraints(ConstrainedEnvironment& env){
     std::list<Statement*>::iterator subStatementIter = subs.begin();
     std::list<Statement*>::iterator subStatementEnd = subs.end();
     for(; subStatementIter != subStatementEnd; ++subStatementIter){
-        (*subStatementIter)->solveConstraints(env);
+        // avoid iterator invalidation -> dereference and go back
+        Statement* st = *subStatementIter;
+        --subStatementIter;
+        st->solveConstraints(env);
+        ++subStatementIter; // go forth
+        // check if child has changed and restart iteration if changed
+        // or go back if already at the end so that increment does not
+        // exceed the range.
+        if(subStatementIter == subStatementEnd || *subStatementIter != st){
+            --subStatementIter;
+        }
     }
 }
 
@@ -345,3 +355,35 @@ void IfElse::solveConstraints(ConstrainedEnvironment& env){
         std::cout << "if: " << "condition has no logic properties!" << std::endl;
     }
 }
+
+void WhileLoop::solveConstraints(ConstrainedEnvironment& env){
+    ExpressionProperties prop = condition->properties(env);
+    if(isJust(prop.satisfiable)){
+        // the predicate may be true
+        if(fromJust(prop.satisfiable)){
+            std::cout << "while accessible" << std::endl;
+            
+            env.startBlock(prop.changesFulfilled);
+            body->solveConstraints(env);
+            env.endBlock();
+            
+            // predicate must be false after while finished
+            ExpressionProperties::ChangedVariables::iterator changedIter = prop.changesNotFulfilled.begin();
+            for(; changedIter != prop.changesNotFulfilled.end(); ++changedIter){
+                env.update(changedIter->first, changedIter->second);
+            }
+        }
+        // the predicate will never be true
+        else{
+            std::cout << "while not accessible" << std::endl;
+            // eliminate while completely
+            std::cout << "dropping while-block" << std::endl;
+            getParent()->replaceChild(this, 0);
+        }
+    }
+    // Should not happen (type error)
+    else{
+        std::cout << "while: " << "condition has no logic properties!" << std::endl;
+    }
+}
+

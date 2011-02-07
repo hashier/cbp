@@ -169,6 +169,7 @@ class WhileLoop : public Statement {
         void constProp();
         bool isConst();
         constant* getConstant();
+        virtual void solveConstraints(ConstrainedEnvironment& env);
         virtual ~WhileLoop();
         virtual void gen(CodeGen* out);
         virtual int calcStackOffset(int offset);
