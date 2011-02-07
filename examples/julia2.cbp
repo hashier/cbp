@@ -1,0 +1,377 @@
+type  SDL_Surface: struct {
+  var flags : uint32 @ 0
+  var format : []void @ 8
+  var w : uint32 @ 16
+  var h : uint32 @ 20
+  var pitch : uint16 @ 24
+  var pixels : []uint32 @ 32
+}
+
+func abi_c SDL_Init (flags:uint32) : uint32
+func abi_c SDL_SetVideoMode (width:uint32 height:uint32 bpp:uint32 flags:uint32) : []SDL_Surface
+func abi_c SDL_Flip (screen:[]SDL_Surface) : uint32
+func abi_c SDL_LockSurface (screen:[]SDL_Surface) : uint32
+func abi_c SDL_UnlockSurface (screen:[]SDL_Surface x:uint32 y:uint32 w:uint32 h:uint32) : uint32
+func abi_c SDL_UpdateRect (screen:[]SDL_Surface) : uint32
+
+func abi_c cbp_sleep(seconds:uint32):void
+func abi_c writeInt(i:uint32):void
+func abi_c writeLineEnd():void
+func abi_c getTimeInMS():uint32
+func abi_c writeTime():void
+func abi_c waitAnyKey():void
+func abi_c processMessages():void
+func abi_c free(pointer:[]uint32):void
+func abi_c malloc(size:uint32):[]uint32
+func abi_c printBenchmark (times:[]uint32 avgInt:uint32 k:uint32):void
+
+
+func setPixel(screen:[]SDL_Surface x:uint32 y:uint32 w:uint32 c:uint32):void 
+{
+	screen[0].pixels[y*w + x] = c
+}
+
+func fillScreen(screen:[]SDL_Surface w:uint32 h:uint32 c:uint32):void
+{
+	local var xMax : uint32
+	local var yMax : uint32	
+	local var x : uint32
+	local var y : uint32
+
+	xMax = (w - 1)
+	yMax = (h - 1)
+	
+	for y = 0 .. yMax
+	{
+		for x = 0 .. xMax
+		{
+			call setPixel(screen x y w c)
+		}
+	}
+}
+
+#Berechnet den größten gemeinsamen Teiler
+func ggt(a:uint32 b:uint32):uint32
+{
+	local var r : uint32
+	local var aa : uint32
+	local var bb : uint32
+	
+	aa = a
+	bb = b
+	
+	if(aa==0)
+		return 0
+	
+	if(bb==0)
+		return 0
+		
+	if(aa<0) aa = aa*-1
+	if(bb<0) bb = bb*-1
+	
+	r = bb
+	bb = aa % bb
+	aa = r
+	
+	while(bb!=0)
+	{
+		r = bb
+		bb = aa % bb
+		aa = r
+	}
+	
+	return aa
+}
+
+#Kleinstes gemeinsames Vielfaches
+func kgv(a:uint32 b:uint32):uint32
+{
+     return (a*b) / call ggt(a b)
+}
+
+func kuerzen(b:[]uint32):void
+{
+	local var t : uint32
+	
+	#call writeInt(b[0]) call writeInt(b[1]) call writeLineEnd()
+	#call writeLineEnd()
+	
+	t = call ggt(b[0] b[1])
+	
+	if(t==0)
+		return 0
+	#call writeInt(t) call writeLineEnd()
+	#call writeLineEnd()
+
+	if(b[0]<0)
+	{
+		b[0] = -1*((-1*b[0]) / t)
+	}else{
+		b[0] = b[0] / t
+	}	
+	
+	b[1] = b[1] / t
+	
+#--------------------------
+#truncation
+
+	while(b[1]>9999)
+	{
+		if(b[0]<0)
+		{
+			b[0] = -1*((-1*b[0]) / 10)
+		}else{
+			b[0] = b[0] / 10
+		}	
+			
+		b[1] = b[1] / 10
+	}
+}
+
+func addB(b1:[]uint32 b2:[]uint32 r:[]uint32):void
+{	
+	r[0] = b1[0]*b2[1] + b2[0]*b1[1] 
+	r[1] = b1[1]*b2[1]
+	
+	call kuerzen(r)
+}
+
+func subB(b1:[]uint32 b2:[]uint32 r:[]uint32):void
+{
+	r[0] = b1[0]*b2[1] - b2[0]*b1[1] 
+	r[1] = b1[1]*b2[1]
+
+	call kuerzen(r)
+}
+
+func mulB(b1:[]uint32 b2:[]uint32 r:[]uint32):void
+{
+	r[0] = b1[0]*b2[0]
+	r[1] = b1[1]*b2[1]
+	
+	call kuerzen(r)
+}
+
+func checkGr(b:[]uint32 z:uint32):uint32
+{
+	if( b[0] > (b[1]*z) ) {
+		return 0
+	}
+	
+	return 1
+}
+
+func juliaa(x:[]uint32 y:[]uint32):uint32
+{
+
+	local var z_real    : []uint32
+	local var z_comp    : []uint32
+	local var t_real    : []uint32
+	local var t_comp    : []uint32
+	local var fac       : []uint32
+	local var i         : uint32
+	 
+	local var t_zreal_q : []uint32
+	local var t_zcomp_q : []uint32
+	local var t_zmix    : []uint32
+	
+	z_real = call malloc(8)
+	z_comp = call malloc(8)
+	t_real = call malloc(8)
+	t_comp = call malloc(8)
+	fac    = call malloc(8)
+	
+	t_zreal_q = call malloc(8)
+	t_zcomp_q = call malloc(8)
+	t_zmix    = call malloc(8)
+	
+	fac[0] = 1
+	fac[1] = 2
+
+	call mulB(x fac z_real)	
+	call mulB(y fac z_comp)	
+	
+	for i = 0 .. 199
+	{
+		call mulB(z_real z_real t_zreal_q)
+		call mulB(z_comp z_comp t_zcomp_q)
+		call mulB(z_real z_comp t_zmix)
+
+		call subB(t_zreal_q t_zcomp_q t_real)
+		fac[0] = 12
+		fac[1] = 10
+		call subB(t_real fac t_real)		
+
+		call addB(t_zmix t_zmix t_comp)
+		fac[0] = 156
+		fac[1] = 1000
+		call addB(t_comp fac t_comp)
+		
+		z_real[0] = t_real[0]
+		z_real[1] = t_real[1]
+		
+		z_comp[0] = t_comp[0]
+		z_comp[1] = t_comp[1]
+		
+		call mulB(z_real z_real t_zreal_q)
+		call mulB(z_comp z_comp t_zcomp_q)
+		call addB(t_zreal_q t_zcomp_q fac)
+
+		if( call checkGr(fac 1000) == 0 )
+		{
+			return i
+		}
+	}
+	
+	call free(z_real)
+	call free(z_comp)
+	call free(t_real)
+	call free(t_comp)
+	call free(fac)
+	
+	call free(t_zreal_q)
+	call free(t_zcomp_q)
+	call free(t_zmix)
+	
+	return 0
+}
+
+func juliaMain(w:uint32 h:uint32) : void
+{
+	local var x     : uint32
+	local var y     : uint32
+	
+	local var red   : uint32
+	local var gray  : uint32
+	local var green : uint32
+	local var data  : []uint32
+	local var j     : uint32
+	
+	red   = 000 + 000*256 + 255*65536
+	gray  = 100 + 100*256 + 100*65536
+	green = 000 + 255*256 + 000*65536
+
+	call SDL_Init(0)
+
+	local var screen : []SDL_Surface
+	screen = call SDL_SetVideoMode(w h 32 0)
+
+	call SDL_LockSurface(screen)
+	
+	#clear screen
+	call fillScreen(screen w h gray)
+	call SDL_UnlockSurface(screen)
+	call SDL_UpdateRect(screen 0 0 0 0)
+	call SDL_Flip(screen)
+	
+	local var bbx : []uint32
+	local var bby : []uint32
+	
+	bbx = call malloc(8)
+	bby = call malloc(8)
+		
+	for y = 0 .. h - 1
+	{
+		#call writeInt(y) call writeLineEnd()
+		
+		for x = 0 .. w - 1
+		{
+			bbx[0] =  x-(w/2)
+			bbx[1] =  w/2
+			
+			bby[0] =  y-(h/2)
+			bby[1] =  h/2
+			
+			j = call juliaa(bbx bby)
+			#call writeInt(j) call writeLineEnd()
+			if( j == 0  )
+			{
+				call setPixel(screen x y w green)
+			}else{
+				red = 180 + j*256 + j*65536
+				call setPixel(screen x y w red)
+			}
+			
+			call processMessages()
+		}		
+		
+		call SDL_UnlockSurface(screen)
+		call SDL_UpdateRect(screen 0 0 0 0)
+		call SDL_Flip(screen)
+	}
+	
+	call SDL_UnlockSurface(screen)
+	call SDL_UpdateRect(screen 0 0 0 0)
+	call SDL_Flip(screen)
+
+	call free(bbx)
+	call free(bby)
+	
+	#call writeInt(1)
+	#call writeInt(2)
+	#call writeInt(3)
+	#call waitAnyKey()
+}
+
+
+func testaa() : uint32
+{
+	local var n : uint32
+	local var m : uint32
+	
+	if(n == 0)
+	{
+		return 0
+	}else{
+		return 1
+	}	
+}
+
+func main() : void
+{
+	#local vars needed for benchmark
+	local var n         : uint32
+	local var i         : uint32
+	local var avg       : uint32
+	local var startTime : uint32
+	local var endTime   : uint32
+	local var times     : []uint32
+
+#------------------------------------------------------------------------------
+#Init Benchmark
+
+	n = 5
+	times = call malloc(4*n)
+
+	for i = 0 .. (n - 1) {
+	  times[i] = 9999
+	}
+
+#------------------------------------------------------------------------------
+#Start Benchmark
+
+	for i = 0 .. n - 1
+	{
+		#get start Time 
+		startTime = call getTimeInMS()
+
+		call juliaMain(640 480)
+		
+		#save times
+		endTime = call getTimeInMS()
+		times[i] = endTime - startTime
+		avg = avg + times[i]
+		
+		call writeInt(i) call writeLineEnd()
+	}
+
+#------------------------------------------------------------------------------
+#Print Results
+
+	call printBenchmark(times avg (n - 1) )
+
+	call processMessages()
+	call waitAnyKey()
+}
+
+
