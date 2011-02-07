@@ -338,6 +338,7 @@ func main() : void
 #Init Benchmark
 
 	n = 5
+	avg = 0
 	times = call malloc(4*n)
 
 	for i = 0 .. (n - 1) {
@@ -365,7 +366,7 @@ func main() : void
 #------------------------------------------------------------------------------
 #Print Results
 
-	call printBenchmark(times avg (n - 1) )
+	call printBenchmark(times avg n)
 
 	call processMessages()
 	call waitAnyKey()

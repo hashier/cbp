@@ -369,7 +369,7 @@ func main() : void
 #------------------------------------------------------------------------------
 #Print Results
 
-	call printBenchmark(times avg (n - 1) )
+	call printBenchmark(times avg n )
 
 	call processMessages()
 	call waitAnyKey()

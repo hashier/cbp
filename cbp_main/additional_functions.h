@@ -70,7 +70,6 @@ void __cdecl printBenchmark(unsigned int* times, unsigned int avgInt, unsigned i
 		//{
 		//	printf("%d %d \n", ii,times[ii]);
 		//}
-
 		double avg = (double) avgInt;//average
 
 		unsigned int med = 0;//medium
@@ -85,10 +84,10 @@ void __cdecl printBenchmark(unsigned int* times, unsigned int avgInt, unsigned i
 	    max = times[k-1];
 
 
-	    avg /= (double)k;
-		unsigned int i;
+	    avg = avg/(double)k;
 
-	    for( i= 0; i<k; i++)
+		unsigned int i;
+	    for(i= 0; i<k; i++)
 	    {
 	        dev += ((times[i]-avg)*(times[i]-avg));
 	    }
@@ -96,7 +95,7 @@ void __cdecl printBenchmark(unsigned int* times, unsigned int avgInt, unsigned i
 	    dev /= (double)(k-1);
 	    dev = sqrt(dev);
 
-	    printf("minimum: %d\nms avarage: %f ms\nmedian: %d ms\ndeviation: %f ms\nmaximum: %d ms", min, avg, med, dev ,max );
+	    printf("minimum: %d ms \n avarage: %f ms \n median: %d ms \n deviation: %f ms \n maximum: %d ms \n", min, avg, med, dev ,max );
 }
 
 unsigned int __cdecl getTimeInMS()
