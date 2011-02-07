@@ -13,8 +13,9 @@ void Function::gen(CodeGen* out) {
         Label mark = getMark(out);
 
         // mark beginning of function for gdb
+#ifndef __APPLE__
         *out << (Directive(".func")(identifier)(mark) << " # mark beginning of function for gdb");
-
+#endif
         if (identifier == "main") {
             *out << (Directive(".globl") << ' ' << (out->isWithUnderscore() ? "_" : "") << "_cbp_main");
             *out << Label((out->isWithUnderscore() ? "_" : "") + string("_cbp_main"));
@@ -70,6 +71,8 @@ void Function::gen(CodeGen* out) {
         *out << Command("ret");
 
         // mark end of function for gdb
+#ifndef __APPLE__
         *out << (Directive(".endfunc") << " # mark end of function \"" << identifier << "\" for gdb");
+#endif
     }
 }

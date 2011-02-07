@@ -19,6 +19,7 @@ void Expr_Mul::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
     // right operand into %eax
@@ -26,6 +27,7 @@ void Expr_Mul::gen(CodeGen* out) {
     // multiply
     *out << Command("imull")("%ebx");
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_Mul::clone()
@@ -99,6 +101,7 @@ void Expr_EQ::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
     // right operand into %eax
@@ -110,6 +113,7 @@ void Expr_EQ::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_EQ::clone()
@@ -122,6 +126,7 @@ void Expr_NEQ::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
     // right operand into %eax
@@ -133,6 +138,7 @@ void Expr_NEQ::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_NEQ::clone()
@@ -145,6 +151,7 @@ void Expr_LT::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
     // right operand into %eax
@@ -156,6 +163,7 @@ void Expr_LT::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_LT::clone()
@@ -168,6 +176,7 @@ void Expr_GT::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
     // right operand into %eax
@@ -179,6 +188,7 @@ void Expr_GT::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_GT::clone()
@@ -191,6 +201,7 @@ void Expr_LE::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
     // right operand into %eax
@@ -201,7 +212,7 @@ void Expr_LE::gen(CodeGen* out) {
     *out << Command("setle")("%al");
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
-    *out << Command("popq")("%rbx");
+    *out << Command("addq")("%rbx");
 }
 
 Node* Expr_LE::clone()
@@ -214,6 +225,7 @@ void Expr_GE::gen(CodeGen* out) {
     // left hand operand into %eax
     left->gen(out);
     // save to local var
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movl")("%eax")("%ebx");
     // right operand into %eax
@@ -225,6 +237,7 @@ void Expr_GE::gen(CodeGen* out) {
     // move from byte %al to long %eax and pad with zeros
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_GE::clone()
@@ -294,6 +307,7 @@ Node* Expr_BoolAND::clone()
 
 void Expr_BoolXOR::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BoolXOR::gen()", this);
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     // left hand operand into %eax
     left->gen(out);
@@ -312,6 +326,7 @@ void Expr_BoolXOR::gen(CodeGen* out) {
     *out << Command("sete")("%al");
     *out << Command("movzbl")("%al")("%eax");
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_BoolXOR::clone()
@@ -331,11 +346,13 @@ Node* Expr_BitLeft::clone() {
 void Expr_BitLeft::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BitLeft::gen()", this);
     right->gen(out);                         // right hand operand into %rax
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
     *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("shl")("%cl")("%rax");   // %rax = %rax << %cl
     *out << Command("popq")("%rcx");         // restore %rcx from the stack
+    *out << Command("addq")("$8")("%rsp");
     *out << Message(DEBUG, "result of * << *", this);
 }
 
@@ -350,11 +367,13 @@ Node* Expr_BitRight::clone() {
 void Expr_BitRight::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BitRight::gen()", this);
     right->gen(out);                         // right hand operand into %eax
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rcx");        // store %rcx including %cl to the stack
     *out << Command("movq")("%rax")("%rcx"); // %rcx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("shr")("%cl")("%rax");   // %rax = %rax >> %cl
     *out << Command("popq")("%rcx");            // restore %rcx from the stack
+    *out << Command("addq")("$8")("%rsp");
     *out << Message(DEBUG, "result of * >> *", this);
 }
 
@@ -368,11 +387,13 @@ Node* Expr_BitOR::clone() {
 void Expr_BitOR::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BitOR::gen()", this);
     right->gen(out);                         // right hand operand into %rax
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("or")("%rbx")("%rax");   // %rax = %rax or %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
+    *out << Command("addq")("$8")("%rsp");
     *out << Message(DEBUG, "result of * | *", this);
 }
 
@@ -386,11 +407,13 @@ Node* Expr_BitAND::clone() {
 void Expr_BitAND::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BitAND::gen()", this);
     right->gen(out);                         // right hand operand into %rax
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("and")("%rbx")("%rax");  // %rax = %rax and %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
+    *out << Command("addq")("$8")("%rsp");
     *out << Message(DEBUG, "result of * & *", this);
 }
 
@@ -404,11 +427,13 @@ Node* Expr_BitXOR::clone() {
 void Expr_BitXOR::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_BitXOR::gen()", this);
     right->gen(out);                         // right hand operand into %rax
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("xor")("%rbx")("%rax");  // %rax = %rax xor %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
+    *out << Command("addq")("$8")("%rsp");
     *out << Message(DEBUG, "result of * ^ *", this);
 }
 
@@ -457,6 +482,7 @@ void Expr_Add::gen(CodeGen* out) {
                 ("%ax", smallSizeInBytes)    //  argument with smaller size expanding
                 ("%ax", bigSizeInBytes);     //  to size of argument with bigger size
     }
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     bigExp->gen(out);                        // argument with big size into %rax
@@ -464,6 +490,7 @@ void Expr_Add::gen(CodeGen* out) {
             ("%bx", bigSizeInBytes)          //  argument with smaller size adding to
             ("%ax", bigSizeInBytes);         //  argument with bigger size
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
+    *out << Command("addq")("$8")("%rsp");
     *out << Message(DEBUG, "result of * + *", this);
 }
 
@@ -484,11 +511,13 @@ void Expr_Sub::gen(CodeGen* out) {
         return;
     }
     right->gen(out);                         // right hand operand into %eax
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");        // store %rbx to the stack
     *out << Command("movq")("%rax")("%rbx"); // %rbx = %rax
     left->gen(out);                          // left hand operand into %rax
     *out << Command("sub")("%rbx")("%rax");  // %rax = %rax - %rbx
     *out << Command("popq")("%rbx");         // restore %rbx from the stack
+    *out << Command("addq")("$8")("%rsp");
     *out << Message(DEBUG, "result of * - *", this);
 }
 
@@ -506,6 +535,7 @@ Node* Expr_Identifier::clone()
 
 void Expr_Assign::gen(CodeGen* out) {
     *out << Message(DEBUG, "Expr_Assign:gen()", this);
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");           // store ebx to the stack
     left->genLeft(out);
     *out << Command("movq")("%rax")("%rbx");   // %ebx = %eax
@@ -513,6 +543,7 @@ void Expr_Assign::gen(CodeGen* out) {
     int size = right->getType()->getSize();
     *out << Command("mov", size)("%ax", size)(Reg("rbx"));   // %ebx = %eax
     *out << Command("popq")("%rbx");            // restore %ebx from the stack
+    *out << Command("addq")("$8")("%rsp");
 }
 
 Node* Expr_Assign::clone()
@@ -574,7 +605,7 @@ void FuncCall::gen(CodeGen *out) {
             }
             //align towards 16 byte (hopefully)
             if(stackArgsSize % 2 != 0) {
-                *out << Command("pushq")("%rax");
+                *out << Command("subq")("$8")("%rsp");
             }
             for (std::vector<Expression *>::const_reverse_iterator it = stackArgs.rbegin();
                     it != stackArgs.rend(); ++it) {
@@ -641,16 +672,20 @@ void Expr_Deref::genLeft(CodeGen* out) {
         int refsize = ref->getType()->getSize();
 
         // Evaluate offset
+        *out << Command("subq")("$8")("%rsp");
         *out << Command("pushq")("%rbx");
         index->gen(out);
         
+        *out << Command("subq")("$8")("%rsp");
         *out << Command("pushq")("%rdx");
         *out << Command("imul")(refsize)("%eax");
         *out << Command("popq")("%rdx");
+        *out << Command("addq")("$8")("%rsp");
         
         // Return value of variable at address
         *out << Command("leaq")(Reg("rax") + Reg("rbx"))("%rax");
         *out << Command("popq")("%rbx");
+        *out << Command("addq")("$8")("%rsp");
     } else {
         sub->gen(out);
         *out << Command("leaq")(Reg("rax"))("%rax");
@@ -674,6 +709,7 @@ void Expr_Deref::gen(CodeGen* out) {
     }
 
     // Save base address in rbx
+    *out << Command("subq")("$8")("%rsp");
     *out << Command("pushq")("%rbx");
     *out << Command("movq")("%rax")("%rbx");
 
@@ -688,13 +724,16 @@ void Expr_Deref::gen(CodeGen* out) {
         *out << Command("mov", refsize)(Reg("rbx") + Reg("rax") * refsize)("%ax", refsize);
     else {
         // Multiply by refsize (TODO is this legal? I don't really think so..)
+        *out << Command("subq")("$8")("%rsp");
         *out << Command("pushq")("%rdx");
         *out << Command("imul")(refsize)("%eax");
         *out << Command("popq")("%rdx");
+        *out << Command("addq")("$8")("%rsp");
         *out << Command("mov", refsize)(Reg("rbx") + Reg("rax"))("%ax", refsize);
     }
 
     *out << Command("popq")("%rbx");
+    *out << Command("addq")("$8")("%rsp");
 }
 
 std::vector<Node**> Expr_Deref::getChildren()
