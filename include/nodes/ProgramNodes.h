@@ -49,7 +49,7 @@ class TypeDecl : public Declaration {
         void constProp() { };
         Type* getType() { return type; }
         static Type* getDeclaredType(std::string *identifier);
-        std::vector<Node**> getChildren();
+        std::vector<Node**> getChildren(){ return std::vector<Node**>(); }
         virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
         virtual Node* clone();
     protected:

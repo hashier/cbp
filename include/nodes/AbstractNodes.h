@@ -92,6 +92,8 @@ class Node {
             for(; childIter != childEnd; ++childIter){
                 Node* child = **childIter;
                 if(child != 0){
+                    // std::cout << typeid(*this).name() << " - propagate to: " << std::flush;
+                    // std::cout << typeid(*child).name() << std::endl;
                     child->propagateParent(this);
                 }
             }

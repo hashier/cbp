@@ -568,35 +568,3 @@ std::vector<Node**> File::getChildren()
     return childs;
 }
 
-std::vector<Node**> TypeDecl::getChildren()
-{
-    std::vector<Node**> childs;
-    childs.push_back((Node**)&identifier);
-    childs.push_back((Node**)&type);
-    return childs;
-}
-
-std::vector<Node**> StructVariable::getChildren()
-{
-    std::vector<Node**> childs;
-    childs.push_back((Node**)&identifier);
-    childs.push_back((Node**)&type);
-    return childs;
-}
-
-std::vector<Node**> LocalVariable::getChildren()
-{
-    std::vector<Node**> childs;
-    childs.push_back((Node**)&identifier);
-    childs.push_back((Node**)&type);
-    return childs;
-}
-
-std::vector<Node**> GlobalVariable::getChildren()
-{
-    std::vector<Node**> childs;
-    childs.push_back((Node**)&identifier);
-    childs.push_back((Node**)&type);
-    return childs;
-}
-

@@ -21,6 +21,7 @@ class Variable : public Declaration {
         
         virtual void solveConstraints(ConstrainedEnvironment& env);
         virtual void replaceChild(Node* oldChild, Node* newChild){ assert(false && "replaceChild not allowed"); }
+        virtual std::vector<Node**> getChildren() { return std::vector<Node**>(); }
     
     protected:
         virtual int getMemoryOffset();
@@ -33,7 +34,6 @@ class GlobalVariable : public Variable {
         GlobalVariable(std::string* identifier, Type* type);
         GlobalVariable(GlobalVariable* node);
         virtual Address getAddress();
-        std::vector<Node**> getChildren();
         virtual Node* clone();
 };
 
@@ -41,7 +41,6 @@ class LocalVariable : public Variable {
     public:
         LocalVariable(std::string* identifier, Type* type);
         LocalVariable(LocalVariable* node);
-        std::vector<Node**> getChildren();
         virtual Node* clone();
 };
 
@@ -56,7 +55,6 @@ class StructVariable : public Variable {
         virtual Address getAddress();
         void dump(int num = 0);
         int getExplicitOffset() { return explicitOffset; };
-        std::vector<Node**> getChildren();
         virtual Node* clone();
     protected:
         int explicitOffset;
